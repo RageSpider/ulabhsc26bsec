@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HSC 26 | Section B | The Archive</title>
     
     <!-- 1. TYPOGRAPHY -->
@@ -47,9 +47,13 @@
             background-color: var(--archive);
             color: var(--paper);
             margin: 0;
-            overflow: hidden;
+            /* FIXED: Changed from overflow:hidden to overflow-x:hidden to allow vertical scroll on mobile */
+            overflow-x: hidden;
+            overflow-y: auto; 
             cursor: none;
             -webkit-font-smoothing: antialiased;
+            /* Prevent bounce on mobile */
+            overscroll-behavior: none;
         }
 
         .hardware-accel {
@@ -105,6 +109,28 @@
             .cursor-dot, .cursor-outline { display: none; }
         }
 
+        /* Audio Button Animation */
+        .audio-waves span {
+            display: block;
+            width: 2px;
+            background-color: currentColor;
+            animation: wave 1s infinite ease-in-out;
+        }
+        .audio-waves span:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+        .audio-waves span:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+        .audio-waves span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+        .audio-waves span:nth-child(4) { height: 14px; animation-delay: 0.4s; }
+        
+        .audio-off .audio-waves span {
+            animation: none;
+            height: 2px;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -154,14 +180,25 @@
     <div class="fixed inset-0 z-0 pointer-events-none opacity-[0.04] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
     <!-- UI LAYER -->
-    <nav class="fixed top-0 w-full p-6 md:p-8 z-50 flex justify-between mix-blend-exclusion text-paper pointer-events-none">
-        <div class="flex flex-col reveal-nav translate-y-[-100%]">
+    <nav class="fixed top-0 w-full p-6 md:p-8 z-50 flex justify-between mix-blend-exclusion text-paper pointer-events-auto">
+        <div class="flex flex-col reveal-nav translate-y-[-100%] pointer-events-none">
             <span class="font-display font-bold uppercase tracking-widest text-xs md:text-sm">Section B</span>
             <span class="font-serif italic text-[10px] md:text-xs opacity-70">The Memory Archive</span>
         </div>
-        <div class="flex flex-col text-right reveal-nav translate-y-[-100%]">
-            <span class="font-display font-bold text-sm md:text-base">2026</span>
-            <span class="font-mono text-[8px] md:text-[10px] opacity-50 uppercase">Science Group</span>
+        
+        <div class="flex items-start gap-6">
+            <!-- Audio Toggle Button (New) -->
+            <button id="audio-btn" class="reveal-nav translate-y-[-100%] flex items-center gap-2 group cursor-pointer focus:outline-none" aria-label="Toggle Music">
+                <div class="text-[10px] uppercase tracking-widest opacity-50 group-hover:opacity-100 transition-opacity hidden md:block">Sound</div>
+                <div class="audio-waves flex items-end gap-[2px] h-4 audio-off">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+            </button>
+
+            <div class="flex flex-col text-right reveal-nav translate-y-[-100%] pointer-events-none">
+                <span class="font-display font-bold text-sm md:text-base">2026</span>
+                <span class="font-mono text-[8px] md:text-[10px] opacity-50 uppercase">Science Group</span>
+            </div>
         </div>
     </nav>
 
@@ -174,7 +211,7 @@
     </div>
     <!-- Mobile Scroll Indicator -->
     <div class="fixed bottom-8 w-full text-center z-50 mix-blend-exclusion text-paper pointer-events-none reveal-nav translate-y-[100%] md:hidden">
-        <span class="text-[10px] uppercase tracking-widest animate-pulse opacity-50">Swipe Up to Recall</span>
+        <span class="text-[10px] uppercase tracking-widest animate-pulse opacity-50">Swipe Left or Scroll</span>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -446,7 +483,6 @@
 
         // 2. Optimized Cursor (Disabled on Mobile via CSS)
         function initCursor() {
-            // Check if touch device, if so, skip JS cursor logic to save resources
             if (window.matchMedia("(pointer: coarse)").matches) return;
 
             const dot = document.querySelector('.cursor-dot');
@@ -482,35 +518,54 @@
             });
         }
 
-        // 3. Audio Handler
+        // 3. Audio Handler (Fixed)
         function initAudio() {
             const audio = document.getElementById('bg-music');
+            const btn = document.getElementById('audio-btn');
+            const waves = btn.querySelector('.audio-waves');
+            
             if (!audio) return;
             
-            audio.volume = 0.5; // Start at 50% volume
+            audio.volume = 0.4;
+            let isPlaying = false;
 
-            // Attempt to play immediately
-            const playPromise = audio.play();
+            // Toggle Function
+            const toggleAudio = () => {
+                if (isPlaying) {
+                    audio.pause();
+                    waves.classList.add('audio-off');
+                } else {
+                    audio.play().catch(e => console.log("Audio prevented"));
+                    waves.classList.remove('audio-off');
+                }
+                isPlaying = !isPlaying;
+            };
 
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    // Auto-play was prevented. This is expected in most browsers.
-                    // We wait for the first user interaction to start the music.
-                    const startAudio = () => {
-                        audio.play();
-                        // Remove listeners once audio starts
-                        document.removeEventListener('click', startAudio);
-                        document.removeEventListener('keydown', startAudio);
-                        document.removeEventListener('touchstart', startAudio);
-                        document.removeEventListener('wheel', startAudio);
-                    };
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent document click from triggering twice
+                toggleAudio();
+            });
 
-                    document.addEventListener('click', startAudio);
-                    document.addEventListener('keydown', startAudio);
-                    document.addEventListener('touchstart', startAudio);
-                    document.addEventListener('wheel', startAudio);
-                });
-            }
+            // Auto-play Attempt on First Interaction
+            const enableAudio = () => {
+                if (!isPlaying) {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        waves.classList.remove('audio-off');
+                        // Remove listeners once successfully started
+                        ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => 
+                            document.removeEventListener(evt, enableAudio)
+                        );
+                    }).catch(err => {
+                        // Keep listeners if play failed (e.g. browser policy not satisfied yet)
+                    });
+                }
+            };
+
+            // Attach to all likely first user actions
+            ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => 
+                document.addEventListener(evt, enableAudio, { once: false, passive: true })
+            );
         }
 
         // 4. Logic
@@ -593,6 +648,45 @@
                         start: "left 90%",
                         onEnter: () => block.classList.add('is-visible')
                     });
+                });
+            }
+
+            // --- 5. MOBILE SWIPE FIX ---
+            // Allows users to swipe left/right to scroll vertically (which moves the track horizontally)
+            if (window.matchMedia("(pointer: coarse)").matches) {
+                let touchStart = 0;
+                let touchY = 0;
+                let isDragging = false;
+
+                document.addEventListener('touchstart', (e) => {
+                    touchStart = e.touches[0].clientX;
+                    touchY = e.touches[0].clientY;
+                    isDragging = true;
+                }, { passive: false }); // CHANGED: Set passive to false to allow preventDefault
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+
+                    const x = e.touches[0].clientX;
+                    const y = e.touches[0].clientY;
+                    
+                    const xDiff = touchStart - x;
+                    const yDiff = touchY - y;
+
+                    // If moving mostly horizontally
+                    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                        // Prevent default browser behavior (like navigating back/forward)
+                        if (e.cancelable) e.preventDefault();
+                        
+                        // Translate horizontal swipe to vertical scroll
+                        // Multiplier 2.5 makes the swipe feel more 1:1 with the track movement
+                        window.scrollBy(0, xDiff * 2.5); 
+                        touchStart = x;
+                    }
+                }, { passive: false }); // CHANGED: Set passive to false to allow preventDefault
+
+                document.addEventListener('touchend', () => {
+                    isDragging = false;
                 });
             }
         }
