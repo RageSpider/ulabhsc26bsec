@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC 26 | Section B | The Gallery</title>
+    
+    <!-- TYPOGRAPHY -->
+    <link href="https://api.fontshare.com/v2/css?f[]=alpino@300,400,500,700&f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        archive: '#0f0e0d',
+                        paper: '#e8e6e1',   
+                        sepia: '#cbb69d',
+                        gold: '#d4af37',
+                    },
+                    fontFamily: {
+                        sans: ['Alpino', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        bangla: ['Tiro Bangla', 'serif'],
+                    },
+                    cursor: {
+                        none: 'none',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- STYLES -->
+    <style>
+        :root { --archive: #0f0e0d; --paper: #e8e6e1; }
+        body {
+            background-color: var(--archive);
+            color: var(--paper);
+            margin: 0;
+            cursor: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* The Card Style */
+        .polaroid {
+            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+        .polaroid:hover {
+            z-index: 50;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Tape Effect */
+        .tape {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+            transform: rotate(-2deg);
+        }
+
+        /* Back Button Magnetic Zone */
+        .magnetic-wrap {
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9998; pointer-events: none;
+        }
+        .cursor-dot { width: 6px; height: 6px; background-color: var(--gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(232, 230, 225, 0.5); transition: all 0.2s; }
+        
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-outline { display: none; }
+        }
+
+        /* Lenis */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* Loader */
+        .loader-screen {
+            position: fixed; inset: 0; background: var(--archive); z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+        }
+    </style>
+
+    <!-- LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Use ESM Lenis for safety -->
+    <script type="module" src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+</head>
+<body class="selection:bg-gold selection:text-archive" data-barba="wrapper">
+
+    <!-- LOADER -->
+    <div class="loader-screen">
+        <div class="text-center">
+            <span class="block font-display text-4xl mb-2 text-gold">Opening Files</span>
+            <div class="w-32 h-[1px] bg-paper/20 mx-auto overflow-hidden">
+                <div class="w-full h-full bg-gold -translate-x-full animate-[shimmer_1.5s_infinite]"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- NOISE -->
+    <div class="fixed inset-0 z-0 pointer-events-none opacity-[0.05] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+    <!-- NAVIGATION (The Magnetic Back Button) -->
+    <nav class="fixed top-8 left-8 z-50 mix-blend-difference">
+        <a href="index.html" class="magnetic-wrap group cursor-pointer block">
+            <div class="btn-circle w-16 h-16 rounded-full border border-paper/30 flex items-center justify-center group-hover:bg-paper group-hover:border-paper transition-colors duration-300">
+                <!-- Arrow Icon -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-paper group-hover:text-archive transition-colors duration-300 transform group-hover:-translate-x-1 group-hover:scale-90">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span class="absolute left-20 top-1/2 -translate-y-1/2 text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap text-paper">
+                Return to Stream
+            </span>
+        </a>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-32 pb-16 px-6 md:px-12 text-center relative z-10">
+        <span class="block font-mono text-xs uppercase tracking-[0.3em] text-gold mb-4 opacity-0 reveal-header">Confidential Archive</span>
+        <h1 class="font-display text-[15vw] md:text-[8vw] leading-[0.8] opacity-0 reveal-header">
+            Class of <span class="text-transparent" style="-webkit-text-stroke: 1px #e8e6e1;">26</span>
+        </h1>
+        <p class="mt-8 font-serif italic text-lg opacity-60 max-w-md mx-auto reveal-header opacity-0">
+            A collection of personalities, ghosts, and legends.
+        </p>
+    </header>
+
+    <!-- MAIN GRID -->
+    <main class="relative z-10 px-4 md:px-12 pb-32">
+        <!-- The Grid Container -->
+        <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-24 w-full max-w-[1600px] mx-auto">
+            <!-- Cards will be injected here via JS -->
+        </div>
+    </main>
+
+    <!-- LOGIC -->
+    <script type="module">
+        import Lenis from 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/+esm';
+
+        // 1. DATA FETCHING
+        async function loadGallery() {
+            try {
+                const response = await fetch('gallery-data.json');
+                const students = await response.json();
+                renderCards(students);
+            } catch (error) {
+                console.error("Failed to load archive:", error);
+                document.getElementById('gallery-grid').innerHTML = '<p class="text-center w-full col-span-full opacity-50">Archive Data Corrupted.</p>';
+                revealUI(); // still reveal
+            }
+        }
+
+        // 2. RENDER CARDS
+        function renderCards(students) {
+            const container = document.getElementById('gallery-grid');
+            // Generating range 101 to 188
+            const placeholderRolls = Array.from({length: 88}, (_, i) => 101 + i); 
+            
+            // Map known data for O(1) lookup
+            const knownData = {};
+            students.forEach(s => knownData[s.roll] = s);
+
+            placeholderRolls.forEach((roll, index) => {
+                const student = knownData[roll];
+                
+                // DATA SYNC & MAPPING:
+                // We map the JSON 'tag' to the card description.
+                // We set a static 'SEC B' label for the top right corner.
+                const data = {
+                    roll: roll,
+                    tagLabel: "SEC B", // Static Section Label
+                    desc: student ? (student.tag || "Student") : "Student", // Use JSON tag as description
+                    quote: student ? (student.quote || "...") : "...",
+                    link: student ? student.link : `students/${roll}.html`
+                };
+                
+                // Procedural Variation
+                const rotation = (Math.random() - 0.5) * 6; // -3 to 3 deg
+                const tapeRotation = (Math.random() - 0.5) * 20;
+                const delay = index * 0.02; // Stagger effect
+
+                const card = document.createElement('div');
+                card.className = 'polaroid-wrapper relative group opacity-0 translate-y-8'; // Init hidden
+                card.style.transitionDelay = `${Math.min(delay, 0.5)}s`; // Cap delay
+                
+                card.innerHTML = `
+                    <div class="polaroid bg-[#1a1816] p-4 pb-8 shadow-2xl relative transform transition-all duration-500 group-hover:scale-105 group-hover:z-10 group-hover:bg-[#252220]"
+                         style="transform: rotate(${rotation}deg);">
+                        
+                        <!-- Tape -->
+                        <div class="tape absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/10 opacity-50" 
+                             style="transform: translateX(-50%) rotate(${tapeRotation}deg);"></div>
+
+                        <!-- Image Area (Placeholder pattern) -->
+                        <div class="aspect-[4/5] bg-[#0f0e0d] mb-4 relative overflow-hidden flex items-center justify-center border border-white/5">
+                            <span class="font-display text-[8rem] text-white/5 font-bold absolute">${data.roll}</span>
+                            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                            
+                            <!-- Hover Overlay -->
+                            <div class="absolute inset-0 bg-gold/90 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col items-center justify-center p-4 text-center">
+                                <span class="font-mono text-xs text-archive mb-2 uppercase tracking-widest">Quote</span>
+                                <p class="font-bangla text-archive text-lg leading-tight">"${data.quote}"</p>
+                                <a href="${data.link}" class="mt-4 px-4 py-2 border border-archive text-archive text-xs uppercase tracking-widest hover:bg-archive hover:text-gold transition-colors">
+                                    Open File
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Text Info -->
+                        <div class="flex justify-between items-end border-b border-white/10 pb-2 mb-2">
+                            <span class="font-display text-3xl text-paper">${data.roll}</span>
+                            <span class="font-mono text-[10px] text-gold uppercase tracking-widest opacity-80">${data.tagLabel}</span>
+                        </div>
+                        <p class="font-serif italic text-sm opacity-60 line-clamp-2 min-h-[2.5em]">${data.desc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            revealUI();
+        }
+
+        // 3. ANIMATIONS
+        function revealUI() {
+            const tl = gsap.timeline();
+
+            // Loader Out
+            tl.to('.loader-screen', { yPercent: -100, duration: 1, ease: "expo.inOut" });
+
+            // Header Text
+            tl.to('.reveal-header', { 
+                y: 0, 
+                opacity: 1, 
+                duration: 1, 
+                stagger: 0.1, 
+                ease: "power3.out" 
+            }, "-=0.5");
+
+            // Cards Cascade (Using class toggle for performance instead of GSAP staggering 80 items)
+            tl.add(() => {
+                document.querySelectorAll('.polaroid-wrapper').forEach(card => {
+                    card.classList.remove('opacity-0', 'translate-y-8');
+                });
+            }, "-=0.5");
+        }
+
+        // 4. MOUSE/SCROLL LOGIC
+        function initApp() {
+            // Smooth Scroll
+            const lenis = new Lenis({ lerp: 0.08, smooth: true });
+            function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+            requestAnimationFrame(raf);
+
+            // Magnetic Button
+            const magneticBtn = document.querySelector('.magnetic-wrap');
+            const circle = magneticBtn.querySelector('.btn-circle');
+            
+            magneticBtn.addEventListener('mousemove', (e) => {
+                const rect = magneticBtn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Move button body
+                gsap.to(magneticBtn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+                // Move inner circle more
+                gsap.to(circle, { x: x * 0.2, y: y * 0.2, duration: 0.3 });
+            });
+
+            magneticBtn.addEventListener('mouseleave', () => {
+                gsap.to([magneticBtn, circle], { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+            });
+
+            // Cursor Logic (Desktop Only)
+            if (!window.matchMedia("(pointer: coarse)").matches) {
+                const dot = document.querySelector('.cursor-dot');
+                const outline = document.querySelector('.cursor-outline');
+                
+                window.addEventListener('mousemove', (e) => {
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+                    
+                    // Simple lag
+                    gsap.to(outline, { x: x, y: y, duration: 0.15 });
+                });
+
+                // Hover States
+                const interactables = document.querySelectorAll('a, .polaroid');
+                interactables.forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        gsap.to(outline, { scale: 1.5, borderColor: '#d4af37' });
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        gsap.to(outline, { scale: 1, borderColor: 'rgba(232,230,225,0.5)' });
+                    });
+                });
+            }
+        }
+
+        // Run
+        initApp();
+        loadGallery();
+
+    </script>
+</body>
+</html>

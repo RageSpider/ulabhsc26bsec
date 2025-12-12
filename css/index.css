@@ -1,0 +1,63 @@
+/* --- Reset & Base --- */
+:root {
+    --archive: #12100e; /* Deep Warm Brown/Black */
+    --paper: #e6e1db;
+    --gold: #d4af37;
+    --sepia: #cbb69d;
+}
+
+body {
+    background-color: var(--archive);
+    color: var(--paper);
+    margin: 0;
+    width: 100vw;
+}
+
+/* --- Typography --- */
+.font-bangla {
+    font-family: 'Tiro Bangla', serif;
+}
+
+.stroke-text {
+    -webkit-text-stroke: 1px rgba(230, 225, 219, 0.5);
+    color: transparent;
+}
+
+/* --- Transitions --- */
+.memory-block {
+    will-change: transform, opacity;
+    opacity: 0; /* JS handles reveal */
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.memory-block.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Custom Scrollbar Hide --- */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* --- Lenis Recommended --- */
+html.lenis {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+/* Selection */
+::selection {
+    background: var(--sepia);
+    color: var(--archive);
+}

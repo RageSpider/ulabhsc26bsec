@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC 26 | Section B | The Archive</title>
+    
+    <!-- 1. TYPOGRAPHY -->
+    <link href="https://api.fontshare.com/v2/css?f[]=alpino@300,400,500,700&f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- 2. TAILWIND CONFIG -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        archive: '#0f0e0d',
+                        paper: '#e8e6e1',   
+                        sepia: '#cbb69d',
+                        gold: '#d4af37',
+                    },
+                    fontFamily: {
+                        sans: ['Alpino', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        bangla: ['Tiro Bangla', 'serif'],
+                    },
+                    cursor: {
+                        none: 'none',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 3. CSS STYLES -->
+    <style>
+        /* Base Reset */
+        :root {
+            --archive: #0f0e0d;
+            --paper: #e8e6e1;
+        }
+        
+        body {
+            background-color: var(--archive);
+            color: var(--paper);
+            margin: 0;
+            overflow: hidden;
+            cursor: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hardware-accel {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .stroke-text {
+            -webkit-text-stroke: 1px rgba(232, 230, 225, 0.3);
+            color: transparent;
+        }
+        
+        .memory-block {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .memory-block.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--archive);
+            color: var(--paper);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: top;
+        }
+
+        /* Custom Cursor - Hidden on Touch Devices via Media Query below */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9998;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 6px; height: 6px; background-color: var(--gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(232, 230, 225, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-outline { display: none; }
+        }
+
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+    </style>
+
+    <!-- 4. LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js"
+        }
+      }
+    </script>
+</head>
+<body class="antialiased selection:bg-sepia selection:text-archive">
+
+    <!-- PRELOADER -->
+    <div class="preloader">
+        <div class="flex flex-col items-center">
+            <span class="font-display text-4xl font-bold tracking-tighter counter">00</span>
+            <span class="font-mono text-xs uppercase tracking-widest mt-2 opacity-50 text-gold">Loading Memory</span>
+        </div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- WEBGL BACKGROUND -->
+    <canvas id="webgl-canvas" class="fixed inset-0 z-0 pointer-events-none opacity-80"></canvas>
+    
+    <!-- FALLBACK BACKGROUND -->
+    <div id="fallback-bg" class="fixed inset-0 z-[-1] pointer-events-none bg-[#0f0e0d] opacity-0 transition-opacity duration-500"></div>
+
+    <!-- LIGHT GRAIN -->
+    <div class="fixed inset-0 z-0 pointer-events-none opacity-[0.04] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+    <!-- UI LAYER -->
+    <nav class="fixed top-0 w-full p-6 md:p-8 z-50 flex justify-between mix-blend-exclusion text-paper pointer-events-none">
+        <div class="flex flex-col reveal-nav translate-y-[-100%]">
+            <span class="font-display font-bold uppercase tracking-widest text-xs md:text-sm">Section B</span>
+            <span class="font-serif italic text-[10px] md:text-xs opacity-70">The Memory Archive</span>
+        </div>
+        <div class="flex flex-col text-right reveal-nav translate-y-[-100%]">
+            <span class="font-display font-bold text-sm md:text-base">2026</span>
+            <span class="font-mono text-[8px] md:text-[10px] opacity-50 uppercase">Science Group</span>
+        </div>
+    </nav>
+
+    <!-- SCROLL INDICATOR -->
+    <div class="fixed bottom-8 left-8 z-50 mix-blend-exclusion text-paper pointer-events-none reveal-nav translate-y-[100%] hidden md:block">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-[1px] bg-paper"></div>
+            <span class="text-[10px] uppercase tracking-widest animate-pulse">Scroll Down</span>
+        </div>
+    </div>
+    <!-- Mobile Scroll Indicator -->
+    <div class="fixed bottom-8 w-full text-center z-50 mix-blend-exclusion text-paper pointer-events-none reveal-nav translate-y-[100%] md:hidden">
+        <span class="text-[10px] uppercase tracking-widest animate-pulse opacity-50">Swipe Up to Recall</span>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10">
+        
+        <!-- 
+            Responsive Track Length: 
+            Mobile needs less scroll height relative to content width, 
+            but 400vh-500vh is usually safe.
+        -->
+        <div id="timeline-container" class="relative h-[450vh] md:h-[500vh]">
+            
+            <div class="sticky top-0 h-screen overflow-hidden flex items-center pl-4 md:pl-[10vw] pr-4 md:pr-[10vw]" id="timeline-wrapper">
+                
+                <!-- 
+                    THE HORIZONTAL TRACK 
+                    Mobile: smaller gap (gap-8)
+                    Desktop: larger gap (gap-[15vw])
+                -->
+                <div id="track" class="flex gap-12 md:gap-[15vw] items-center w-fit hardware-accel">
+
+                    <!-- 01: Title Card -->
+                    <div class="memory-block shrink-0 relative w-[85vw] md:w-auto">
+                        <h1 class="split-text text-[20vw] md:text-[15vw] font-serif italic leading-[0.8] text-sepia mix-blend-screen opacity-90">
+                            The<br>Memory
+                        </h1>
+                        <p class="mt-8 font-sans text-xs md:text-sm max-w-[80%] md:max-w-xs opacity-70 leading-relaxed border-l border-sepia/30 pl-4 text-paper">
+                            A curated collection of moments, voices, and echoes preserved in time. <br>HSC 26, Section B.
+                        </p>
+                    </div>
+
+                    <!-- 02: Dilruba Mam -->
+                    <div class="memory-block shrink-0 relative group w-[80vw] md:w-[25vw]">
+                        <div class="w-full aspect-[3/4] border border-white/10 p-2 relative overflow-hidden bg-white/[0.03] transition-transform duration-700 hover:scale-[1.02]">
+                            <div class="w-full h-full bg-[#1a1816] flex flex-col justify-end p-6 relative z-10">
+                                <span class="font-mono text-[10px] uppercase mb-2 text-gold opacity-80">Figure 01</span>
+                                <h2 class="text-4xl md:text-5xl font-bangla text-paper leading-tight">
+                                    দিলরুবা ম্যামের <br>
+                                    <span class="font-serif italic text-sepia">ক্লাস</span>
+                                </h2>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- 03: Best Friends -->
+                    <div class="memory-block shrink-0 flex flex-col items-start w-[70vw] md:w-auto">
+                        <span class="text-xs uppercase tracking-[0.3em] mb-4 opacity-50 border-b border-paper/30 pb-2">Core Memory</span>
+                        <h2 class="text-[15vw] md:text-[10vw] font-display font-bold leading-none text-transparent stroke-text hover:text-paper transition-colors duration-500 cursor-default">
+                            Best<br>Friends
+                        </h2>
+                        <span class="block text-right w-full font-serif italic text-xl md:text-2xl mt-4 text-gold">Since Day One</span>
+                    </div>
+
+                    <!-- 04: Canteen -->
+                    <div class="memory-block shrink-0 flex flex-col items-center justify-center w-[85vw] md:w-[40vw]">
+                        <div class="relative group cursor-none-target">
+                            <h2 class="text-[18vw] md:text-9xl font-display font-black tracking-tighter text-[#2a2622] group-hover:text-paper transition-colors duration-500">
+                                CANTEEN
+                            </h2>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[1px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out"></div>
+                            <p class="absolute -bottom-12 left-1/2 -translate-x-1/2 text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 whitespace-nowrap text-gold">
+                                The Hangout Spot
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 05: Club Days -->
+                    <div class="memory-block shrink-0 border-l border-white/10 pl-8 md:pl-12 flex flex-col justify-between h-[30vh] md:h-[40vh] py-4 w-[70vw] md:w-auto">
+                        <!-- Replaced Alien with Chess Pawn and Camera (Photography) -->
+                        <span class="text-5xl md:text-8xl filter grayscale hover:grayscale-0 transition-all duration-500">♟️ 📷</span>
+                        <div>
+                            <h2 class="text-5xl md:text-8xl font-display font-medium text-paper">Club Days</h2>
+                            <p class="text-xs md:text-sm opacity-50 mt-2 font-mono">Extra Curricular Activities</p>
+                        </div>
+                    </div>
+
+                    <!-- 06: Rooms (Responsive Parallax) -->
+                    <!-- On mobile: wider container (90vw), smaller text to avoid overlap -->
+                    <div class="memory-block shrink-0 w-[90vw] md:w-[50vw] h-[50vh] md:h-[60vh] relative flex items-center justify-center border-y border-white/5 bg-white/[0.01]">
+                        <span class="text-[25vw] md:text-[18vw] font-display font-bold text-white/5 absolute top-4 left-4 parallax-el" data-speed="0.05">212</span>
+                        <span class="text-[25vw] md:text-[18vw] font-display font-bold text-sepia/10 absolute bottom-4 right-4 parallax-el" data-speed="-0.05">214</span>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30">
+                            <div class="w-[1px] h-12 md:h-20 bg-paper"></div>
+                        </div>
+                    </div>
+
+                    <!-- 07: Principal -->
+                    <div class="memory-block shrink-0 text-center w-[70vw] md:w-auto">
+                        <div class="inline-block border rounded-full px-4 md:px-6 py-2 border-sepia/50 text-sepia text-[10px] md:text-xs uppercase tracking-widest mb-6">Authority</div>
+                        <h2 class="text-4xl md:text-8xl font-display text-paper">Jamiluddin Sir</h2>
+                    </div>
+
+                    <!-- 08: Quote 1 -->
+                    <div class="memory-block shrink-0 w-[85vw] md:w-auto">
+                        <div class="bg-paper text-archive p-8 md:p-20 relative border border-sepia md:max-w-[40vw]">
+                            <span class="absolute -top-4 -left-4 md:-top-6 md:-left-6 text-6xl md:text-8xl text-gold font-serif">"</span>
+                            <p class="text-2xl md:text-5xl font-bangla font-medium leading-relaxed">
+                                আজকে কলেজে<br>যাবি না মামা?
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 09: ULAB -->
+                    <div class="memory-block shrink-0 w-[80vw] md:w-auto">
+                        <!-- Increased opacity to 30% and removed stroke-text from "ULAB" to make it solid but dark -->
+                        <h2 class="text-[20vw] md:text-[15vw] font-display font-bold tracking-tighter text-white/30 stroke-text">ULAB</h2>
+                        <h2 class="text-[12vw] md:text-[8vw] font-display font-bold tracking-tighter text-paper -mt-[5vw] ml-[5vw]">CAMPUS</h2>
+                    </div>
+
+                    <!-- 10: Labs -->
+                    <div class="memory-block shrink-0 flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-end border-b border-white/20 pb-8 w-[60vw] md:w-auto">
+                        <div class="group cursor-pointer">
+                            <span class="text-3xl md:text-6xl font-display text-white/40 group-hover:text-white transition-colors duration-300">Physics</span>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <span class="text-3xl md:text-6xl font-display text-white/60 group-hover:text-white transition-colors duration-300">Chemistry</span>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <span class="text-3xl md:text-6xl font-display text-gold group-hover:text-white transition-colors duration-300">Biology</span>
+                        </div>
+                    </div>
+
+                    <!-- 11: Borun Sir -->
+                    <div class="memory-block shrink-0 w-[80vw] md:w-auto">
+                         <h2 class="text-4xl md:text-8xl font-bangla text-sepia hover:text-paper transition-colors duration-500">বরুন স্যারের গল্প</h2>
+                    </div>
+
+                    <!-- 12: Taimur Sir -->
+                    <div class="memory-block shrink-0 text-left md:text-right pr-0 md:pr-12 border-l md:border-l-0 md:border-r border-white/20 pl-6 md:pl-0 w-[70vw] md:w-auto">
+                        <span class="block text-lg md:text-xl font-serif italic opacity-60 mb-2">Dr. Taimur</span>
+                        <h2 class="text-5xl md:text-9xl font-display font-bold">Al Mobarak</h2>
+                    </div>
+
+                    <!-- 13: Dilruba Quote -->
+                    <div class="memory-block shrink-0 w-[80vw] md:w-auto">
+                         <h2 class="text-5xl md:text-9xl font-bangla font-bold text-transparent bg-clip-text bg-gradient-to-r from-sepia to-paper">আমার ছেলে..</h2>
+                    </div>
+
+                    <!-- 14: Jahangir Sir Quote -->
+                    <div class="memory-block shrink-0 w-[85vw] md:max-w-[60vw]">
+                        <blockquote class="text-xl md:text-5xl font-bangla leading-relaxed border-l-4 border-gold pl-6 md:pl-8 text-paper/90">
+                            "তোমরা কি ক্লাস করতে এসেছো<br>নাকি <span class="text-gold italic">গল্প</span> করতে?"
+                        </blockquote>
+                        <cite class="block mt-6 font-display text-[10px] md:text-xs tracking-[0.2em] opacity-50 uppercase">— Jahangir Sir</cite>
+                    </div>
+
+                    <!-- 15: Footer Link -->
+                    <div class="memory-block shrink-0 flex flex-col justify-center items-center w-[90vw] md:w-[40vw] h-screen">
+                        <p class="font-serif italic text-xl md:text-2xl text-sepia mb-6">End of Archive</p>
+                        <a href="gallery.html" class="relative group">
+                            <span class="text-4xl md:text-7xl font-display font-bold group-hover:text-gold transition-colors duration-300">ENTER GALLERY</span>
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right group-hover:origin-left"></span>
+                        </a>
+                        <div class="mt-12 flex gap-4 text-[10px] uppercase tracking-widest opacity-30">
+                            <span>Designed for ULAB</span>
+                            <span>•</span>
+                            <span>Section B</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-[10vw] shrink-0"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 5. MAIN SCRIPT -->
+    <script type="module">
+        import * as THREE from 'three';
+        import Lenis from 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/+esm';
+
+        // 1. HIGH PERFORMANCE WEBGL (Dust Motes)
+        function initWebGL() {
+            const canvas = document.querySelector('#webgl-canvas');
+            const fallback = document.querySelector('#fallback-bg');
+
+            try {
+                if (!window.WebGLRenderingContext) throw new Error("No WebGL");
+
+                const renderer = new THREE.WebGLRenderer({ 
+                    canvas, 
+                    alpha: true, 
+                    antialias: false,
+                    powerPreference: "default"
+                });
+                
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+                camera.position.z = 30;
+
+                const count = 3000;
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(count * 3);
+                const speeds = new Float32Array(count); 
+
+                for(let i = 0; i < count; i++) {
+                    const i3 = i * 3;
+                    positions[i3] = (Math.random() - 0.5) * 80;
+                    positions[i3+1] = (Math.random() - 0.5) * 50;
+                    positions[i3+2] = (Math.random() - 0.5) * 30;
+                    speeds[i] = 0.02 + Math.random() * 0.05;
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
+
+                const material = new THREE.ShaderMaterial({
+                    transparent: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                    uniforms: {
+                        uTime: { value: 0 },
+                        uColor: { value: new THREE.Color('#d4af37') }
+                    },
+                    vertexShader: `
+                        uniform float uTime;
+                        attribute float aSpeed;
+                        varying float vAlpha;
+                        void main() {
+                            vec3 pos = position;
+                            pos.y += sin(uTime * aSpeed + pos.x) * 2.0;
+                            vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                            gl_Position = projectionMatrix * mvPosition;
+                            gl_PointSize = (60.0 / -mvPosition.z);
+                            vAlpha = 1.0 - smoothstep(0.0, 40.0, abs(pos.z)); 
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform vec3 uColor;
+                        varying float vAlpha;
+                        void main() {
+                            vec2 uv = gl_PointCoord - 0.5;
+                            float dist = length(uv);
+                            if (dist > 0.5) discard;
+                            float glow = 1.0 - (dist * 2.0);
+                            gl_FragColor = vec4(uColor, glow * vAlpha * 0.6);
+                        }
+                    `
+                });
+
+                const particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                const clock = new THREE.Clock();
+                const animate = () => {
+                    material.uniforms.uTime.value = clock.getElapsedTime();
+                    particles.rotation.y = clock.getElapsedTime() * 0.05;
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(animate);
+                };
+                animate();
+
+            } catch (err) {
+                console.warn("WebGL failed, fallback active.");
+                if (canvas) canvas.style.display = 'none';
+                if (fallback) fallback.style.opacity = 1;
+            }
+        }
+
+        // 2. Optimized Cursor (Disabled on Mobile via CSS)
+        function initCursor() {
+            // Check if touch device, if so, skip JS cursor logic to save resources
+            if (window.matchMedia("(pointer: coarse)").matches) return;
+
+            const dot = document.querySelector('.cursor-dot');
+            const outline = document.querySelector('.cursor-outline');
+            
+            let mouseX = 0, mouseY = 0;
+            let outlineX = 0, outlineY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+            });
+
+            gsap.ticker.add(() => {
+                outlineX += (mouseX - outlineX) * 0.15;
+                outlineY += (mouseY - outlineY) * 0.15;
+                outline.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
+            });
+
+            const targets = document.querySelectorAll('a, button, .memory-block h2');
+            targets.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    outline.style.borderColor = '#d4af37';
+                    outline.style.width = '60px';
+                    outline.style.height = '60px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    outline.style.borderColor = 'rgba(232, 230, 225, 0.5)';
+                    outline.style.width = '40px';
+                    outline.style.height = '40px';
+                });
+            });
+        }
+
+        // 3. Logic
+        function initApp() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const tl = gsap.timeline();
+            tl.to('.counter', { textContent: 100, duration: 1, ease: "power1.inOut", snap: { textContent: 1 } });
+            tl.to('.preloader', { yPercent: -100, duration: 1, ease: "expo.inOut" });
+            
+            tl.add(() => { initWebGL(); initCursor(); }, "-=0.5");
+            tl.to('.reveal-nav', { y: '0%', duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.5");
+
+            if (typeof SplitType !== 'undefined') {
+                const splitTitle = new SplitType('.split-text', { types: 'chars' });
+                gsap.from(splitTitle.chars, {
+                    y: 100, opacity: 0, rotate: 5, duration: 1.5, stagger: 0.05, ease: "power4.out"
+                });
+            }
+
+            const lenis = new Lenis({
+                lerp: 0.1,
+                wheelMultiplier: 1,
+                normalizeWheel: true
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+            
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => lenis.raf(time * 1000));
+            gsap.ticker.lagSmoothing(0);
+
+            const container = document.querySelector('#timeline-container');
+            const wrapper = document.querySelector('#timeline-wrapper');
+            const track = document.querySelector('#track');
+
+            if (container && track) {
+                const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
+                
+                const tween = gsap.to(track, {
+                    x: getScrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 0.5,
+                        pin: wrapper,
+                        invalidateOnRefresh: true,
+                    }
+                });
+
+                document.querySelectorAll('.parallax-el').forEach(el => {
+                    const speed = parseFloat(el.getAttribute('data-speed'));
+                    gsap.to(el, {
+                        x: () => (window.innerWidth * speed),
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: el.parentElement,
+                            containerAnimation: tween,
+                            start: "left right",
+                            end: "right left",
+                            scrub: true
+                        }
+                    });
+                });
+
+                const blocks = document.querySelectorAll('.memory-block');
+                blocks.forEach(block => {
+                    ScrollTrigger.create({
+                        trigger: block,
+                        containerAnimation: tween,
+                        start: "left 90%",
+                        onEnter: () => block.classList.add('is-visible')
+                    });
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+</body>
+</html>

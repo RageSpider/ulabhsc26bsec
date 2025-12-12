@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONFIDENTIAL // 163</title>
+    
+    <!-- TYPOGRAPHY -->
+    <link href="https://api.fontshare.com/v2/css?f[]=alpino@300,400,500,700&f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+    <!-- TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        paper: '#f0f0eb',   
+                        accent: '#ff3333', /* Red for classified feel */
+                        dim: '#4a4a4a',
+                    },
+                    fontFamily: {
+                        sans: ['Alpino', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        grotesk: ['Cabinet Grotesk', 'sans-serif'],
+                        bangla: ['Tiro Bangla', 'serif'],
+                    },
+                    backgroundImage: {
+                        'noise': "url('https://grainy-gradients.vercel.app/noise.svg')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- STYLES -->
+    <style>
+        body { background-color: #050505; color: #f0f0eb; overflow-x: hidden; }
+        .bangla-text { font-family: 'Tiro Bangla', serif; }
+        
+        /* Scanline Effect */
+        .scanline {
+            width: 100%; height: 100px; z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute; bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100%; }
+        }
+
+        /* Glitch Text Utility */
+        .glitch-wrapper { position: relative; display: inline-block; }
+        .glitch-wrapper::before, .glitch-wrapper::after {
+            content: attr(data-text);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; opacity: 0.8;
+        }
+        .glitch-wrapper::before {
+            color: #ff3333; z-index: -1;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch-wrapper::after {
+            color: #00ffff; z-index: -2;
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
+            20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(60% 0 30% 0); transform: translate(2px, -2px); }
+            100% { clip-path: inset(50% 0 40% 0); transform: translate(-2px, 2px); }
+        }
+
+        /* Initial Overlay */
+        #start-screen {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+
+        /* Image Placeholder Texture */
+        .missing-texture {
+            background-image: repeating-linear-gradient(45deg, #111 0, #111 10px, #1a1a1a 10px, #1a1a1a 20px);
+        }
+        
+        /* Transition Curtain */
+        #transition-curtain {
+            position: fixed; inset: 0; background: #050505; transform: scaleY(0); transform-origin: bottom; z-index: 10000;
+        }
+    </style>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body class="selection:bg-accent selection:text-void">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/163.mp3" type="audio/mpeg">
+        <!-- Fallback if specific file missing, silent fallback logic handled in JS -->
+    </audio>
+
+    <!-- TRANSITION CURTAIN -->
+    <div id="transition-curtain">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-accent font-mono text-sm tracking-widest animate-pulse">ENCRYPTING DATA...</span>
+        </div>
+    </div>
+
+    <!-- CLICK TO START OVERLAY -->
+    <div id="start-screen">
+        <div class="border border-dim/50 p-8 relative group hover:border-accent/50 transition-colors duration-500">
+            <div class="absolute -top-1 -left-1 w-2 h-2 bg-paper"></div>
+            <div class="absolute -top-1 -right-1 w-2 h-2 bg-paper"></div>
+            <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-paper"></div>
+            <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-paper"></div>
+            
+            <h1 class="font-mono text-xs tracking-[0.5em] text-dim mb-4 text-center">SECURE CONNECTION REQUIRED</h1>
+            <p class="font-display text-4xl text-paper group-hover:text-accent transition-colors duration-300">DECRYPT FILE 163</p>
+        </div>
+    </div>
+
+    <!-- BACKGROUND NOISE -->
+    <div class="fixed inset-0 bg-noise opacity-[0.03] pointer-events-none mix-blend-overlay z-50"></div>
+    <div class="fixed inset-0 pointer-events-none z-40 scanline"></div>
+
+    <!-- MAIN INTERFACE -->
+    <main class="min-h-screen relative p-4 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-6 opacity-0" id="main-content">
+        
+        <!-- TOP BAR (Mobile/Desktop) -->
+        <div class="lg:col-span-12 flex justify-between items-start border-b border-dim/30 pb-4 mb-4">
+            <div class="flex flex-col">
+                <span class="font-mono text-[10px] text-accent tracking-widest">CLASSIFIED LEVEL 5</span>
+                <span class="font-mono text-xs text-dim">REF: SAZIDUR-163-B</span>
+            </div>
+            
+            <!-- NAV BUTTONS -->
+            <div class="flex gap-4">
+                <a href="../gallery.html" class="nav-link group flex items-center gap-2 font-mono text-xs text-dim hover:text-paper transition-colors">
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity"><</span>
+                    RETURN TO GALLERY
+                </a>
+                <span class="text-dim">/</span>
+                <a href="../index.html" class="nav-link group flex items-center gap-2 font-mono text-xs text-dim hover:text-paper transition-colors">
+                    MAIN INDEX
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity">></span>
+                </a>
+            </div>
+        </div>
+
+        <!-- LEFT COLUMN: IDENTITY -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- IMAGE PLACEHOLDER -->
+            <div class="relative aspect-[3/4] border border-dim/30 missing-texture overflow-hidden group">
+                <!-- Silhouette/Icon -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                </div>
+                
+                <!-- Overlay Data -->
+                <div class="absolute bottom-4 left-4 font-mono text-[10px] text-paper/50">
+                    IMG_STATUS: NOT_FOUND<br>
+                    LAST_SEEN: UNKNOWN
+                </div>
+                
+                <!-- Corner Accents -->
+                <div class="absolute top-0 left-0 w-4 h-4 border-l border-t border-accent"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 border-r border-b border-accent"></div>
+            </div>
+
+            <!-- KEY STATS -->
+            <div class="border-l-2 border-accent pl-4 py-2 bg-paper/5">
+                <h2 class="font-grotesk font-bold text-5xl text-paper mb-1 glitch-wrapper" data-text="163">163</h2>
+                <p class="font-mono text-xs text-dim uppercase tracking-widest">Identification Number</p>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="font-mono text-xs text-dim space-y-2">
+                <p class="flex justify-between border-b border-dim/20 pb-1">
+                    <span>STATUS</span>
+                    <span class="text-paper">ALIVE</span>
+                </p>
+                <p class="flex justify-between border-b border-dim/20 pb-1">
+                    <span>CONTACT</span>
+                    <span class="text-paper tracking-wider">+880 1886-150418</span>
+                </p>
+                <p class="flex justify-between border-b border-dim/20 pb-1">
+                    <span>LOCATION</span>
+                    <span class="text-paper">DHAKA, BD</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: DATA -->
+        <div class="lg:col-span-8 flex flex-col justify-end lg:pl-12 pt-12 lg:pt-0">
+            
+            <!-- NAME BLOCK -->
+            <div class="mb-16">
+                <span class="font-mono text-xs text-accent tracking-[0.2em] block mb-2">SUBJECT NAME</span>
+                <h1 class="font-display text-6xl md:text-8xl text-paper uppercase leading-[0.85] mb-4">
+                    Sazidur<br><span class="text-dim">Rahman</span>
+                </h1>
+                
+                <!-- BANGLA NICKNAME -->
+                <div class="flex items-center gap-4 mt-6">
+                    <span class="font-mono text-[10px] text-dim border border-dim px-2 py-1 rounded-full">ALIAS</span>
+                    <h3 class="bangla-text text-2xl md:text-3xl text-paper/90">রাষ্ট্রপতি সাহাবুদ্দিন চুপ্পু</h3>
+                </div>
+            </div>
+
+            <!-- QUOTE BLOCK -->
+            <div class="mb-12 relative">
+                <div class="absolute -left-8 top-0 text-6xl text-dim/20 font-serif">"</div>
+                <blockquote class="bangla-text text-3xl md:text-5xl text-paper leading-tight max-w-3xl">
+                    "দিনশেষে সবাই বেকার"
+                </blockquote>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-dim/30 pt-8">
+                <div>
+                    <h4 class="font-mono text-xs text-accent mb-4">>> BIO_LOG.txt</h4>
+                    <p class="font-sans text-paper/80 leading-relaxed text-sm">
+                        The current ICT Club President and a central figure in the Section B digital infrastructure. Often found managing the chaos of club activities or silently judging code quality.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-mono text-xs text-accent mb-4">>> NOTES</h4>
+                    <p class="font-sans text-paper/80 leading-relaxed text-sm">
+                        Subject shows high proficiency in technology and administration. Currently operating without a visual identifier in the database. Approach with technical queries only.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- LOGIC -->
+    <script>
+        // 1. SETUP
+        const audio = document.getElementById('bg-music');
+        const startScreen = document.getElementById('start-screen');
+        const mainContent = document.getElementById('main-content');
+        const curtain = document.getElementById('transition-curtain');
+        let isLeaving = false;
+
+        // 2. OPENING SEQUENCE
+        startScreen.addEventListener('click', () => {
+            // Play Audio
+            audio.volume = 0.4; // not too loud
+            audio.play().catch(e => console.log("Audio failed:", e));
+
+            // Animate Out Start Screen
+            gsap.to(startScreen, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => startScreen.style.display = 'none'
+            });
+
+            // Animate In Main Content
+            const tl = gsap.timeline();
+            
+            tl.to(mainContent, { opacity: 1, duration: 0.1 });
+            
+            // Text Reveal Stagger
+            tl.from('h1, h2, h3, blockquote', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                ease: "power4.out"
+            });
+            
+            // Line elements
+            tl.from('.border-dim', {
+                scaleX: 0,
+                transformOrigin: "left",
+                duration: 0.8,
+                ease: "expo.out"
+            }, "-=0.5");
+        });
+
+        // 3. CLOSING SEQUENCE (Hijack Links)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Stop immediate jump
+                if(isLeaving) return;
+                isLeaving = true;
+
+                const targetUrl = link.href;
+
+                // Audio Fade Out
+                gsap.to(audio, { volume: 0, duration: 1 });
+
+                // Curtain Up Animation
+                const tl = gsap.timeline({
+                    onComplete: () => {
+                        window.location.href = targetUrl;
+                    }
+                });
+
+                // UI Glitch out
+                tl.to(mainContent, {
+                    filter: "blur(10px) grayscale(100%)",
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+
+                // Curtain Rise
+                tl.to(curtain, {
+                    scaleY: 1,
+                    duration: 0.5,
+                    ease: "expo.inOut"
+                }, "-=0.3");
+            });
+        });
+
+    </script>
+</body>
+</html>
