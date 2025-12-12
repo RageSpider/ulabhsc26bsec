@@ -106,6 +106,11 @@
 </head>
 <body class="selection:bg-gold selection:text-archive" data-barba="wrapper">
 
+    <!-- AUDIO PLAYER -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="music/gallery.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- LOADER -->
     <div class="loader-screen">
         <div class="text-center">
@@ -161,7 +166,37 @@
     <script type="module">
         import Lenis from 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/+esm';
 
-        // 1. DATA FETCHING
+        // 1. AUDIO HANDLER
+        function initAudio() {
+            const audio = document.getElementById('bg-music');
+            if (!audio) return;
+            
+            audio.volume = 0.5; // Start at 50% volume
+
+            // Attempt to play immediately
+            const playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // Auto-play was prevented. Wait for first interaction.
+                    const startAudio = () => {
+                        audio.play();
+                        // Remove listeners once audio starts
+                        document.removeEventListener('click', startAudio);
+                        document.removeEventListener('keydown', startAudio);
+                        document.removeEventListener('touchstart', startAudio);
+                        document.removeEventListener('wheel', startAudio);
+                    };
+
+                    document.addEventListener('click', startAudio);
+                    document.addEventListener('keydown', startAudio);
+                    document.addEventListener('touchstart', startAudio);
+                    document.addEventListener('wheel', startAudio);
+                });
+            }
+        }
+
+        // 2. DATA FETCHING
         async function loadGallery() {
             try {
                 const response = await fetch('gallery-data.json');
@@ -174,7 +209,7 @@
             }
         }
 
-        // 2. RENDER CARDS
+        // 3. RENDER CARDS
         function renderCards(students) {
             const container = document.getElementById('gallery-grid');
             // Generating range 101 to 188
@@ -244,7 +279,7 @@
             revealUI();
         }
 
-        // 3. ANIMATIONS
+        // 4. ANIMATIONS
         function revealUI() {
             const tl = gsap.timeline();
 
@@ -268,8 +303,11 @@
             }, "-=0.5");
         }
 
-        // 4. MOUSE/SCROLL LOGIC
+        // 5. MOUSE/SCROLL LOGIC
         function initApp() {
+            // Init Audio
+            initAudio();
+
             // Smooth Scroll
             const lenis = new Lenis({ lerp: 0.08, smooth: true });
             function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
