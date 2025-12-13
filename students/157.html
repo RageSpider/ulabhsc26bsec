@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bappy | 157 | The Scrapbook</title>
+    
+    <!-- TYPOGRAPHY -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <!-- BANGLA FONT (Mina) -->
+    <link rel="preload" as="font" type="font/woff2" href="https://banglawebfonts.pages.dev/fonts/mina/mina-regular.woff2" crossorigin="anonymous">
+    <link href="https://banglawebfonts.pages.dev/css/mina.css" rel="stylesheet">
+
+    <!-- TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#0a2318', // Deep Green Background
+                        cream: '#eae0d5',   // Paper color
+                        gold: '#d4af37',    // Accent
+                        sepia: '#cbb69d',
+                    },
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                        bangla: ['Mina', 'sans-serif'],
+                        hand: ['Dancing Script', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://www.transparenttextures.com/patterns/cream-paper.png')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- STYLES -->
+    <style>
+        body { background-color: #0a2318; color: #eae0d5; overflow-x: hidden; }
+        
+        .bangla { 
+            font-family: 'Mina', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        /* Photo Scrapbook Effect */
+        .photo-frame {
+            background: #eae0d5;
+            padding: 8px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            transform: rotate(var(--rotation, 0deg));
+            transition: transform 0.3s ease, z-index 0.3s ease;
+            position: relative;
+        }
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 50;
+        }
+        /* Washi Tape Effect */
+        .tape {
+            position: absolute; height: 30px; width: 80px;
+            background-color: rgba(255,255,255,0.4);
+            top: -10px; left: 20%;
+            transform: rotate(-5deg);
+            backdrop-filter: blur(2px);
+            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h100v100H0z" fill="%23000" filter="url(%23a)"/><filter id="a"><feTurbulence baseFrequency=".1" result="a"/><feDisplacementMap in="SourceGraphic" in2="a" scale="15"/></filter></svg>');
+            z-index: 10;
+        }
+
+        /* Closing Transition: Circular Ripple */
+        .transition-circle {
+            position: fixed; top: 50%; left: 50%;
+            width: 150vmax; height: 150vmax;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* Opening Mask Styles */
+        #start-overlay {
+            /* Variable controlled by GSAP */
+            --mask-radius: 0%;
+            -webkit-mask-image: radial-gradient(circle at center, transparent var(--mask-radius), black calc(var(--mask-radius) + 0.5%));
+            mask-image: radial-gradient(circle at center, transparent var(--mask-radius), black calc(var(--mask-radius) + 0.5%));
+        }
+    </style>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body class="bg-paper-texture">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/157.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CLOSING ANIMATION LAYERS (Gold inner, Forest outer for ripple effect) -->
+    <div id="transition-gold" class="transition-circle bg-gold z-[9000]"></div>
+    <div id="transition-forest" class="transition-circle bg-forest z-[9001]"></div>
+
+    <!-- OPENING OVERLAY -->
+    <div id="start-overlay" class="fixed inset-0 bg-forest z-[9999] flex flex-col items-center justify-center cursor-pointer">
+        <div class="overlay-content text-center">
+            <h1 class="font-display text-6xl text-gold mb-4 tracking-tighter">157</h1>
+            <p class="font-hand text-2xl text-cream animate-pulse">Click to open memory book</p>
+        </div>
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="min-h-screen p-6 md:p-12 max-w-7xl mx-auto opacity-0" id="main-content">
+        
+        <!-- HEADER / NAVIGATION -->
+        <header class="flex justify-between items-center mb-12 border-b border-gold/30 pb-4">
+            <div>
+                <h1 class="font-display text-4xl md:text-5xl text-gold">Bappy</h1>
+                <span class="font-mono text-sm tracking-widest opacity-60">Roll No. 157</span>
+            </div>
+            <!-- Nav Links -->
+             <div class="flex gap-6 font-display text-sm uppercase tracking-widest">
+                <a href="../gallery.html" class="nav-link hover:text-gold transition-colors relative group">
+                    <span class="absolute -left-4 opacity-0 group-hover:opacity-100 transition-opacity">←</span> Gallery
+                </a>
+                <a href="../index.html" class="nav-link hover:text-gold transition-colors relative group">
+                    Index <span class="absolute -right-4 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            <!-- LEFT COLUMN: IDENTITY & BIO -->
+            <div class="lg:col-span-5 space-y-12">
+                
+                <!-- Main Identity Block -->
+                <div>
+                    <h2 class="font-display text-3xl mb-2">Md. Sanowar Hossen Bappy</h2>
+                    <h3 class="font-bangla text-xl text-gold/80">Known as Bappi</h3>
+                </div>
+
+                 <!-- Quote -->
+                 <div class="relative py-8">
+                    <span class="absolute top-0 left-0 font-hand text-6xl text-gold/20">“</span>
+                    <blockquote class="font-display text-2xl md:text-3xl pl-8 leading-relaxed text-cream">
+                        Behind Every success, there's a mother who believed first.
+                    </blockquote>
+                </div>
+
+                <!-- Info Cards (Data from image) -->
+                <div class="grid grid-cols-2 gap-4 font-sans text-sm">
+                    <div class="bg-forest/50 border border-gold/20 p-4 rounded">
+                        <span class="block text-gold/60 uppercase tracking-widest text-xs mb-1">Status</span>
+                        Still Alive
+                    </div>
+                     <div class="bg-forest/50 border border-gold/20 p-4 rounded">
+                        <span class="block text-gold/60 uppercase tracking-widest text-xs mb-1">Contact</span>
+                        01903056517
+                    </div>
+                     <div class="bg-forest/50 border border-gold/20 p-4 rounded col-span-2">
+                        <span class="block text-gold/60 uppercase tracking-widest text-xs mb-1">Location</span>
+                        Kaliganj, Satkhira, Khulna, BD
+                    </div>
+                     <div class="bg-forest/50 border border-gold/20 p-4 rounded col-span-2 flex justify-between items-center">
+                        <div>
+                            <span class="block text-gold/60 uppercase tracking-widest text-xs mb-1">Relationship Status</span>
+                            <span class="font-bangla">আল্লাহ যেদিন দেয়</span> (Allah Jedin Dei)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Structured Bio from Paragraph -->
+                <div class="pt-8 border-t border-gold/30">
+                    <h3 class="font-display text-2xl text-gold mb-6">College Life Chronicles</h3>
+                    <div class="space-y-6 font-bangla text-cream/80 leading-relaxed">
+                        <div>
+                            <h4 class="font-sans text-gold/70 uppercase text-sm mb-2 tracking-widest">The Beginning</h4>
+                            <p>এসএসসি রেজাল্টের পর বড় ভাইয়ের বাসায় ঢাকায় ঘুরতে আসা, এবং হঠাৎ করেই ইউল্যাবে ভর্তি হওয়া। আগে থেকে ঢাকায় পড়ার ইচ্ছা বা ইউল্যাবের নাম জানা ছিল না, কিন্তু এক বড় ভাইয়ের পরামর্শে এখানে ভর্তি হওয়া।</p>
+                        </div>
+                        <div>
+                            <h4 class="font-sans text-gold/70 uppercase text-sm mb-2 tracking-widest">First Day Chaos</h4>
+                            <p>"কলেজের প্রথম অবাক করা মেমোরি"। প্রথম দিনেই গেটে গিয়ে দেখি প্রিন্সিপালের পদত্যাগের দাবিতে স্লোগান চলছে। প্রিন্সিপালকে দেখার আগেই তার পদত্যাগের মিছিলে যোগ দেওয়া এক অদ্ভুত অভিজ্ঞতা ছিল। এরপরই কলেজ বন্ধ হয়ে যায়।</p>
+                        </div>
+                         <div>
+                            <h4 class="font-sans text-gold/70 uppercase text-sm mb-2 tracking-widest">Academics & Atmosphere</h4>
+                            <p>কলেজ খোলার পর সবার সাথে পরিচিত হওয়া, দিলরুবা ম্যাম সহ অন্যান্য শিক্ষকদের ভালো লাগা। তবে রেজাল্ট এবং অ্যাটেন্ডেন্স নিয়ে প্যারা ছিল জীবনের সবথেকে খারাপ অভিজ্ঞতা। ভালো পরীক্ষা দিয়েও খারাপ নাম্বার পাওয়ার স্মৃতি ভোলার নয়।</p>
+                        </div>
+                         <div>
+                            <h4 class="font-sans text-gold/70 uppercase text-sm mb-2 tracking-widest">Final Thoughts</h4>
+                            <p>সবথেকে ভালো দিক ছিল কলেজের শান্ত পরিবেশ, কোনো ঝামেলা বা মারামারি নেই। দেখতে দেখতেই কলেজ লাইফ শেষ। সবথেকে বেশি মনে পড়বে সেরা বন্ধুদের সাথে কাটানো মুহূর্তগুলো। সবকিছুর জন্য আলহামদুলিল্লাহ। 🤍</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: PHOTO LAYOUT (As requested) -->
+            <div class="lg:col-span-7 relative">
+                <!-- The Grid Layout -->
+                <div class="grid grid-cols-2 gap-6 h-full content-start sticky top-12">
+                    
+                    <!-- Left Stack (3 Small Photos) -->
+                    <div class="flex flex-col gap-6">
+                        <!-- Photo 1 -->
+                        <div class="photo-frame" style="--rotation: -3deg;">
+                            <div class="tape"></div>
+                            <img src="../images/157/1.jpg" alt="Memory 1" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
+                        </div>
+                         <!-- Photo 2 -->
+                        <div class="photo-frame" style="--rotation: 2deg;">
+                             <div class="tape" style="left: 50%; transform: rotate(5deg);"></div>
+                            <img src="../images/157/2.jpg" alt="Memory 2" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
+                        </div>
+                         <!-- Photo 3 -->
+                        <div class="photo-frame" style="--rotation: -1deg;">
+                             <div class="tape" style="left: 10%;"></div>
+                            <img src="../images/157/3.jpg" alt="Memory 3" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
+                        </div>
+                    </div>
+
+                    <!-- Right Stack (1 Tall Photo) -->
+                    <div>
+                         <!-- Tall Photo -->
+                        <div class="photo-frame h-full" style="--rotation: 1deg;">
+                             <div class="tape" style="right: 20%; left: auto; transform: rotate(10deg);"></div>
+                             <img src="../images/157/4.jpg" alt="Memory 4" class="w-full h-full object-cover block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- LOGIC -->
+    <script>
+        // SETUP
+        const audio = document.getElementById('bg-music');
+        const startOverlay = document.getElementById('start-overlay');
+        const mainContent = document.getElementById('main-content');
+        // No shutters, using circles now
+        let isLeaving = false;
+
+        // 1. OPENING ANIMATION (Iris Reveal)
+        startOverlay.addEventListener('click', () => {
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio failed:", e));
+
+            const tl = gsap.timeline();
+
+            // Reveal Content Immediately (behind overlay)
+            gsap.set(mainContent, { opacity: 1 });
+
+            // Animate Text Scale & Fade
+            tl.to('.overlay-content', { scale: 0.8, opacity: 0, duration: 0.5, ease: "power2.in" });
+
+            // Animate Overlay Mask (Iris Open)
+            tl.to(startOverlay, { 
+                '--mask-radius': '150%', 
+                duration: 1.5, 
+                ease: "power2.inOut",
+                onComplete: () => startOverlay.style.display = 'none'
+            }, "-=0.3");
+
+            // Animate elements in
+            tl.from('header h1, header span', { y: -20, opacity: 0, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.8");
+            tl.from('.lg\\:col-span-5 > div', { y: 30, opacity: 0, stagger: 0.2, duration: 0.8, ease: "power3.out" }, "-=0.6");
+            
+            // Pop in photos with rotation reset effect
+            tl.from('.photo-frame', { 
+                scale: 0.8, 
+                opacity: 0, 
+                rotation: 0, // start at 0
+                stagger: 0.15, 
+                duration: 0.8, 
+                ease: "elastic.out(1, 0.5)",
+                clearProps: "rotation" // allow CSS rotation to take over
+            }, "-=1");
+        });
+
+        // 2. CLOSING ANIMATION (Hijack Nav Links)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(isLeaving) return;
+                isLeaving = true;
+                const target = link.href;
+
+                gsap.to(audio, { volume: 0, duration: 1 }); // Fade music
+
+                const tl = gsap.timeline({
+                    onComplete: () => window.location.href = target
+                });
+
+                // Pull content back
+                tl.to(mainContent, { scale: 0.95, opacity: 0, duration: 0.5, ease: "power2.in" });
+
+                // Circular Ripple Transition
+                // First gold, then forest to create a layered closing
+                tl.to('#transition-gold', { scale: 1, duration: 0.8, ease: "power2.inOut" }, "-=0.3");
+                tl.to('#transition-forest', { scale: 1, duration: 0.8, ease: "power2.inOut" }, "-=0.6");
+            });
+        });
+
+    </script>
+</body>
+</html>

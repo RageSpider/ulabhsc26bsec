@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONFIDENTIAL // 163</title>
+    <title> CONFIDENTIAL // 163 </title>
     
     <!-- TYPOGRAPHY -->
     <link href="https://api.fontshare.com/v2/css?f[]=alpino@300,400,500,700&f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
-    <!-- TAILWIND -->
+    <!-- TAILWIND CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,8 +19,10 @@
                     colors: {
                         void: '#050505',
                         paper: '#f0f0eb',   
-                        accent: '#ff3333', /* Red for classified feel */
+                        accent: '#ff3333',
                         dim: '#4a4a4a',
+                        terminal: '#0f0',
+                        glass: 'rgba(255, 255, 255, 0.03)',
                     },
                     fontFamily: {
                         sans: ['Alpino', 'sans-serif'],
@@ -31,136 +33,186 @@
                     },
                     backgroundImage: {
                         'noise': "url('https://grainy-gradients.vercel.app/noise.svg')",
+                        'grid': "linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'cursor-blink': 'blink 1s step-end infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blink: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0' } }
+                    },
+                    cursor: {
+                        'crosshair': 'crosshair',
                     }
                 }
             }
         }
     </script>
 
-    <!-- STYLES -->
+    <!-- CUSTOM STYLES -->
     <style>
-        body { background-color: #050505; color: #f0f0eb; overflow-x: hidden; }
+        body { 
+            background-color: #050505; 
+            color: #f0f0eb; 
+            overflow-x: hidden; 
+            cursor: crosshair; /* Hacker feel */
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff3333; }
+
         .bangla-text { font-family: 'Tiro Bangla', serif; }
         
-        /* Scanline Effect */
-        .scanline {
-            width: 100%; height: 100px; z-index: 10;
-            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0,0,0,0) 100%);
-            opacity: 0.1;
+        /* CRT Scanline Effect */
+        .scanline-container {
+            position: fixed; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+        }
+        
+        .scan-bar {
+            width: 100%; height: 5px; z-index: 51;
+            background: rgba(255, 51, 51, 0.1);
             position: absolute; bottom: 100%;
-            animation: scanline 10s linear infinite;
+            animation: scanline 8s linear infinite;
             pointer-events: none;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
         }
         @keyframes scanline {
-            0% { bottom: 100%; }
-            100% { bottom: -100%; }
+            0% { top: -10%; }
+            100% { top: 110%; }
         }
 
         /* Glitch Text Utility */
         .glitch-wrapper { position: relative; display: inline-block; }
-        .glitch-wrapper::before, .glitch-wrapper::after {
+        .glitch-wrapper:hover::before {
             content: attr(data-text);
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #050505; opacity: 0.8;
-        }
-        .glitch-wrapper::before {
             color: #ff3333; z-index: -1;
-            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+            animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
         }
-        .glitch-wrapper::after {
+        .glitch-wrapper:hover::after {
+            content: attr(data-text);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; opacity: 0.8;
             color: #00ffff; z-index: -2;
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+            animation: glitch-anim-2 0.6s infinite linear alternate-reverse;
         }
         @keyframes glitch-anim-1 {
             0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
-            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
             100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
         }
         @keyframes glitch-anim-2 {
             0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
-            20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
-            40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
-            60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
-            80% { clip-path: inset(60% 0 30% 0); transform: translate(2px, -2px); }
             100% { clip-path: inset(50% 0 40% 0); transform: translate(-2px, 2px); }
         }
 
-        /* Initial Overlay */
+        /* CRT Shutdown Layer */
+        #crt-layer {
+            position: fixed; inset: 0; background: #fff; z-index: 10000;
+            opacity: 0; pointer-events: none; mix-blend-mode: hard-light;
+        }
+
+        /* Matrix Canvas */
+        #matrix-canvas {
+            position: fixed; inset: 0; z-index: 9998; 
+            background: #000;
+        }
+
+        /* Start Screen */
         #start-screen {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(8px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer;
         }
 
-        /* Image Placeholder Texture */
-        .missing-texture {
-            background-image: repeating-linear-gradient(45deg, #111 0, #111 10px, #1a1a1a 10px, #1a1a1a 20px);
-        }
-        
-        /* Transition Curtain */
-        #transition-curtain {
-            position: fixed; inset: 0; background: #050505; transform: scaleY(0); transform-origin: bottom; z-index: 10000;
+        /* Tactical Grid Background */
+        .tactical-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(74, 74, 74, 0.1) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(74, 74, 74, 0.1) 1px, transparent 1px);
         }
     </style>
     
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
 </head>
-<body class="selection:bg-accent selection:text-void">
+<body class="selection:bg-accent selection:text-void tactical-grid">
 
     <!-- AUDIO -->
     <audio id="bg-music" loop>
         <source src="../music/163.mp3" type="audio/mpeg">
-        <!-- Fallback if specific file missing, silent fallback logic handled in JS -->
     </audio>
 
-    <!-- TRANSITION CURTAIN -->
-    <div id="transition-curtain">
-        <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-accent font-mono text-sm tracking-widest animate-pulse">ENCRYPTING DATA...</span>
-        </div>
-    </div>
+    <!-- VISUAL FX LAYERS -->
+    <canvas id="matrix-canvas"></canvas>
+    <div id="crt-layer"></div>
+    <div class="scanline-container"><div class="scan-bar"></div></div>
+    <div class="fixed inset-0 bg-noise opacity-[0.04] pointer-events-none mix-blend-overlay z-[60]"></div>
 
-    <!-- CLICK TO START OVERLAY -->
+    <!-- START SCREEN -->
     <div id="start-screen">
-        <div class="border border-dim/50 p-8 relative group hover:border-accent/50 transition-colors duration-500">
-            <div class="absolute -top-1 -left-1 w-2 h-2 bg-paper"></div>
-            <div class="absolute -top-1 -right-1 w-2 h-2 bg-paper"></div>
-            <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-paper"></div>
-            <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-paper"></div>
+        <div class="border border-dim/50 p-12 relative group hover:border-accent/80 transition-all duration-500 bg-void/90 max-w-md w-full mx-4">
+            <!-- Decorative Corners -->
+            <div class="absolute -top-1 -left-1 w-3 h-3 border-l-2 border-t-2 border-paper transition-all group-hover:border-accent group-hover:w-full group-hover:h-full group-hover:-top-2 group-hover:-left-2 opacity-50"></div>
+            <div class="absolute -bottom-1 -right-1 w-3 h-3 border-r-2 border-b-2 border-paper transition-all group-hover:border-accent group-hover:w-full group-hover:h-full group-hover:-bottom-2 group-hover:-right-2 opacity-50"></div>
             
-            <h1 class="font-mono text-xs tracking-[0.5em] text-dim mb-4 text-center">SECURE CONNECTION REQUIRED</h1>
-            <p class="font-display text-4xl text-paper group-hover:text-accent transition-colors duration-300">DECRYPT FILE 163</p>
+            <div class="text-center relative z-10">
+                <div class="flex items-center justify-center gap-2 mb-6">
+                    <div class="w-2 h-2 bg-accent animate-pulse"></div>
+                    <h1 class="font-mono text-[10px] tracking-[0.4em] text-dim">SECURE ARCHIVE 163</h1>
+                    <div class="w-2 h-2 bg-accent animate-pulse"></div>
+                </div>
+                
+                <p class="font-display text-5xl md:text-6xl text-paper group-hover:text-accent transition-colors duration-300 tracking-tight glitch-wrapper" data-text="DECRYPT">
+                    DECRYPT
+                </p>
+                
+                <div class="mt-8 flex justify-between items-end border-t border-dim/20 pt-4">
+                    <p class="font-mono text-[9px] text-dim text-left">
+                        ENCRYPTION: AES-256<br>
+                        STATUS: LOCKED
+                    </p>
+                    <p class="font-mono text-[9px] text-accent animate-pulse text-right">
+                        [ CLICK TO INITIALIZE ]
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- BACKGROUND NOISE -->
-    <div class="fixed inset-0 bg-noise opacity-[0.03] pointer-events-none mix-blend-overlay z-50"></div>
-    <div class="fixed inset-0 pointer-events-none z-40 scanline"></div>
 
     <!-- MAIN INTERFACE -->
     <main class="min-h-screen relative p-4 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-6 opacity-0" id="main-content">
         
-        <!-- TOP BAR (Mobile/Desktop) -->
-        <div class="lg:col-span-12 flex justify-between items-start border-b border-dim/30 pb-4 mb-4">
+        <!-- TOP BAR -->
+        <div class="lg:col-span-12 flex justify-between items-start border-b border-dim/30 pb-4 mb-4 relative">
+            <div class="absolute bottom-0 left-0 h-[1px] bg-accent w-0" id="top-bar-loader"></div>
+            
             <div class="flex flex-col">
-                <span class="font-mono text-[10px] text-accent tracking-widest">CLASSIFIED LEVEL 5</span>
-                <span class="font-mono text-xs text-dim">REF: SAZIDUR-163-B</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                    <span class="font-mono text-[10px] text-accent tracking-widest">LIVE CONNECTION</span>
+                </div>
+                <span class="font-mono text-xs text-dim mt-1">REF: SAZIDUR-163-B // ADMIN ACCESS</span>
             </div>
             
-            <!-- NAV BUTTONS -->
-            <div class="flex gap-4">
+            <!-- NAV -->
+            <div class="flex gap-6">
                 <a href="../gallery.html" class="nav-link group flex items-center gap-2 font-mono text-xs text-dim hover:text-paper transition-colors">
-                    <span class="opacity-0 group-hover:opacity-100 transition-opacity"><</span>
+                    <span class="text-accent opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">&lt;</span>
                     RETURN TO GALLERY
                 </a>
-                <span class="text-dim">/</span>
+                <span class="text-dim/30">|</span>
                 <a href="../index.html" class="nav-link group flex items-center gap-2 font-mono text-xs text-dim hover:text-paper transition-colors">
                     MAIN INDEX
-                    <span class="opacity-0 group-hover:opacity-100 transition-opacity">></span>
+                    <span class="text-accent opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 duration-300">&gt;</span>
                 </a>
             </div>
         </div>
@@ -168,87 +220,118 @@
         <!-- LEFT COLUMN: IDENTITY -->
         <div class="lg:col-span-4 flex flex-col gap-6">
             
-            <!-- IMAGE PLACEHOLDER -->
-            <div class="relative aspect-[3/4] border border-dim/30 missing-texture overflow-hidden group">
-                <!-- Silhouette/Icon -->
-                <div class="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+            <!-- IMAGE FRAME -->
+            <div class="relative aspect-[3/4] bg-glass border border-dim/30 overflow-hidden group">
+                <!-- Grid Overlay within image -->
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20"></div>
+                
+                <!-- Silhouette Icon -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity duration-500 text-paper">
                     <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                     </svg>
                 </div>
                 
+                <!-- Scanning Bar Animation inside image -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent/50 shadow-[0_0_15px_rgba(255,51,51,0.5)] animate-[scanline_3s_linear_infinite]"></div>
+                
                 <!-- Overlay Data -->
-                <div class="absolute bottom-4 left-4 font-mono text-[10px] text-paper/50">
-                    IMG_STATUS: NOT_FOUND<br>
-                    LAST_SEEN: UNKNOWN
+                <div class="absolute bottom-4 left-4 font-mono text-[10px] text-paper/70 z-10">
+                    <span class="bg-accent/20 px-1 text-accent">IMG_ERR_404</span><br>
+                    <span class="text-dim">Reconstructing face data...</span>
                 </div>
                 
                 <!-- Corner Accents -->
-                <div class="absolute top-0 left-0 w-4 h-4 border-l border-t border-accent"></div>
-                <div class="absolute bottom-0 right-0 w-4 h-4 border-r border-b border-accent"></div>
+                <div class="absolute top-0 left-0 w-8 h-8 border-l border-t border-accent transition-all duration-300 group-hover:w-full group-hover:h-full group-hover:border-dim/20"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-accent transition-all duration-300 group-hover:w-full group-hover:h-full group-hover:border-dim/20"></div>
             </div>
 
             <!-- KEY STATS -->
-            <div class="border-l-2 border-accent pl-4 py-2 bg-paper/5">
-                <h2 class="font-grotesk font-bold text-5xl text-paper mb-1 glitch-wrapper" data-text="163">163</h2>
-                <p class="font-mono text-xs text-dim uppercase tracking-widest">Identification Number</p>
+            <div class="border-l-2 border-accent pl-6 py-4 bg-gradient-to-r from-accent/5 to-transparent relative overflow-hidden">
+                <div class="absolute right-0 top-0 text-[100px] font-bold text-white/5 font-display leading-none -mt-4 -mr-4 select-none">163</div>
+                <h2 class="font-grotesk font-bold text-6xl text-paper mb-1 glitch-wrapper" data-text="163" id="scramble-id">000</h2>
+                <p class="font-mono text-[10px] text-accent uppercase tracking-[0.2em]">Identification Number</p>
             </div>
 
-            <!-- CONTACT -->
-            <div class="font-mono text-xs text-dim space-y-2">
-                <p class="flex justify-between border-b border-dim/20 pb-1">
-                    <span>STATUS</span>
-                    <span class="text-paper">ALIVE</span>
-                </p>
-                <p class="flex justify-between border-b border-dim/20 pb-1">
+            <!-- CONTACT GRID -->
+            <div class="font-mono text-xs text-dim grid gap-4 bg-dim/5 p-4 border border-dim/10">
+                <div class="flex justify-between items-center border-b border-dim/20 pb-2">
+                    <span>ROLE</span>
+                    <span class="text-paper bg-dim/20 px-2 py-0.5">ICT CLUB PRESIDENT</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-dim/20 pb-2">
                     <span>CONTACT</span>
-                    <span class="text-paper tracking-wider">+880 1886-150418</span>
-                </p>
-                <p class="flex justify-between border-b border-dim/20 pb-1">
-                    <span>LOCATION</span>
+                    <span class="text-paper tracking-wider group cursor-pointer hover:text-accent transition-colors">+880 1886-150418</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>BASE</span>
                     <span class="text-paper">DHAKA, BD</span>
-                </p>
+                </div>
             </div>
         </div>
 
         <!-- RIGHT COLUMN: DATA -->
-        <div class="lg:col-span-8 flex flex-col justify-end lg:pl-12 pt-12 lg:pt-0">
+        <div class="lg:col-span-8 flex flex-col justify-end lg:pl-12 pt-12 lg:pt-0 relative">
             
+            <!-- Background Watermark -->
+            <div class="absolute top-10 right-0 text-dim/5 font-display text-9xl font-bold select-none pointer-events-none">CONFIDENTIAL</div>
+
             <!-- NAME BLOCK -->
-            <div class="mb-16">
-                <span class="font-mono text-xs text-accent tracking-[0.2em] block mb-2">SUBJECT NAME</span>
-                <h1 class="font-display text-6xl md:text-8xl text-paper uppercase leading-[0.85] mb-4">
-                    Sazidur<br><span class="text-dim">Rahman</span>
+            <div class="mb-16 relative z-10">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-mono text-xs text-accent tracking-[0.2em]">SUBJECT NAME</span>
+                    <div class="h-[1px] w-20 bg-accent/50"></div>
+                </div>
+                
+                <h1 class="font-display text-6xl md:text-8xl text-paper uppercase leading-[0.85] mb-4 mix-blend-difference">
+                    <span id="scramble-name-1" class="block">UNKNOWN</span>
+                    <span class="text-dim block" id="scramble-name-2">USER</span>
                 </h1>
                 
                 <!-- BANGLA NICKNAME -->
-                <div class="flex items-center gap-4 mt-6">
-                    <span class="font-mono text-[10px] text-dim border border-dim px-2 py-1 rounded-full">ALIAS</span>
-                    <h3 class="bangla-text text-2xl md:text-3xl text-paper/90">রাষ্ট্রপতি সাহাবুদ্দিন চুপ্পু</h3>
+                <div class="flex items-center gap-4 mt-8">
+                    <span class="font-mono text-[9px] text-dim border border-dim px-2 py-1 rounded-sm uppercase tracking-widest">Alias</span>
+                    <h3 class="bangla-text text-2xl md:text-3xl text-paper/90 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">রাষ্ট্রপতি সাহাবুদ্দিন চুপ্পু</h3>
                 </div>
             </div>
 
             <!-- QUOTE BLOCK -->
-            <div class="mb-12 relative">
-                <div class="absolute -left-8 top-0 text-6xl text-dim/20 font-serif">"</div>
-                <blockquote class="bangla-text text-3xl md:text-5xl text-paper leading-tight max-w-3xl">
-                    "দিনশেষে সবাই বেকার"
+            <div class="mb-12 relative border-l border-dim/30 pl-8">
+                <div class="absolute -left-3 top-0 w-1.5 h-1.5 bg-paper rounded-full"></div>
+                <blockquote class="bangla-text text-3xl md:text-5xl text-paper leading-tight max-w-3xl opacity-90">
+                    দিনশেষে সবাই বেকার
                 </blockquote>
+                <div class="flex items-center gap-2 mt-4">
+                    <span class="h-[1px] w-8 bg-dim"></span>
+                    <p class="font-mono text-[10px] text-dim uppercase tracking-widest">
+                        // AT THE END OF THE DAY, EVERYONE IS UNEMPLOYED
+                    </p>
+                </div>
             </div>
 
-            <!-- DESCRIPTION -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-dim/30 pt-8">
+            <!-- DESCRIPTION CONSOLE -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-dim/30 pt-8 relative bg-void/50 backdrop-blur-sm p-6 -mx-6 md:mx-0 border-b border-dim/30 md:border-b-0">
+                <!-- Corner decorations for console -->
+                <div class="absolute top-0 left-0 w-2 h-2 border-l border-t border-paper"></div>
+                <div class="absolute top-0 right-0 w-2 h-2 border-r border-t border-paper"></div>
+
                 <div>
-                    <h4 class="font-mono text-xs text-accent mb-4">>> BIO_LOG.txt</h4>
-                    <p class="font-sans text-paper/80 leading-relaxed text-sm">
-                        The current ICT Club President and a central figure in the Section B digital infrastructure. Often found managing the chaos of club activities or silently judging code quality.
+                    <h4 class="font-mono text-xs text-accent mb-4 flex items-center gap-2">
+                        <span>>> BIO_LOG.txt</span>
+                        <span class="animate-cursor-blink w-1.5 h-3 bg-accent block"></span>
+                    </h4>
+                    <p class="font-sans text-paper/80 leading-relaxed text-sm h-24" id="typewriter-bio">
+                        <!-- Content injected via JS -->
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-mono text-xs text-accent mb-4">>> NOTES</h4>
-                    <p class="font-sans text-paper/80 leading-relaxed text-sm">
-                        Subject shows high proficiency in technology and administration. Currently operating without a visual identifier in the database. Approach with technical queries only.
+                    <h4 class="font-mono text-xs text-dim mb-4">>> SYSTEM_NOTES</h4>
+                    <p class="font-mono text-xs text-dim leading-relaxed">
+                        > Subject shows high proficiency in technology.<br>
+                        > Central figure in Section B digital infrastructure.<br>
+                        > Visual identifier missing from database.<br>
+                        > Status: <span class="text-accent">WATCHLIST</span>
                     </p>
                 </div>
             </div>
@@ -257,83 +340,211 @@
 
     </main>
 
-    <!-- LOGIC -->
+    <!-- SYSTEM FOOTER -->
+    <div class="fixed bottom-4 right-6 font-mono text-[9px] text-dim/40 z-40 hidden md:block text-right">
+        SYS.VER.2.0.4<br>
+        MEMORY: 64TB // SECURE
+    </div>
+
+    <!-- SCRIPT LOGIC -->
     <script>
-        // 1. SETUP
-        const audio = document.getElementById('bg-music');
+        gsap.registerPlugin(TextPlugin);
+
+        // --- DOM ELEMENTS ---
         const startScreen = document.getElementById('start-screen');
         const mainContent = document.getElementById('main-content');
-        const curtain = document.getElementById('transition-curtain');
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const crtLayer = document.getElementById('crt-layer');
+        const audio = document.getElementById('bg-music');
+        const loader = document.getElementById('top-bar-loader');
+        
         let isLeaving = false;
+        let matrixInterval;
 
-        // 2. OPENING SEQUENCE
+        // --- UTILS: CUSTOM SCRAMBLE EFFECT ---
+        // A robust vanilla JS replacement for the paid ScrambleTextPlugin
+        function scrambleTextTo(elementId, finalText, durationSecs, chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&") {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            
+            const fps = 30;
+            const totalFrames = durationSecs * fps;
+            let frame = 0;
+            
+            const interval = setInterval(() => {
+                frame++;
+                const progress = frame / totalFrames;
+                const revealLength = Math.floor(finalText.length * progress);
+                
+                let scrambled = finalText.substring(0, revealLength);
+                
+                // Add random chars for the rest
+                for (let i = revealLength; i < finalText.length; i++) {
+                    if (finalText[i] === " ") {
+                        scrambled += " ";
+                    } else {
+                        scrambled += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                }
+                
+                el.innerText = scrambled;
+                
+                if (frame >= totalFrames) {
+                    clearInterval(interval);
+                    el.innerText = finalText; // Ensure exact match at end
+                }
+            }, 1000 / fps);
+        }
+
+        // --- MATRIX RAIN EFFECT ---
+        function initMatrix() {
+            const ctx = matrixCanvas.getContext('2d');
+            
+            const resize = () => {
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
+            };
+            window.addEventListener('resize', resize);
+            resize();
+
+            const chars = '0123456789ABCDEF@#$%&アァカサタナハマヤラワ';
+            const fontSize = 14;
+            let columns = matrixCanvas.width / fontSize;
+            const drops = [];
+
+            // Initialize drops
+            for (let x = 0; x < columns; x++) {
+                drops[x] = Math.random() * matrixCanvas.height / fontSize; // Start anywhere on screen
+            }
+
+            function draw() {
+                // Translucent black background for trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                ctx.fillStyle = '#ff3333'; // Hacker Red
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    
+                    // Randomly highlight some characters white
+                    if(Math.random() > 0.98) ctx.fillStyle = '#fff';
+                    else ctx.fillStyle = '#ff3333';
+                    
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    // Reset drop to top randomly
+                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            matrixInterval = setInterval(draw, 33);
+        }
+
+        // Start Matrix immediately
+        initMatrix();
+
+
+        // --- OPENING SEQUENCE ---
         startScreen.addEventListener('click', () => {
-            // Play Audio
-            audio.volume = 0.4; // not too loud
-            audio.play().catch(e => console.log("Audio failed:", e));
+            // 1. Play Audio
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log("Audio autoplay blocked", e));
 
-            // Animate Out Start Screen
-            gsap.to(startScreen, {
-                opacity: 0,
-                duration: 0.5,
-                onComplete: () => startScreen.style.display = 'none'
-            });
+            // 2. Hide Start Screen UI
+            gsap.to(startScreen, { opacity: 0, duration: 0.5, onComplete: () => startScreen.style.display = 'none' });
 
-            // Animate In Main Content
+            // 3. Main Timeline
             const tl = gsap.timeline();
             
-            tl.to(mainContent, { opacity: 1, duration: 0.1 });
+            // Prepare content (hidden behind canvas)
+            gsap.set(mainContent, { opacity: 1 });
             
-            // Text Reveal Stagger
-            tl.from('h1, h2, h3, blockquote', {
-                y: 50,
+            // A. Matrix "Scan Wipe" Down
+            // We use clipPath to slice the canvas from top to bottom
+            tl.to(matrixCanvas, {
+                clipPath: "inset(100% 0 0 0)", // Wipe down
+                duration: 2,
+                ease: "power4.inOut",
+                onComplete: () => {
+                    clearInterval(matrixInterval);
+                    matrixCanvas.style.display = 'none';
+                }
+            });
+
+            // B. Loader Line Animation
+            tl.to(loader, { width: "100%", duration: 1.5, ease: "expo.out" }, "-=1.5");
+
+            // C. Trigger Text Scrambles
+            tl.call(() => {
+                scrambleTextTo("scramble-name-1", "SAZIDUR", 1.5);
+                scrambleTextTo("scramble-name-2", "RAHMAN", 2.0); // Slightly slower
+                scrambleTextTo("scramble-id", "163", 2.5, "0123456789");
+            }, null, "-=1.5");
+
+            // D. Reveal Elements (Staggered Fade Up)
+            tl.from("#main-content > div", {
+                y: 30,
                 opacity: 0,
                 duration: 1,
-                stagger: 0.1,
-                ease: "power4.out"
-            });
-            
-            // Line elements
-            tl.from('.border-dim', {
-                scaleX: 0,
-                transformOrigin: "left",
-                duration: 0.8,
-                ease: "expo.out"
-            }, "-=0.5");
+                stagger: 0.2,
+                ease: "power2.out"
+            }, "-=1");
+
+            // E. Typewriter Bio
+            tl.to("#typewriter-bio", {
+                text: {
+                    value: "The current ICT Club President and a central figure in the digital infrastructure. Often found managing the chaos of club activities or silently judging code quality.",
+                    delimiter: ""
+                },
+                duration: 4,
+                ease: "none",
+                delay: 0.5
+            }, "-=1");
+
         });
 
-        // 3. CLOSING SEQUENCE (Hijack Links)
+
+        // --- EXIT SEQUENCE (CRT SHUTDOWN) ---
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault(); // Stop immediate jump
+                e.preventDefault();
                 if(isLeaving) return;
                 isLeaving = true;
-
                 const targetUrl = link.href;
 
-                // Audio Fade Out
-                gsap.to(audio, { volume: 0, duration: 1 });
+                // Fade out audio
+                gsap.to(audio, { volume: 0, duration: 0.5 });
 
-                // Curtain Up Animation
                 const tl = gsap.timeline({
-                    onComplete: () => {
-                        window.location.href = targetUrl;
-                    }
+                    onComplete: () => window.location.href = targetUrl
                 });
 
-                // UI Glitch out
-                tl.to(mainContent, {
-                    filter: "blur(10px) grayscale(100%)",
-                    duration: 0.5,
+                // 1. Bright Flash
+                tl.to(crtLayer, { opacity: 1, duration: 0.1, ease: "power2.in" });
+                tl.to(crtLayer, { opacity: 0, duration: 0.2 });
+
+                // 2. Horizontal Collapse (Turn into a line)
+                tl.to("body", { 
+                    scaleY: 0.005, 
+                    transformOrigin: "center", 
+                    duration: 0.4, 
+                    ease: "power2.inOut",
+                    filter: "brightness(200%)"
+                });
+
+                // 3. Vertical Collapse (Turn into a dot)
+                tl.to("body", { 
+                    scaleX: 0, 
+                    duration: 0.3, 
                     ease: "power2.in"
                 });
-
-                // Curtain Rise
-                tl.to(curtain, {
-                    scaleY: 1,
-                    duration: 0.5,
-                    ease: "expo.inOut"
-                }, "-=0.3");
+                
+                // 4. Fade out completely
+                tl.to("body", { opacity: 0, duration: 0.1 });
             });
         });
 
