@@ -103,27 +103,27 @@
 
     <!-- ENTRANCE CURTAIN -->
     <div id="entrance-curtain">
-        <div class="text-center cursor-pointer" id="enter-btn">
-            <h1 class="font-serif text-6xl md:text-8xl text-lux-gold opacity-0 translate-y-10" id="intro-num">144</h1>
-            <p class="font-sans text-xs tracking-[0.4em] text-lux-white/50 mt-4 opacity-0" id="intro-text">CLICK TO ENTER</p>
+        <div class="text-center cursor-pointer px-4" id="enter-btn">
+            <h1 class="font-serif text-5xl md:text-8xl text-lux-gold opacity-0 translate-y-10" id="intro-num">144</h1>
+            <p class="font-sans text-[10px] md:text-xs tracking-[0.4em] text-lux-white/50 mt-4 opacity-0" id="intro-text">CLICK TO ENTER</p>
         </div>
     </div>
 
     <!-- NAVIGATION -->
     <nav class="fixed top-0 left-0 w-full z-40 floating-nav border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <span class="font-serif text-2xl text-lux-gold">144</span>
-                <span class="h-4 w-[1px] bg-white/20"></span>
-                <span class="text-xs uppercase tracking-widest text-white/60">ULPC Vice President</span>
+                <span class="font-serif text-xl md:text-2xl text-lux-gold">144</span>
+                <span class="h-4 w-[1px] bg-white/20 hidden md:block"></span>
+                <span class="text-xs uppercase tracking-widest text-white/60 hidden md:block">ULPC Vice President</span>
             </div>
             
-            <div class="flex items-center gap-8 text-xs font-bold tracking-widest uppercase">
+            <div class="flex items-center gap-4 md:gap-8 text-[10px] md:text-xs font-bold tracking-widest uppercase">
                 <a href="../gallery.html" class="nav-link hover:text-lux-gold transition-colors duration-300 group flex items-center gap-2">
-                    <span class="group-hover:-translate-x-1 transition-transform">←</span> Gallery
+                    <span class="group-hover:-translate-x-1 transition-transform">←</span> <span class="hidden md:inline">Gallery</span><span class="md:hidden">Back</span>
                 </a>
                 <a href="../index.html" class="nav-link hover:text-lux-gold transition-colors duration-300 group flex items-center gap-2">
-                    Index <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    <span class="hidden md:inline">Index</span><span class="md:hidden">Home</span> <span class="group-hover:translate-x-1 transition-transform">→</span>
                 </a>
             </div>
         </div>
@@ -133,45 +133,45 @@
     <main class="opacity-0" id="main-content">
 
         <!-- HERO SECTION -->
-        <section class="min-h-screen flex flex-col justify-center items-center relative px-6 pt-20">
+        <section class="min-h-screen flex flex-col justify-center items-center relative px-4 md:px-6 pt-20">
             <div class="max-w-4xl w-full text-center relative z-10">
-                <p class="font-sans text-lux-gold text-xs tracking-[0.5em] mb-6 uppercase fade-in-up">The Executive Profile</p>
-                <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl leading-tight text-white mb-8 fade-in-up">
-                    VICE<br><span class="text-lux-gold italic pr-4">President</span>
+                <p class="font-sans text-lux-gold text-[10px] md:text-xs tracking-[0.3em] md:tracking-[0.5em] mb-4 md:mb-6 uppercase fade-in-up">The Executive Profile</p>
+                <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl leading-tight text-white mb-6 md:mb-8 fade-in-up">
+                    VICE<br><span class="text-lux-gold italic pr-0 md:pr-4">President</span>
                 </h1>
                 
-                <div class="w-24 h-[1px] bg-lux-gold mx-auto mb-8 scale-x-0 gold-divider"></div>
+                <div class="w-16 md:w-24 h-[1px] bg-lux-gold mx-auto mb-6 md:mb-8 scale-x-0 gold-divider"></div>
 
-                <blockquote class="font-bangla text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed fade-in-up">
+                <blockquote class="font-bangla text-lg md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed fade-in-up px-2">
                     "জীবনের সব অংক মিলে গেলে অংকের সমাধান করা লাগত না"
                 </blockquote>
             </div>
 
             <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-                <span class="text-[10px] tracking-widest uppercase">Scroll</span>
-                <div class="w-[1px] h-12 bg-gradient-to-b from-lux-gold to-transparent"></div>
+            <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+                <span class="text-[9px] md:text-[10px] tracking-widest uppercase">Scroll</span>
+                <div class="w-[1px] h-8 md:h-12 bg-gradient-to-b from-lux-gold to-transparent"></div>
             </div>
         </section>
 
 
         <!-- CHAPTER 1: THE BEGINNING -->
-        <section class="py-24 md:py-32 px-6 max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section class="py-16 md:py-32 px-4 md:px-6 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
                 <!-- Image -->
-                <div class="reveal-img-container aspect-[3/4] lg:aspect-[4/5] bg-lux-charcoal">
+                <div class="reveal-img-container aspect-[3/4] lg:aspect-[4/5] bg-lux-charcoal w-full">
                     <img src="../images/144/1.jpeg" alt="The Beginning" class="w-full h-full object-cover opacity-80 hover:scale-105 transition-transform duration-700">
                     <div class="reveal-mask"></div>
                 </div>
 
                 <!-- Text -->
-                <div class="space-y-8">
+                <div class="space-y-6 md:space-y-8">
                     <div class="flex items-center gap-4">
-                        <span class="text-4xl font-serif text-lux-gold/20">01</span>
-                        <h2 class="text-2xl font-serif text-white">The Rocky Start</h2>
+                        <span class="text-3xl md:text-4xl font-serif text-lux-gold/20">01</span>
+                        <h2 class="text-xl md:text-2xl font-serif text-white">The Rocky Start</h2>
                     </div>
                     
-                    <div class="font-bangla text-white/70 leading-loose text-lg text-justify-custom space-y-6">
+                    <div class="font-bangla text-white/70 leading-loose text-base md:text-lg text-justify-custom space-y-4 md:space-y-6">
                         <p>
                             কলেজ জীবনের শুরুটা মোটেও সুন্দর ছিল না। নতুন কলেজ, নতুন পরিবেশ—পা রাখতেই আন্দোলন। প্রথম দিনেই বিরক্তি, অনিশ্চয়তা আর একটু ভয়। সিনিয়রদের হালকা র‍্যাগিং, চারপাশে অপরিচিত মুখ।
                         </p>
@@ -185,36 +185,37 @@
 
 
         <!-- CHAPTER 2: THE CIRCLE & LOVE -->
-        <section class="py-24 md:py-32 px-6 bg-lux-charcoal/30">
+        <section class="py-16 md:py-32 px-4 md:px-6 bg-lux-charcoal/30">
             <div class="max-w-7xl mx-auto">
                 <!-- Header -->
-                <div class="mb-16 md:text-center max-w-3xl mx-auto">
-                    <h2 class="font-serif text-4xl text-white mb-6">Turning Tides</h2>
-                    <p class="font-bangla text-white/60">
+                <div class="mb-10 md:mb-16 md:text-center max-w-3xl mx-auto">
+                    <h2 class="font-serif text-3xl md:text-4xl text-white mb-4 md:mb-6">Turning Tides</h2>
+                    <p class="font-bangla text-white/60 text-sm md:text-base">
                         আন্দোলন থামে, পরিস্থিতি শান্ত হয়। ধীরে ধীরে কলেজে যাওয়া শুরু করি। আর ঠিক তখনই জীবনে ঢুকে পড়ে নতুন কিছু মানুষ।
                     </p>
                 </div>
 
                 <!-- Grid Layout -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8">
                     
                     <!-- Left Column: Friends List -->
-                    <div class="md:col-span-4 space-y-8 p-8 border border-white/5 bg-lux-charcoal/50 backdrop-blur-sm h-fit sticky top-32">
-                        <h3 class="font-serif text-xl text-lux-gold">The Inner Circle</h3>
-                        <ul class="font-bangla text-white/70 space-y-3">
+                    <!-- Removed sticky on mobile to prevent overlapping -->
+                    <div class="md:col-span-4 space-y-6 md:space-y-8 p-6 md:p-8 border border-white/5 bg-lux-charcoal/50 backdrop-blur-sm h-fit relative md:sticky md:top-32">
+                        <h3 class="font-serif text-lg md:text-xl text-lux-gold">The Inner Circle</h3>
+                        <ul class="font-bangla text-white/70 space-y-3 text-sm md:text-base">
                             <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-lux-gold rounded-full"></span> নিসা & আনিকা (Gossip Partners)</li>
                             <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-lux-gold rounded-full"></span> আজিজুল & জাওয়াদ</li>
                             <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-lux-gold rounded-full"></span> মাহাদি & আরিফিন</li>
                             <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-lux-gold rounded-full"></span> রংগন</li>
                         </ul>
                         <div class="h-[1px] w-full bg-white/10 my-4"></div>
-                        <p class="font-bangla text-sm text-white/50 italic">
+                        <p class="font-bangla text-xs md:text-sm text-white/50 italic">
                             "নিসা আর আনিকার সাথে বিটচিং ছিল একরকম থেরাপি। এখনো সেই গ্রুপটা আছে—মাথা হালকা করার জগত।"
                         </p>
                     </div>
 
                     <!-- Right Column: Love Story & Images -->
-                    <div class="md:col-span-8 space-y-12">
+                    <div class="md:col-span-8 space-y-8 md:space-y-12">
                         <!-- Image 2 -->
                         <div class="reveal-img-container aspect-video w-full">
                             <img src="../images/144/2.jpeg" alt="Friends" class="w-full h-full object-cover opacity-80">
@@ -222,13 +223,13 @@
                         </div>
 
                         <!-- Love Story Block -->
-                        <div class="bg-gradient-to-br from-lux-gold/10 to-transparent p-8 border-l-2 border-lux-gold">
-                            <h3 class="font-serif text-2xl text-white mb-4">The One</h3>
-                            <p class="font-bangla text-white/80 leading-relaxed text-lg">
+                        <div class="bg-gradient-to-br from-lux-gold/10 to-transparent p-6 md:p-8 border-l-2 border-lux-gold">
+                            <h3 class="font-serif text-xl md:text-2xl text-white mb-4">The One</h3>
+                            <p class="font-bangla text-white/80 leading-relaxed text-base md:text-lg">
                                 এই কলেজেই, একদম শুরুর দিকেই, একজনকে দেখে ভালো লেগে যায়। তারপর থেকে কলেজে যাওয়া, ক্লাস বাঙ্ক দিয়ে বসে থাকা—সবকিছুর একটাই কারণ ছিল সে।<br><br>
                                 শুরুতে সাহস ছিল না, শুধু দূর থেকে দেখা। পরে সোশ্যাল মিডিয়ায় কানেক্ট হওয়া, আর একসময় মনের কথাটা বলে ফেলা।
                                 <br>
-                                <span class="text-lux-gold font-bold block mt-4 text-xl">"আলহামদুলিল্লাহ—আজও সে আমার সাথেই আছে 🤍"</span>
+                                <span class="text-lux-gold font-bold block mt-4 text-lg md:text-xl">"আলহামদুলিল্লাহ—আজও সে আমার সাথেই আছে 🤍"</span>
                             </p>
                         </div>
 
@@ -245,47 +246,47 @@
 
 
         <!-- CHAPTER 3: LEGACY & CLUB -->
-        <section class="py-24 md:py-32 px-6 max-w-5xl mx-auto">
-            <div class="text-center mb-16">
-                <span class="inline-block py-1 px-3 border border-lux-gold/30 rounded-full text-[10px] tracking-widest text-lux-gold uppercase mb-4">
+        <section class="py-16 md:py-32 px-4 md:px-6 max-w-5xl mx-auto">
+            <div class="text-center mb-10 md:mb-16">
+                <span class="inline-block py-1 px-3 border border-lux-gold/30 rounded-full text-[9px] md:text-[10px] tracking-widest text-lux-gold uppercase mb-4">
                     Leadership
                 </span>
-                <h2 class="font-serif text-5xl md:text-6xl text-white mb-6">ULPC & Beyond</h2>
+                <h2 class="font-serif text-4xl md:text-6xl text-white mb-4 md:mb-6">ULPC & Beyond</h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-                <div class="order-2 md:order-1 font-bangla text-white/70 text-lg leading-relaxed text-justify-custom">
-                    <p class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-10 md:mb-16">
+                <div class="order-2 md:order-1 font-bangla text-white/70 text-base md:text-lg leading-relaxed text-justify-custom">
+                    <p class="mb-4 md:mb-6">
                         কলেজে ক্লাব লাইফ শুরু হলো। সেখান থেকেই জীবনে আসে আরও কিছু অসাধারণ মানুষ—আহনাফ, রাফিউ, চুপ্পু, রাহিল।
                     </p>
                     <p>
                         কলেজ ছুটির পরও তাদের সাথে সময় কাটানো, আড্ডা, হাসাহাসি—এই মুহূর্তগুলোই কলেজ জীবনকে সত্যিকারের রঙিন করে তুলেছিল।
                     </p>
                 </div>
-                <div class="order-1 md:order-2 reveal-img-container aspect-square bg-lux-charcoal">
+                <div class="order-1 md:order-2 reveal-img-container aspect-square bg-lux-charcoal w-full">
                     <img src="../images/144/4.jpeg" alt="Club Life" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
                     <div class="reveal-mask"></div>
                 </div>
             </div>
 
             <!-- Conclusion Card -->
-            <div class="bg-lux-charcoal border border-white/5 p-8 md:p-12 text-center relative overflow-hidden group">
+            <div class="bg-lux-charcoal border border-white/5 p-6 md:p-12 text-center relative overflow-hidden group rounded-sm">
                 <!-- Animated BG Glow -->
                 <div class="absolute inset-0 bg-lux-gold opacity-0 group-hover:opacity-5 transition-opacity duration-700"></div>
 
-                <p class="font-bangla text-xl md:text-2xl text-white/90 leading-relaxed italic relative z-10">
+                <p class="font-bangla text-lg md:text-2xl text-white/90 leading-relaxed italic relative z-10">
                     "সময়টা খুব ছোট ছিল, কিন্তু প্রাপ্তিটা ছিল বিশাল। বিপদে পাশে দাঁড়ানোর বন্ধু পেয়েছি, জীবনের সঙ্গীকে পেয়েছি। এই অল্প কয়েকটা দিনে জীবনের সেরা কিছু মুহূর্ত জমা হয়েছে হৃদয়ের গভীরে।"
                 </p>
-                <div class="mt-8">
-                    <p class="font-serif text-lux-gold text-lg">Md. Vice President</p>
-                    <p class="font-sans text-xs tracking-widest text-white/40 uppercase mt-1">Roll 144 • 24-25 Panel</p>
+                <div class="mt-6 md:mt-8">
+                    <p class="font-serif text-lux-gold text-base md:text-lg">Md. Vice President</p>
+                    <p class="font-sans text-[10px] md:text-xs tracking-widest text-white/40 uppercase mt-1">Roll 144 • 24-25 Panel</p>
                 </div>
             </div>
         </section>
 
         <!-- FOOTER -->
-        <footer class="py-12 border-t border-white/5 text-center">
-            <p class="font-sans text-xs text-white/30 tracking-widest uppercase">End of File • 144</p>
+        <footer class="py-8 md:py-12 border-t border-white/5 text-center">
+            <p class="font-sans text-[10px] md:text-xs text-white/30 tracking-widest uppercase">End of File • 144</p>
         </footer>
 
     </main>
