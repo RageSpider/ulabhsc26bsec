@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chronicle | 130</title>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Anton (Display), DM Sans (Body), Tiro Bangla (Bengali), Permanent Marker (Accents) -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:opsz,wght@9..40,400;500;700&family=Permanent+Marker&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#0044CC',
+                        'brand-yellow': '#FFD700',
+                        'off-white': '#F0F0F0',
+                        'dark-slate': '#101010',
+                    },
+                    fontFamily: {
+                        'display': ['Anton', 'sans-serif'],
+                        'body': ['DM Sans', 'sans-serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                        'marker': ['Permanent Marker', 'cursive'],
+                    },
+                    screens: {
+                        'xs': '375px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F0F0F0;
+            color: #101010;
+            overflow-x: hidden; /* Critical for mobile to prevent side scroll */
+        }
+
+        /* UTILITIES */
+        .text-outline {
+            -webkit-text-stroke: 1px #101010;
+            color: transparent;
+        }
+        @media (min-width: 768px) {
+            .text-outline { -webkit-text-stroke: 2px #101010; }
+        }
+        
+        .text-outline-white {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+        }
+        
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            transition: transform 0.3s ease;
+        }
+        .image-container img {
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        /* CLOSING SHUTTERS */
+        .shutter-panel {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: #101010;
+            z-index: 9998;
+            transition: transform 0.1s; 
+        }
+        .shutter-left { left: 0; transform: translateX(-100%); border-right: 2px solid #333; }
+        .shutter-right { right: 0; transform: translateX(100%); border-left: 2px solid #333; }
+
+        /* HIDE SCROLLBAR IN LOADER */
+        #loader { scrollbar-width: none; -ms-overflow-style: none; }
+        #loader::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="font-body selection:bg-brand-blue selection:text-white">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/130.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SHUTTERS (For Closing Anim) -->
+    <div class="shutter-panel shutter-left" id="shutter-l"></div>
+    <div class="shutter-panel shutter-right" id="shutter-r"></div>
+
+    <!-- OPENING LOADER -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-dark-slate flex items-center justify-center cursor-pointer overflow-hidden px-4">
+        <!-- The big masked text effect -->
+        <div class="relative w-full h-full flex flex-col items-center justify-center">
+            <div class="relative z-10 text-center mix-blend-difference text-white">
+                <h1 class="font-display text-[30vw] md:text-[25vw] leading-none tracking-tighter transition-transform" id="loader-text">130</h1>
+                <p class="font-body text-xs md:text-sm uppercase tracking-[0.3em] mt-4 animate-pulse">Click to Unlock</p>
+            </div>
+            
+            <!-- Background Image revealed later -->
+            <div class="absolute inset-0 z-0 opacity-0" id="loader-bg">
+                <img src="../images/130/1.jpg" class="w-full h-full object-cover grayscale opacity-30">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MAIN APP -->
+    <main id="app-container" class="opacity-0">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 w-full z-40 px-4 md:px-8 py-4 flex justify-between items-center mix-blend-difference text-white pointer-events-none">
+            <div class="font-display text-xl md:text-2xl tracking-wide uppercase pointer-events-auto">Chronicle</div>
+            <div class="flex gap-4 md:gap-8 text-[10px] md:text-xs font-bold uppercase tracking-widest pointer-events-auto">
+                <a href="../gallery.html" class="hover:text-brand-yellow transition-colors">Gallery</a>
+                <a href="../index.html" class="hover:text-brand-yellow transition-colors">Index</a>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION (Image 1) -->
+        <section class="min-h-screen relative flex flex-col justify-end pb-12 md:pb-20 px-4 md:px-12 lg:px-20 bg-off-white overflow-hidden pt-24">
+            <!-- Background Text -->
+            <div class="absolute top-24 right-[-10%] md:right-0 font-display text-[40vw] leading-none text-outline opacity-5 pointer-events-none select-none z-0">
+                130
+            </div>
+
+            <!-- Content Container -->
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-end">
+                
+                <!-- Left: Text -->
+                <div class="lg:col-span-7 space-y-4 md:space-y-6 order-2 lg:order-1">
+                    <div class="flex flex-wrap items-center gap-2 md:gap-4">
+                        <span class="bg-brand-blue text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase tracking-widest">Player 130</span>
+                        <span class="bg-dark-slate text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase tracking-widest">Batch 25</span>
+                    </div>
+                    
+                    <h1 class="font-display text-6xl md:text-8xl lg:text-9xl leading-[0.9] text-dark-slate">
+                        MD AZIZUL <br>
+                        <span class="text-brand-blue">ABIR</span>
+                    </h1>
+                    
+                    <div class="max-w-md border-l-4 border-brand-yellow pl-4 md:pl-6 py-2">
+                        <p class="font-marker text-xl md:text-2xl text-gray-600">"Life is short, enjoy every second."</p>
+                    </div>
+
+                    <div class="pt-4 md:pt-8 flex flex-col gap-2 font-mono text-[10px] md:text-xs text-gray-500 uppercase tracking-wider">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-brand-blue rounded-full"></div>
+                            Vashantek Govt College
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-brand-yellow rounded-full"></div>
+                            Senpara Porbota, Mirpur-10
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            01331062890
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Image 1 -->
+                <div class="lg:col-span-5 relative order-1 lg:order-2">
+                    <div class="image-container aspect-[3/4] border-4 border-dark-slate shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] rotate-2 md:rotate-3 hover:rotate-0 transition-transform duration-500">
+                        <img src="../images/130/1.jpg" alt="Profile">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 1: FIRST DAY (Image 2) -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-white border-t-2 border-dark-slate">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
+                <!-- Image side -->
+                <div class="order-1 md:order-1 relative px-2 md:px-0">
+                    <div class="absolute top-3 left-3 md:top-4 md:left-4 w-full h-full border-2 border-brand-blue z-0"></div>
+                    <div class="image-container aspect-square relative z-10 border-2 border-dark-slate">
+                        <img src="../images/130/2.jpg" alt="First Day">
+                    </div>
+                </div>
+
+                <!-- Text side -->
+                <div class="order-2 md:order-2 space-y-4 md:space-y-6">
+                    <h2 class="font-display text-4xl md:text-6xl uppercase leading-tight">
+                        First Day <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400">Feelings</span>
+                    </h2>
+                    <p class="font-bangla text-lg md:text-xl leading-relaxed text-gray-700 text-justify">
+                        কলেজের প্রথম দিনটি ছিল আমার জীবনের এক নতুন অধ্যায়ের শুরু। নতুন পরিবেশ, নতুন শিক্ষক এবং নতুন বন্ধুরা আমাকে আনন্দের পাশাপাশি কিছুটা ভয়ও দিয়েছিল। তবে সবার আন্তরিক ব্যবহার সেই ভয় দূর করে দেয়। এই দিনটি আমার মনে অনেক স্মৃতি তৈরি করেছে, যা আমি সারা জীবন মনে রাখবো।
+                    </p>
+                    <div class="h-1 w-20 bg-brand-yellow"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: THE PLAYBOOK (Image 3 & 4) -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-dark-slate text-white relative overflow-hidden">
+            <!-- Background Texture -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMTAxMDEwIiAvPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMjIyIiAvPgo8L3N2Zz4=')] opacity-20"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto">
+                <div class="mb-10 md:mb-16 text-left">
+                    <h2 class="font-display text-4xl md:text-7xl uppercase text-white leading-tight">The <span class="text-brand-yellow">Playbook</span></h2>
+                    <p class="font-marker text-gray-400 text-lg md:text-xl mt-2 rotate-1 inline-block">Football & Brotherhood</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+                    <!-- Text Block -->
+                    <div class="lg:col-span-5 font-bangla text-lg md:text-xl leading-relaxed text-gray-300 text-justify order-2 lg:order-1">
+                        <p class="mb-6 border-l-2 border-brand-blue pl-4 md:pl-6">
+                            আমরা কয়েকজন বন্ধু ক্লাসে না গিয়ে মাঠে ফুটবল খেলতাম। পড়াশোনার চাপের মাঝে সেই সময়টা ছিল খুব আনন্দের। একসাথে খেলাধুলা করে আমরা হাসি–আনন্দ ভাগ করে নিয়েছিলাম এবং বন্ধুত্ব আরও গভীর হয়েছিল।
+                        </p>
+                        <div class="flex flex-wrap gap-2 md:gap-3">
+                            <span class="px-3 py-1 md:px-4 md:py-2 border border-white/20 rounded-full text-xs md:text-sm font-body uppercase tracking-widest">Sport</span>
+                            <span class="px-3 py-1 md:px-4 md:py-2 border border-white/20 rounded-full text-xs md:text-sm font-body uppercase tracking-widest">Friends</span>
+                        </div>
+                    </div>
+
+                    <!-- Images Block -->
+                    <div class="lg:col-span-7 grid grid-cols-2 gap-4 order-1 lg:order-2">
+                        <div class="image-container aspect-[4/3] -rotate-2 border-4 border-white">
+                            <img src="../images/130/3.jpg" alt="Friends">
+                        </div>
+                        <div class="image-container aspect-square translate-y-4 md:translate-y-8 rotate-2 border-4 border-white">
+                            <img src="../images/130/4.jpg" alt="Football">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: CAMPUS SNAPSHOTS (Image 5 & 6) -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-brand-yellow">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 border-b-4 border-black pb-4">
+                <h2 class="font-display text-5xl md:text-6xl text-black uppercase leading-none">Campus<br>Snapshots</h2>
+                <div class="font-mono text-xs md:text-sm font-bold uppercase mt-2 md:mt-0">Archive_2024-25</div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-8">
+                <!-- Snap 1 -->
+                <div class="bg-white p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1">
+                    <div class="image-container aspect-video mb-4 border border-black">
+                        <img src="../images/130/5.jpg" alt="Memory 1">
+                    </div>
+                    <div class="flex justify-between items-center font-marker text-gray-500 text-sm md:text-base">
+                        <span>Good Vibes Only</span>
+                        <span>05</span>
+                    </div>
+                </div>
+
+                <!-- Snap 2 -->
+                <div class="bg-white p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1 md:translate-y-12">
+                    <div class="image-container aspect-video mb-4 border border-black">
+                        <img src="../images/130/6.jpg" alt="Memory 2">
+                    </div>
+                    <div class="flex justify-between items-center font-marker text-gray-500 text-sm md:text-base">
+                        <span>Unforgettable</span>
+                        <span>06</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-8 md:h-24"></div>
+        </section>
+
+
+        <!-- FINAL THOUGHTS -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-white text-center">
+            <div class="max-w-4xl mx-auto">
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 font-display text-xl md:text-2xl">
+                    END
+                </div>
+                <h3 class="font-display text-3xl md:text-4xl mb-6 md:mb-8">FINAL WHISTLE</h3>
+                <p class="font-bangla text-lg md:text-xl text-gray-600 leading-loose mb-8 md:mb-10 text-justify md:text-center px-2">
+                    এই কলেজ আমাকে জ্ঞান দিয়েছে, বন্ধু দিয়েছে এবং অনেক সুন্দর স্মৃতি উপহার দিয়েছে। শিক্ষকরা আমাদের শুধু পড়াশোনা নয়, জীবনের পথও দেখিয়েছেন। বন্ধুদের সাথে কাটানো প্রতিটি মুহূর্তই স্মৃতিমধুর হয়ে আছে।
+                </p>
+                <div class="inline-block border-2 border-dashed border-brand-blue px-4 md:px-8 py-4 rounded-lg bg-blue-50 w-full md:w-auto">
+                    <p class="font-display text-xl md:text-2xl text-brand-blue uppercase tracking-wide leading-tight">
+                        "সময় থেমে থাকে না, তবে স্মৃতিগুলো সারাজীবন আমাদের সঙ্গে থাকবে।"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-dark-slate text-white py-12 text-center border-t border-gray-800 overflow-hidden">
+            <h1 class="font-display text-[25vw] leading-none text-outline-white opacity-20 select-none">130</h1>
+            <div class="flex justify-center gap-6 md:gap-8 mt-[-10vw] md:mt-[-5vw] relative z-10 text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-500">
+                <span class="hover:text-white transition-colors cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to Top</span>
+                <span class="hover:text-white transition-colors cursor-pointer">Close File</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- JS -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const loader = document.getElementById('loader');
+        const loaderText = document.getElementById('loader-text');
+        const app = document.getElementById('app-container');
+        const audio = document.getElementById('bg-music');
+        const shutterL = document.getElementById('shutter-l');
+        const shutterR = document.getElementById('shutter-r');
+        let isLeaving = false;
+
+        // 1. OPENING ANIMATION: Fast & Responsive
+        loader.addEventListener('click', () => {
+            // Play Audio
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio Blocked", e));
+
+            const tl = gsap.timeline();
+
+            // Reveal BG inside text
+            tl.to("#loader-bg", { opacity: 1, duration: 0.3 });
+            
+            // Fly through effect (Optimized for mobile: smaller scale)
+            tl.to(loaderText, { 
+                scale: 15, // Reduced from 50 to improve mobile performance
+                opacity: 0, 
+                duration: 1.0, 
+                ease: "power3.in",
+                onStart: () => {
+                    app.style.opacity = 1;
+                }
+            });
+
+            // Hide Loader
+            tl.to(loader, { 
+                opacity: 0, 
+                duration: 0.4, 
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    initScrollAnim(); 
+                }
+            }, "-=0.3");
+
+            // Reveal Hero Elements (Staggered)
+            tl.from("h1", { y: 50, opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
+            tl.from(".image-container", { scale: 0.9, opacity: 0, duration: 0.8, ease: "back.out(1.2)" }, "-=0.6");
+        });
+
+        // 2. SCROLL ANIMATIONS: Snappier, Earlier Triggers
+        function initScrollAnim() {
+            gsap.utils.toArray('section').forEach(section => {
+                const imgs = section.querySelectorAll('img');
+                const texts = section.querySelectorAll('h2, p, .max-w-md');
+
+                // Images: Simple fade-up
+                if(imgs.length) {
+                    gsap.from(imgs, {
+                        scrollTrigger: { 
+                            trigger: section, 
+                            start: "top 90%" // Triggers much earlier
+                        },
+                        opacity: 0,
+                        scale: 1.1,
+                        duration: 0.8,
+                        stagger: 0.1,
+                        ease: "power2.out"
+                    });
+                }
+
+                // Text: Fast slide-up
+                if(texts.length) {
+                    gsap.from(texts, {
+                        scrollTrigger: { 
+                            trigger: section, 
+                            start: "top 85%" // Triggers earlier
+                        },
+                        y: 30,
+                        opacity: 0,
+                        stagger: 0.1,
+                        duration: 0.6,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        }
+
+        // 3. CLOSING ANIMATION
+        document.querySelectorAll('a, .cursor-pointer').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(!link.href && link.innerText !== "CLOSE FILE") return;
+                
+                e.preventDefault();
+                if(isLeaving) return;
+                isLeaving = true;
+                
+                const href = link.href || "../index.html"; 
+
+                gsap.to(audio, { volume: 0, duration: 0.3 });
+
+                const tl = gsap.timeline({
+                    onComplete: () => window.location.href = href
+                });
+
+                tl.to(shutterL, { x: '0%', duration: 0.25, ease: "power4.in" }, 0);
+                tl.to(shutterR, { x: '0%', duration: 0.25, ease: "power4.in" }, 0);
+                tl.to("body", { backgroundColor: "#101010", duration: 0.1 });
+            });
+        });
+
+    </script>
+</body>
+</html>
