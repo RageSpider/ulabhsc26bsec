@@ -57,6 +57,7 @@
             transform: rotate(var(--rotation, 0deg));
             transition: transform 0.3s ease, z-index 0.3s ease;
             position: relative;
+            display: inline-block;
         }
         .photo-frame:hover {
             transform: scale(1.05) rotate(0deg) !important;
@@ -90,10 +91,16 @@
             -webkit-mask-image: radial-gradient(circle at center, transparent var(--mask-radius), black calc(var(--mask-radius) + 0.5%));
             mask-image: radial-gradient(circle at center, transparent var(--mask-radius), black calc(var(--mask-radius) + 0.5%));
         }
+
+        /* Scrollbar for masonry */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a2318; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
     </style>
     
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body class="bg-paper-texture">
 
@@ -102,7 +109,7 @@
         <source src="../music/157.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- CLOSING ANIMATION LAYERS (Gold inner, Forest outer for ripple effect) -->
+    <!-- CLOSING ANIMATION LAYERS -->
     <div id="transition-gold" class="transition-circle bg-gold z-[9000]"></div>
     <div id="transition-forest" class="transition-circle bg-forest z-[9001]"></div>
 
@@ -135,26 +142,37 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             
             <!-- LEFT COLUMN: IDENTITY & BIO -->
             <div class="lg:col-span-5 space-y-12">
                 
                 <!-- Main Identity Block -->
                 <div>
-                    <h2 class="font-display text-3xl mb-2">Md. Sanowar Hossen Bappy</h2>
-                    <h3 class="font-bangla text-xl text-gold/80">Known as Bappi</h3>
+                    <h2 class="font-display text-4xl mb-2">Md. Sanowar Hossen Bappy</h2>
+                    <h3 class="font-bangla text-xl text-gold/80 mb-4">Known as Bappi</h3>
+                    
+                    <!-- NEW BIO SECTION -->
+                    <div class="border-l-2 border-gold/40 pl-4 space-y-2">
+                        <p class="font-display text-lg text-cream/90">
+                            Vice President, Quiz Club <br> 
+                            <span class="text-sm opacity-70 font-sans tracking-wide">MEMBER, BANGLADESH SCOUT</span>
+                        </p>
+                        <p class="font-hand text-xl text-gold">
+                            "A Middle Type student, but the dream is big."
+                        </p>
+                    </div>
                 </div>
 
                  <!-- Quote -->
-                 <div class="relative py-8">
+                 <div class="relative py-4">
                     <span class="absolute top-0 left-0 font-hand text-6xl text-gold/20">“</span>
                     <blockquote class="font-display text-2xl md:text-3xl pl-8 leading-relaxed text-cream">
                         Behind Every success, there's a mother who believed first.
                     </blockquote>
                 </div>
 
-                <!-- Info Cards (Data from image) -->
+                <!-- Info Cards -->
                 <div class="grid grid-cols-2 gap-4 font-sans text-sm">
                     <div class="bg-forest/50 border border-gold/20 p-4 rounded">
                         <span class="block text-gold/60 uppercase tracking-widest text-xs mb-1">Status</span>
@@ -176,7 +194,7 @@
                     </div>
                 </div>
 
-                <!-- Structured Bio from Paragraph -->
+                <!-- Structured Bio -->
                 <div class="pt-8 border-t border-gold/30">
                     <h3 class="font-display text-2xl text-gold mb-6">College Life Chronicles</h3>
                     <div class="space-y-6 font-bangla text-cream/80 leading-relaxed">
@@ -201,52 +219,80 @@
 
             </div>
 
-            <!-- RIGHT COLUMN: PHOTO LAYOUT (As requested) -->
-            <div class="lg:col-span-7 relative">
-                <!-- The Grid Layout -->
-                <div class="grid grid-cols-2 gap-6 h-full content-start sticky top-12">
-                    
-                    <!-- Left Stack (3 Small Photos) -->
-                    <div class="flex flex-col gap-6">
-                        <!-- Photo 1 -->
-                        <div class="photo-frame" style="--rotation: -3deg;">
-                            <div class="tape"></div>
-                            <img src="../images/157/1.jpg" alt="Memory 1" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
-                        </div>
-                         <!-- Photo 2 -->
-                        <div class="photo-frame" style="--rotation: 2deg;">
-                             <div class="tape" style="left: 50%; transform: rotate(5deg);"></div>
-                            <img src="../images/157/2.jpg" alt="Memory 2" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
-                        </div>
-                         <!-- Photo 3 -->
-                        <div class="photo-frame" style="--rotation: -1deg;">
-                             <div class="tape" style="left: 10%;"></div>
-                            <img src="../images/157/3.jpg" alt="Memory 3" class="w-full h-auto block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
-                        </div>
+            <!-- RIGHT COLUMN: SOLO PHOTO LAYOUT -->
+            <div class="lg:col-span-7 relative flex flex-col gap-8 items-center lg:items-start">
+                
+                <!-- Main Solo Image -->
+                <div class="w-full max-w-md mx-auto relative z-10 group">
+                    <div class="photo-frame w-full" style="--rotation: 2deg;">
+                        <div class="tape" style="left: 40%; top: -15px;"></div>
+                        <img src="../images/157/main.jpeg" alt="Bappy Main" class="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
                     </div>
-
-                    <!-- Right Stack (1 Tall Photo) -->
-                    <div>
-                         <!-- Tall Photo -->
-                        <div class="photo-frame h-full" style="--rotation: 1deg;">
-                             <div class="tape" style="right: 20%; left: auto; transform: rotate(10deg);"></div>
-                             <img src="../images/157/4.jpg" alt="Memory 4" class="w-full h-full object-cover block sepia-[.2] contrast-125 hover:sepia-0 transition-all duration-500">
-                        </div>
-                    </div>
-
                 </div>
+
+                <!-- Grid of 4 Solo Images -->
+                <div class="grid grid-cols-2 gap-4 w-full">
+                    <div class="photo-frame" style="--rotation: -2deg;">
+                         <div class="tape" style="left: 10%;"></div>
+                        <img src="../images/157/1.jpeg" alt="Solo 1" class="w-full h-48 object-cover grayscale-[30%] hover:grayscale-0 transition-all">
+                    </div>
+                    <div class="photo-frame" style="--rotation: 1deg;">
+                         <div class="tape" style="right: 10%; left: auto;"></div>
+                        <img src="../images/157/2.jpeg" alt="Solo 2" class="w-full h-48 object-cover grayscale-[30%] hover:grayscale-0 transition-all">
+                    </div>
+                    <div class="photo-frame" style="--rotation: 3deg;">
+                         <div class="tape" style="left: 20%;"></div>
+                        <img src="../images/157/3.jpeg" alt="Solo 3" class="w-full h-48 object-cover grayscale-[30%] hover:grayscale-0 transition-all">
+                    </div>
+                    <div class="photo-frame" style="--rotation: -1deg;">
+                         <div class="tape" style="right: 20%; left: auto;"></div>
+                        <img src="../images/157/4.jpeg" alt="Solo 4" class="w-full h-48 object-cover grayscale-[30%] hover:grayscale-0 transition-all">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- NEW SECTION: FRIENDS COLLAGE -->
+        <div class="border-t border-gold/30 pt-16 mt-12 relative">
+             <div class="text-center mb-12">
+                <h2 class="font-display text-4xl text-gold inline-block relative">
+                    Friends & Memories
+                    <span class="absolute -bottom-2 left-0 w-full h-1 bg-gold/50 rounded-full"></span>
+                </h2>
+                <p class="font-hand text-xl text-cream/70 mt-2">Moments that matter</p>
             </div>
 
+            <!-- Masonry Grid for 17 Images -->
+            <div class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 mx-auto pb-12">
+                <!-- Helper for generating frames -->
+                <script>
+                    const rotations = [-2, 1, -1, 2, -3, 1.5, -1.5, 0.5];
+                    for (let i = 1; i <= 17; i++) {
+                        const rot = rotations[i % rotations.length];
+                        const html = `
+                        <div class="break-inside-avoid mb-4">
+                            <div class="photo-frame w-full" style="--rotation: ${rot}deg;">
+                                <div class="tape" style="left: ${Math.random() * 60}%;"></div>
+                                <img src="../images/157/friends_collage/${i}.jpeg" loading="lazy" alt="Friend Memory ${i}" class="w-full h-auto block sepia-[.15] contrast-[1.1] hover:sepia-0 hover:scale-105 transition-all duration-500">
+                            </div>
+                        </div>`;
+                        document.write(html);
+                    }
+                </script>
+            </div>
         </div>
+
     </main>
 
     <!-- LOGIC -->
     <script>
+        gsap.registerPlugin(ScrollTrigger);
+
         // SETUP
         const audio = document.getElementById('bg-music');
         const startOverlay = document.getElementById('start-overlay');
         const mainContent = document.getElementById('main-content');
-        // No shutters, using circles now
         let isLeaving = false;
 
         // 1. OPENING ANIMATION (Iris Reveal)
@@ -279,7 +325,7 @@
                 scale: 0.8, 
                 opacity: 0, 
                 rotation: 0, // start at 0
-                stagger: 0.15, 
+                stagger: 0.05, 
                 duration: 0.8, 
                 ease: "elastic.out(1, 0.5)",
                 clearProps: "rotation" // allow CSS rotation to take over
@@ -304,7 +350,6 @@
                 tl.to(mainContent, { scale: 0.95, opacity: 0, duration: 0.5, ease: "power2.in" });
 
                 // Circular Ripple Transition
-                // First gold, then forest to create a layered closing
                 tl.to('#transition-gold', { scale: 1, duration: 0.8, ease: "power2.inOut" }, "-=0.3");
                 tl.to('#transition-forest', { scale: 1, duration: 0.8, ease: "power2.inOut" }, "-=0.6");
             });

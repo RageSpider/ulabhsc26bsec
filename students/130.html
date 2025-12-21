@@ -24,6 +24,8 @@
                         'brand-blue': '#0044CC',
                         'brand-yellow': '#FFD700',
                         'off-white': '#F0F0F0',
+                        'ash-light': '#E2E8F0',  /* Deepened to Slate-200: clearly gray, not white */
+                        'ash-medium': '#CBD5E1', /* Deepened to Slate-300: distinct ash/gray background */
                         'dark-slate': '#101010',
                     },
                     fontFamily: {
@@ -42,7 +44,7 @@
 
     <style>
         body {
-            background-color: #F0F0F0;
+            background-color: #CBD5E1; /* Updated to new Ash Medium */
             color: #101010;
             overflow-x: hidden; /* Critical for mobile to prevent side scroll */
         }
@@ -136,7 +138,8 @@
         </nav>
 
         <!-- HERO SECTION (Image 1) -->
-        <section class="min-h-screen relative flex flex-col justify-end pb-12 md:pb-20 px-4 md:px-12 lg:px-20 bg-off-white overflow-hidden pt-24">
+        <!-- Changed bg-off-white to bg-ash-medium -->
+        <section class="min-h-screen relative flex flex-col justify-end pb-12 md:pb-20 px-4 md:px-12 lg:px-20 bg-ash-medium overflow-hidden pt-24">
             <!-- Background Text -->
             <div class="absolute top-24 right-[-10%] md:right-0 font-display text-[40vw] leading-none text-outline opacity-5 pointer-events-none select-none z-0">
                 130
@@ -149,7 +152,7 @@
                 <div class="lg:col-span-7 space-y-4 md:space-y-6 order-2 lg:order-1">
                     <div class="flex flex-wrap items-center gap-2 md:gap-4">
                         <span class="bg-brand-blue text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase tracking-widest">Player 130</span>
-                        <span class="bg-dark-slate text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase tracking-widest">Batch 25</span>
+                        <span class="bg-dark-slate text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase tracking-widest">Batch 26</span>
                     </div>
                     
                     <h1 class="font-display text-6xl md:text-8xl lg:text-9xl leading-[0.9] text-dark-slate">
@@ -188,7 +191,8 @@
 
 
         <!-- SECTION 1: FIRST DAY (Image 2) -->
-        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-white border-t-2 border-dark-slate">
+        <!-- Changed bg-white to bg-ash-light -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-ash-light border-t-2 border-dark-slate">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
                 <!-- Image side -->
                 <div class="order-1 md:order-1 relative px-2 md:px-0">
@@ -213,6 +217,7 @@
 
 
         <!-- SECTION 2: THE PLAYBOOK (Image 3 & 4) -->
+        <!-- Kept bg-dark-slate as it's not white -->
         <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-dark-slate text-white relative overflow-hidden">
             <!-- Background Texture -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMTAxMDEwIiAvPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMjIyIiAvPgo8L3N2Zz4=')] opacity-20"></div>
@@ -250,6 +255,7 @@
 
 
         <!-- SECTION 3: CAMPUS SNAPSHOTS (Image 5 & 6) -->
+        <!-- Kept bg-brand-yellow -->
         <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-brand-yellow">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 border-b-4 border-black pb-4">
                 <h2 class="font-display text-5xl md:text-6xl text-black uppercase leading-none">Campus<br>Snapshots</h2>
@@ -258,7 +264,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-8">
                 <!-- Snap 1 -->
-                <div class="bg-white p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1">
+                <!-- Changed card bg from white to ash-light -->
+                <div class="bg-ash-light p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1">
                     <div class="image-container aspect-video mb-4 border border-black">
                         <img src="../images/130/5.jpg" alt="Memory 1">
                     </div>
@@ -269,7 +276,8 @@
                 </div>
 
                 <!-- Snap 2 -->
-                <div class="bg-white p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1 md:translate-y-12">
+                <!-- Changed card bg from white to ash-light -->
+                <div class="bg-ash-light p-3 md:p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1 md:translate-y-12">
                     <div class="image-container aspect-video mb-4 border border-black">
                         <img src="../images/130/6.jpg" alt="Memory 2">
                     </div>
@@ -285,7 +293,8 @@
 
 
         <!-- FINAL THOUGHTS -->
-        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-white text-center">
+        <!-- Changed bg-white to bg-ash-light -->
+        <section class="py-16 md:py-24 px-4 md:px-12 lg:px-20 bg-ash-light text-center">
             <div class="max-w-4xl mx-auto">
                 <div class="w-12 h-12 md:w-16 md:h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 font-display text-xl md:text-2xl">
                     END
