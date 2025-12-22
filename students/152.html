@@ -311,7 +311,55 @@
                 </p>
             </div>
             
-            <div id="last-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[200px]"></div>
+            <div id="last-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-auto">
+                <!-- ROW 1 -->
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-square lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/1.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-square lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/2.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+
+                <!-- ROW 2 -->
+                <div class="img-wrapper col-span-1 md:col-span-1 aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/3.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <div class="img-wrapper col-span-2 md:col-span-2 aspect-[3/2] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/6.JPG">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <div class="img-wrapper col-span-1 md:col-span-1 aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/4.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+
+                <!-- ROW 3 -->
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-[3/2] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/7.jpg">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-[3/2] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/8.jpg">
+                    <div class="skeleton-loader"></div>
+                </div>
+
+                <!-- ROW 4 -->
+                <div class="col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="img-wrapper aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/5.jpeg">
+                         <div class="skeleton-loader"></div>
+                    </div>
+                    <div class="img-wrapper aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/9.JPG">
+                         <div class="skeleton-loader"></div>
+                    </div>
+                    <div class="img-wrapper aspect-[3/4] col-span-2 md:col-span-1 lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/10.png">
+                         <div class="skeleton-loader"></div>
+                    </div>
+                </div>
+
+                <!-- ROW 5 -->
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/11.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <div class="img-wrapper col-span-1 md:col-span-2 aspect-[3/4] lazy-load-wrapper contain-img border border-white/10 bg-black" data-src="../images/152/last_part/12.png">
+                    <div class="skeleton-loader"></div>
+                </div>
+            </div>
         </section>
 
 
@@ -472,7 +520,6 @@
                     mainContent.style.opacity = 1;
                     
                     // Initialize Assets INDEPENDENTLY
-                    initLastGrid(); 
                     loadSavedState(); // Load club images based on history
                     attachObservers(); // Start watching existing elements
                     initScrollAnims();
@@ -482,61 +529,6 @@
 
         // Load More Listener
         document.getElementById('club-load-btn').addEventListener('click', () => loadClubBatch(CLUB_BATCH_SIZE));
-
-        function initLastGrid() {
-            const lastGrid = document.getElementById('last-grid');
-            lastGrid.innerHTML = ''; // Clear previous
-
-            // Helper for standard image block
-            function createImg(src, classes) {
-                const div = document.createElement('div');
-                div.className = `img-wrapper bg-black border border-white/10 lazy-load-wrapper contain-img ${classes}`;
-                div.dataset.src = `../images/152/last_part/${src}`;
-                div.innerHTML = `<div class="skeleton-loader"></div>`;
-                lastGrid.appendChild(div);
-            }
-            
-            // Helper for HTML string return (used in nested grids)
-            function getImgHTML(src, classes) {
-                return `
-                    <div class="img-wrapper bg-black border border-white/10 lazy-load-wrapper contain-img ${classes}" data-src="../images/152/last_part/${src}">
-                        <div class="skeleton-loader"></div>
-                    </div>
-                `;
-            }
-
-            // --- ROW 1: 1, 2 (Square, 50% each) ---
-            createImg('1.png', 'col-span-1 md:col-span-2 aspect-square');
-            createImg('2.png', 'col-span-1 md:col-span-2 aspect-square');
-
-            // --- ROW 2: 3 (Left), 6 (Middle Wide), 4 (Right) ---
-            // Mobile: Order ensures 3 and 4 are side-by-side, 6 is below full width
-            createImg('3.png', 'col-span-1 md:col-span-1 aspect-[3/4] order-1'); 
-            createImg('6.JPG', 'col-span-2 md:col-span-2 aspect-[3/2] order-3 md:order-2');
-            createImg('4.png', 'col-span-1 md:col-span-1 aspect-[3/4] order-2 md:order-3');
-
-            // --- ROW 3: 7, 8 (Landscape, 50% each) ---
-            createImg('7.jpg', 'col-span-1 md:col-span-2 aspect-[3/2] order-4');
-            createImg('8.jpg', 'col-span-1 md:col-span-2 aspect-[3/2] order-5');
-
-            // --- ROW 4: 5, 9, 10 (3 Portrait Images) ---
-            // We use a nested grid here to fit 3 items into the 4-column parent
-            const row4 = document.createElement('div');
-            // Mobile: 2 cols inside this block. Desktop: 3 cols.
-            // Order logic helps specific spanning on mobile if needed
-            row4.className = 'col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 order-6';
-            row4.innerHTML = `
-                ${getImgHTML('5.jpeg', 'aspect-[3/4] col-span-1')}
-                ${getImgHTML('9.JPG', 'aspect-[3/4] col-span-1')}
-                ${getImgHTML('10.png', 'aspect-[3/4] col-span-2 md:col-span-1')} 
-            `;
-            // Note: 10.png spans 2 on mobile to center it/make it full width below the other 2
-            lastGrid.appendChild(row4);
-
-            // --- ROW 5: 11, 12 (Poster/Portrait, 50% each) ---
-            createImg('11.png', 'col-span-1 md:col-span-2 aspect-[3/4] order-7');
-            createImg('12.png', 'col-span-1 md:col-span-2 aspect-[3/4] order-8');
-        }
 
         function initScrollAnims() {
             gsap.from("header h1", { y: 50, opacity: 0, duration: 1.2, ease: "power3.out" });
