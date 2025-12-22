@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>152 | The Relativity</title>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- CONFIG -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'film-black': '#050505',
+                        'film-white': '#F0F0F0',
+                    },
+                    fontFamily: {
+                        'editorial': ['Playfair Display', 'serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #F0F0F0;
+            overflow-x: hidden;
+        }
+
+        /* LIGHTWEIGHT NOISE */
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAA5OTkAAABMTExERERmZmYzMzMyMjJ4Fk31AAAACHRSTlMAMwAqzMzM/wO30g4AAABXSURBVDjLY2AYBaNgKLHgAgNDgwMdwMBw8wIDw80rDAwMrQwMDEw/GBgYvnqB5R5cYGCo/8DAwPCBgYGhBADCDwwMDHsYGBg+MQA1fWJgYPjEwMAwCkYBAwUAPZE27W7/1YAAAAAASUVORK5CYII=');
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+
+        /* IMAGE HOVER EFFECTS */
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-wrapper:hover { filter: grayscale(0%); }
+        .img-wrapper img { transition: transform 0.7s ease; width: 100%; height: 100%; object-fit: cover; opacity: 0; } /* Hidden by default for smooth fade-in */
+        .img-wrapper.loaded img { opacity: 1; }
+        .img-wrapper:hover img { transform: scale(1.05); }
+        
+        /* LOADING PLACEHOLDER ANIMATION */
+        .skeleton-loader {
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 0;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* OPENING ANIMATION */
+        #opening-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* CONTACT SHEET GRID */
+        .contact-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            border: 1px solid #222;
+        }
+        .film-frame {
+            aspect-ratio: 1/1;
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .film-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .film-frame.loaded img { opacity: 0.8; }
+        .film-frame:hover img { opacity: 1; transform: scale(1.1); }
+        .film-number {
+            position: absolute; bottom: 2px; right: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px; color: #cc0000;
+            z-index: 10;
+        }
+
+        /* NEGATIVE EFFECT FOR NONSENSE SECTION */
+        .invert-section { background-color: #F0F0F0; color: #050505; }
+        
+        /* LOAD MORE BUTTON */
+        .load-btn {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #333;
+            background: #000;
+            color: #888;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .load-btn:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="selection:bg-white selection:text-black">
+
+    <!-- AUDIO: PRELOAD NONE to stop bandwidth hogging -->
+    <audio id="bg-music" loop preload="none">
+        <source src="../music/152.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- FX LAYERS -->
+    <div class="grain"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-4 mix-blend-difference text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+            <span class="font-mono text-xs tracking-widest">CO2 // 152</span>
+        </div>
+        <div class="flex gap-6 font-mono text-[10px] uppercase tracking-widest">
+            <a href="../gallery.html" class="nav-link hover:line-through transition-all">Archive</a>
+            <a href="../index.html" class="nav-link hover:line-through transition-all">Exit</a>
+        </div>
+    </nav>
+
+    <!-- OPENING SEQUENCE -->
+    <div id="opening-screen">
+        <div class="relative w-64 h-64 md:w-96 md:h-96 mb-8">
+            <img src="../images/152/opening_anim.png" class="w-full h-full object-contain animate-pulse opacity-80" alt="CO2 Animation" loading="eager">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+        </div>
+        <h1 class="font-editorial text-3xl md:text-5xl text-white text-center mb-2 tracking-wide opacity-0" id="intro-title">LIFE OF A CO2</h1>
+        <p class="font-mono text-xs text-gray-500 tracking-[0.3em] uppercase opacity-0" id="intro-subtitle">Click to Initialize</p>
+        <p class="font-mono text-[8px] text-gray-600 mt-4 tracking-widest opacity-0" id="loading-status">SYSTEM READY</p>
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="relative z-10 opacity-0">
+
+        <!-- HERO -->
+        <header class="min-h-screen flex flex-col justify-center items-center px-4 relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full pointer-events-none opacity-5">
+                <span class="font-editorial text-[10vw] md:text-[8vw] leading-none whitespace-nowrap block">RELATIVITY</span>
+                <span class="font-editorial text-[10vw] md:text-[8vw] leading-none whitespace-nowrap block">CAGE</span>
+            </div>
+
+            <div class="relative z-10 max-w-4xl w-full">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <!-- Photo -->
+                    <div class="img-wrapper aspect-[3/4] border border-white/20 p-2 bg-white/5 rotate-2 hover:rotate-0 transition-transform duration-500 lazy-load-wrapper" data-src="../images/152/main.jpg">
+                        <div class="skeleton-loader"></div>
+                        <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white bg-black px-2 z-10">ROLL: 152</div>
+                    </div>
+                    
+                    <!-- Identity -->
+                    <div class="text-right md:text-left space-y-6">
+                        <h1 class="font-editorial text-5xl md:text-7xl leading-tight">
+                            MAHIDUL<br>ISLAM<br><span class="italic text-gray-400">AHNAF</span>
+                        </h1>
+                        <div class="h-[1px] w-24 bg-white/50 md:ml-0 ml-auto"></div>
+                        <blockquote class="font-mono text-xs md:text-sm text-gray-400 max-w-sm ml-auto md:ml-0 leading-relaxed border-l border-white/20 pl-4">
+                            "Life - A cage built from relativity."
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                <span class="font-mono text-[9px] tracking-widest text-gray-500">SCROLL TO DECRYPT</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
+        </header>
+
+
+        <!-- SECTION 1: SHURUTA -->
+        <section class="py-24 px-4 md:px-12 max-w-7xl mx-auto border-t border-white/10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <div class="lg:col-span-5 space-y-8 sticky top-24 h-fit">
+                    <span class="font-mono text-xs text-gray-500 border border-gray-800 px-2 py-1">CHAPTER 01</span>
+                    <h2 class="font-bangla text-3xl md:text-5xl text-white leading-tight">শুরুটা</h2>
+                    <div class="font-bangla text-gray-300 text-lg leading-loose text-justify space-y-4">
+                        <p>কলেজের শুরুতেই যে বিষয়টা নিয়ে সবচেয়ে বেশি আফসোসে ছিলাম, সেটা হলো—হঠাৎ করে বড় একটা ক্যাম্পাস ছেড়ে ছোট ক্যাম্পাসে চলে আসা। মনটা তখন খুব খারাপ ছিল।</p>
+                        <p>তবে ধীরে ধীরে পরিচিত মুখগুলো দেখতে দেখতে ভয় কেটে যায়। তৈরি হয় নতুন পরিচয়, নতুন মানুষ, নতুন কিছু মুহূর্ত। কলেজ লাইফে আমার স্মৃতিগুলো এত বেশি সুন্দর হওয়ার পেছনে কিছু মানুষের অবদান বিশাল। অনিকা, নিসা, রিয়াজ, রাফিউ, রাফায়েল, রংগন—এই অল্প সময়েই আমরা কী না করেছি!</p>
+                    </div>
+                </div>
+
+                <!-- Gallery: Precise filenames to prevent 404s -->
+                <!-- Converted to independent lazy loaders -->
+                <div class="lg:col-span-7 grid grid-cols-2 gap-4">
+                    <div class="img-wrapper aspect-[3/4] col-span-2 lazy-load-wrapper" data-src="../images/152/start/6.jpg"><div class="skeleton-loader"></div></div>
+                    <div class="img-wrapper aspect-square lazy-load-wrapper" data-src="../images/152/start/1.jpg"><div class="skeleton-loader"></div></div>
+                    <div class="img-wrapper aspect-square lazy-load-wrapper" data-src="../images/152/start/2.png"><div class="skeleton-loader"></div></div>
+                    <div class="img-wrapper aspect-[4/3] col-span-2 lazy-load-wrapper" data-src="../images/152/start/4.jpeg"><div class="skeleton-loader"></div></div>
+                    <div class="img-wrapper aspect-[3/4] lazy-load-wrapper" data-src="../images/152/start/3.png"><div class="skeleton-loader"></div></div>
+                    <div class="img-wrapper aspect-[3/4] lazy-load-wrapper" data-src="../images/152/start/5.png"><div class="skeleton-loader"></div></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: PIZZU -->
+        <section class="py-24 bg-white/5 border-y border-white/10">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <span class="font-mono text-xs text-gray-500 mb-4 block">FLASHBACK</span>
+                <h2 class="font-bangla text-3xl md:text-4xl text-white mb-6">প্রথম অধ্যায়</h2>
+                <div class="w-12 h-[2px] bg-white mx-auto mb-8"></div>
+                <p class="font-bangla text-xl text-gray-300 leading-loose italic">
+                    "শুরুর দিকে পিজ্জুতে নবীন বরণ উপলক্ষে একটা গেট-টুগেদার। সেদিন রাফিউ যদি আমাকে ভিড়ের মধ্যে বৃষ্টিতে ভিজিয়ে-ভিজিয়ে টেনে না নিয়ে যেত, তাহলে হয়তো আজ অনেক কিছুই আজকের মতো হতো না। পুরো প্লটটাই বদলে যেত।"
+                </p>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: CLUBBING (PAGINATED GRID) -->
+        <section class="py-24 px-4">
+            <div class="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/20 pb-8">
+                <div class="max-w-2xl">
+                    <span class="font-mono text-xs text-gray-500 border border-gray-800 px-2 py-1 mb-4 inline-block">CHAPTER 02</span>
+                    <h2 class="font-bangla text-4xl md:text-6xl text-white mb-6">ক্লাবিং পিরিয়ড</h2>
+                    <p class="font-bangla text-gray-400 text-lg leading-relaxed mb-4">
+                        কলেজ লাইফ উপভোগ করার সবচেয়ে বড় কারণই ছিল ক্লাবিং। TSC ফেস্ট থেকে ইন্টারন্যাশনাল ক্লাব কলাবোরেশন—সবখানেই আমরা ছিলাম। রিয়াজ, রাহিল, রাফিউ, নিসা, সাজিদ, অনিকা, অন্টু, সামির, আনাস, রাফায়েল—এদের ছাড়া এই জার্নি অসম্পূর্ণ।
+                    </p>
+                </div>
+                <div class="font-mono text-[10px] text-right text-gray-500">
+                    ARCHIVE: ULAB_CLUBS<br>
+                    STATUS: INDEPENDENT_LOAD
+                </div>
+            </div>
+
+            <!-- The Grid -->
+            <div class="contact-sheet max-w-[1400px] mx-auto mb-8" id="club-grid">
+                <!-- Javascript will populate this in chunks -->
+            </div>
+            
+            <!-- Load More Button -->
+            <button id="club-load-btn" class="load-btn">Decrypt More Data [+]</button>
+        </section>
+
+
+        <!-- SECTION 4: NONSENSE -->
+        <section class="invert-section py-24 px-4 md:px-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 lazy-load-wrapper" data-src="../images/152/black_and_white_nonsense.jpg" data-is-bg="true">
+                <!-- BG Image loaded here -->
+            </div>
+
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-16 h-[2px] bg-black"></div>
+                    <h2 class="font-editorial text-4xl italic text-black">Black & White Nonsense</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="font-bangla text-lg leading-loose text-gray-800 text-justify">
+                        <p class="mb-4">ULAB-এ আসাটাকে মাঝে মধ্যে নিজের জীবনের সবচেয়ে বড় রিগ্রেট বা নিজের করা সবচেয়ে বড় ভুল বলে মনে হয়। কিন্তু পরক্ষণেই যখন কিছু মানুষের সঙ্গে কাটানো মুহূর্তগুলোর কথা মনে পড়ে, তখন সব আফসোস, গ্লানি ধুয়ে-মুছে যায়।</p>
+                        <p class="mb-4">গত এক বছরে আমরা ৮–৯ জনের একটা টিম যে পরিমাণ ডেডিকেশন দিয়ে ULAB-কে যা কিছু উপহার দিয়ে গেছি, প্রকৃতপক্ষে তার বিনিময়ে ULAB আমাদের কিছুই দিতে পারেনি।</p>
+                        <p class="font-bold border-l-4 border-black pl-4">ULAB-এর শিক্ষার্থীদের অনেকের মধ্যেই অসাধারণ পটেনশিয়াল আছে। শুধু সামান্য সাহস, সঠিক পথ আর গাইডেন্সের অভাবে তারা নিজেরাই নিজেদের সম্ভাবনাগুলো নষ্ট করে ফেলে।</p>
+                    </div>
+                    <div class="border-4 border-black p-2 bg-white rotate-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lazy-load-wrapper" data-src="../images/152/black_and_white_nonsense.jpg">
+                        <div class="skeleton-loader"></div>
+                        <!-- img injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: LAST WORDS -->
+        <section class="py-24 px-4 md:px-12 max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-bangla text-4xl text-white mb-6">শেষ কথা</h2>
+                <p class="font-bangla text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
+                    দিনের শেষে ULAB কলেজের বেশিরভাগ স্যার-ম্যাডামের যোগ্যতা নিয়ে প্রশ্ন তোলার কোনো সুযোগ নেই। তবে কিছু গাফিলতির পাপ আজ সাধারণ শিক্ষার্থীরা বহন করছে।<br>
+                    <span class="text-white font-bold block mt-4">ULAB আমার মনের ভেতরে এসেছিল, ULAB আমার মনের ভেতরেই আজীবন থেকে যাবে। ভালোবাসি ULAB।</span>
+                </p>
+            </div>
+            
+            <!-- Gallery injected via JS for performance -->
+            <div id="last-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[200px]"></div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="bg-white text-black py-20 px-6 text-center relative overflow-hidden">
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <div class="w-full aspect-video border-4 border-black p-2 bg-white shadow-[10px_10px_0px_0px_#000] mb-8 rotate-1 lazy-load-wrapper" data-src="../images/152/last_image.jpg">
+                    <div class="skeleton-loader"></div>
+                </div>
+                <h2 class="font-bangla text-4xl md:text-6xl font-bold mb-4">আমরা স্বপ্নদর্শী-২৬</h2>
+                <div class="w-24 h-1 bg-black mx-auto mb-8"></div>
+                
+                <div class="flex justify-center gap-6 font-mono text-xs tracking-widest uppercase">
+                    <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hover:underline">Replay Memory</button>
+                    <a href="../index.html" class="nav-link hover:underline">Close File</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- JS LOGIC -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 1. DATA SOURCES (STRICTLY MAPPED TO PREVENT 404s) ---
+        // Club Images sorted by file type as per tree
+        const clubImages = [
+            // PNGs
+            '1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png','10.png','11.png','12.png','13.png','14.png','15.png','16.png','17.png',
+            // JPGs (Uppercase)
+            '19.JPG','22.JPG','23.JPG','24.JPG','25.JPG','26.JPG','27.JPG','28.JPG','29.JPG','30.JPG','31.JPG','32.JPG','33.JPG',
+            // jpgs (Lowercase)
+            '18.jpg','20.jpg','21.jpg','34.jpg','35.jpg','36.jpg','37.jpg','38.jpg'
+        ];
+
+        const lastImages = [
+            '1.png','2.png','3.png','4.png','10.png','11.png','12.png',
+            '5.jpeg','7.jpg','8.jpg','6.JPG','9.JPG'
+        ];
+
+        // --- 2. INDEPENDENT LOAD SYSTEM (Lazy Loader) ---
+        // This observer watches for elements coming into view and only THEN loads the image
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const wrapper = entry.target;
+                    const src = wrapper.dataset.src;
+                    const isBg = wrapper.dataset.isBg;
+
+                    if (src) {
+                        const img = new Image();
+                        img.src = src;
+                        img.onload = () => {
+                            if(isBg === 'true') {
+                                wrapper.innerHTML = `<img src="${src}" class="w-full h-full object-cover grayscale">`;
+                            } else {
+                                wrapper.classList.add('loaded');
+                                wrapper.innerHTML = `<img src="${src}" alt="loaded">`;
+                            }
+                        };
+                        // If error, just hide skeleton or show fallback, don't stall
+                        img.onerror = () => {
+                            wrapper.innerHTML = '<div class="w-full h-full bg-gray-900 flex items-center justify-center text-xs text-gray-700">IMG ERR</div>';
+                        };
+                    }
+                    observer.unobserve(wrapper);
+                }
+            });
+        }, { rootMargin: "200px" }); // Start loading 200px before element is visible
+
+        function attachObservers() {
+            document.querySelectorAll('.lazy-load-wrapper').forEach(el => imgObserver.observe(el));
+        }
+
+        // --- 3. PAGINATION & LOCAL STORAGE LOGIC ---
+        const LS_KEY = 'ahnaf_152_progress';
+        const CLUB_BATCH_SIZE = 8;
+        let clubIndex = 0;
+
+        function loadSavedState() {
+            const saved = localStorage.getItem(LS_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Load at least the amount they saw last time, or default batch
+                const targetIndex = data.clubCount || CLUB_BATCH_SIZE;
+                // If they saw a lot, maybe just load reasonable amount to not crash
+                clubIndex = 0; // Reset to start
+                loadClubBatch(targetIndex); // Load up to that point
+            } else {
+                loadClubBatch(CLUB_BATCH_SIZE);
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem(LS_KEY, JSON.stringify({ clubCount: clubIndex }));
+        }
+
+        function loadClubBatch(count = CLUB_BATCH_SIZE) {
+            const grid = document.getElementById('club-grid');
+            const btn = document.getElementById('club-load-btn');
+            const fragment = document.createDocumentFragment();
+            
+            // Calculate slice
+            const nextBatch = clubImages.slice(clubIndex, clubIndex + count);
+            
+            if (nextBatch.length === 0) {
+                btn.style.display = 'none';
+                return;
+            }
+
+            nextBatch.forEach((img, i) => {
+                const globalIndex = clubIndex + i;
+                const div = document.createElement('div');
+                div.className = 'film-frame lazy-load-wrapper';
+                div.dataset.src = `../images/152/club_part/${img}`; // Set data-src for observer
+                div.innerHTML = `<div class="skeleton-loader"></div><div class="film-number">${globalIndex + 1}A</div>`;
+                fragment.appendChild(div);
+                
+                // Observe this new element immediately
+                imgObserver.observe(div);
+            });
+
+            grid.appendChild(fragment);
+            
+            // Update index
+            clubIndex += nextBatch.length;
+            saveState();
+
+            // Hide button if end reached
+            if (clubIndex >= clubImages.length) {
+                btn.textContent = "END OF ARCHIVE //";
+                btn.style.opacity = "0.5";
+                btn.style.pointerEvents = "none";
+            }
+        }
+
+        // --- 4. INIT & EVENTS ---
+        const openingScreen = document.getElementById('opening-screen');
+        const mainContent = document.getElementById('main-content');
+        const audio = document.getElementById('bg-music');
+        const title = document.getElementById('intro-title');
+        const subtitle = document.getElementById('intro-subtitle');
+        const loadingStatus = document.getElementById('loading-status');
+        let isLeaving = false;
+
+        // Intro Text
+        gsap.to([title, subtitle], { opacity: 1, duration: 1, stagger: 0.3, delay: 0.5 });
+        gsap.to(loadingStatus, { opacity: 1, duration: 0.5, delay: 1.5 });
+
+        // Start Click
+        openingScreen.addEventListener('click', () => {
+            // Audio starts ONLY on user interaction, and only then does it try to fetch data
+            audio.volume = 0.5;
+            audio.load(); // Explicitly load only now
+            audio.play().catch(e => console.log("Audio prevented"));
+
+            const tl = gsap.timeline();
+            tl.to([title, subtitle, loadingStatus], { opacity: 0, duration: 0.5 });
+            tl.to(openingScreen, { 
+                opacity: 0, 
+                duration: 0.8, 
+                onComplete: () => {
+                    openingScreen.style.display = 'none';
+                    mainContent.style.opacity = 1;
+                    
+                    // Initialize Assets INDEPENDENTLY
+                    initLastGrid(); 
+                    loadSavedState(); // Load club images based on history
+                    attachObservers(); // Start watching existing elements
+                    initScrollAnims();
+                }
+            });
+        });
+
+        // Load More Listener
+        document.getElementById('club-load-btn').addEventListener('click', () => loadClubBatch(CLUB_BATCH_SIZE));
+
+        function initLastGrid() {
+            const lastGrid = document.getElementById('last-grid');
+            const lastFragment = document.createDocumentFragment();
+            lastImages.forEach((img, i) => {
+                const div = document.createElement('div');
+                const spanClass = (i % 5 === 0) ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1';
+                div.className = `img-wrapper bg-white/5 border border-white/10 ${spanClass} lazy-load-wrapper`;
+                div.dataset.src = `../images/152/last_part/${img}`;
+                div.innerHTML = `<div class="skeleton-loader"></div>`;
+                lastFragment.appendChild(div);
+            });
+            lastGrid.appendChild(lastFragment);
+        }
+
+        function initScrollAnims() {
+            gsap.from("header h1", { y: 50, opacity: 0, duration: 1.2, ease: "power3.out" });
+            gsap.utils.toArray('p, h2').forEach(text => {
+                gsap.from(text, {
+                    scrollTrigger: { trigger: text, start: "top 85%" },
+                    y: 20, opacity: 0, duration: 0.8, ease: "power2.out"
+                });
+            });
+        }
+
+        // Closing Animation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(isLeaving) return;
+                isLeaving = true;
+                const target = link.href;
+                gsap.to(audio, { volume: 0, duration: 1 });
+                const tl = gsap.timeline({ onComplete: () => window.location.href = target });
+                tl.to(mainContent, { opacity: 0, y: -20, duration: 0.5 });
+                tl.to("body", { backgroundColor: "#000", duration: 0.5 }, "-=0.3");
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -39,11 +39,22 @@
 
         /* --- THEME SPECIFIC STYLES --- */
 
-        /* 127: The Game Master */
-        .theme-127 { font-family: 'Oxanium', monospace; background: #000; border: 1px solid #333; box-shadow: 0 0 15px rgba(0, 255, 186, 0.1); }
-        .theme-127:hover { box-shadow: 0 0 25px rgba(255, 0, 122, 0.4); border-color: #FF007A; }
-        .text-neon-pink { color: #FF007A; text-shadow: 0 0 5px #FF007A; }
-        .text-neon-green { color: #00FFBA; text-shadow: 0 0 5px #00FFBA; }
+        /* 127: The Game Master (Bio + Squid Game) */
+        .theme-127 { 
+            font-family: 'Oxanium', monospace; 
+            background: #000; 
+            border: 1px solid #333; 
+            position: relative;
+        }
+        .theme-127::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, #000 90%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .theme-127:hover { border-color: #FF007A; box-shadow: 0 0 20px rgba(255, 0, 122, 0.3); }
+        .squid-shape { font-size: 100px; position: absolute; opacity: 0.1; font-weight: 900; z-index: 0; pointer-events: none; }
 
         /* 130: The Urban Chronicle */
         .theme-130 { font-family: 'DM Sans', sans-serif; background: #CBD5E1; color: #101010; }
@@ -51,26 +62,80 @@
         .bg-brand-blue { background-color: #0044CC; }
         .text-brand-yellow { color: #FFD700; }
 
-        /* 141: Variant (Loki) */
-        .theme-141 { background-color: #241C15; color: #F5E6C8; font-family: 'Space Mono', monospace; border: 2px solid #D97736; box-shadow: 4px 4px 0px #4A3321; }
-        .font-retro { font-family: 'DM Serif Display', serif; }
-        .text-tva-orange { color: #D97736; }
+        /* 141: TVA: Loki (Retro Monitor) */
+        .theme-141 { 
+            background-color: #1a1614; 
+            color: #d68041; 
+            font-family: 'Space Mono', monospace; 
+            border: 4px solid #3d2b1f;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .theme-141::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .tva-glow { text-shadow: 0 0 8px #d68041; }
 
-        /* 144: Vintage Gold */
-        .theme-144 { background-color: #0a0a0a; color: #e0e0e0; font-family: 'Bodoni Moda', serif; border: 1px solid rgba(197, 160, 89, 0.3); }
-        .text-lux-gold { color: #c5a059; }
+        /* 144: Vintage Gold Executive (Luxury) */
+        .theme-144 { 
+            background-color: #0a0a0a; 
+            color: #e0e0e0; 
+            font-family: 'Bodoni Moda', serif; 
+            border: 1px solid #c5a059;
+            box-shadow: inset 0 0 30px rgba(197, 160, 89, 0.1);
+            background-image: url('https://www.transparenttextures.com/patterns/black-linen.png');
+        }
+        .theme-144:hover { box-shadow: 0 0 25px rgba(197, 160, 89, 0.4); transform: translateY(-8px); }
+        .text-lux-gold { color: #c5a059; background: linear-gradient(45deg, #c5a059, #eacda3, #c5a059); -webkit-background-clip: text; color: transparent; }
+
+        /* 152: The Relativity Age (Noir Physics) */
+        .theme-152 { 
+            background-color: #050505; 
+            color: #F0F0F0; 
+            font-family: 'Playfair Display', serif; 
+            border: 1px solid #333; 
+        }
+        .theme-152:hover { border-color: #fff; }
+        .font-editorial { font-family: 'Playfair Display', serif; }
 
         /* 157: The Scrapbook */
         .theme-157 { background-color: #0a2318; color: #eae0d5; font-family: 'Clash Display', sans-serif; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
         .font-hand { font-family: 'Dancing Script', cursive; }
         .text-gold { color: #d4af37; }
 
-        /* 163: Confidential */
-        .theme-163 { background-color: #000; color: #f0f0eb; font-family: 'JetBrains Mono', monospace; border: 1px solid #333; }
-        .font-grotesk { font-family: 'Cabinet Grotesk', sans-serif; }
-        .text-accent { color: #ff3333; }
-        .glitch-hover:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; color: #ff3333; }
-        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+        /* 163: Confidential - Code Red (Redacted/Hacker) */
+        .theme-163 { 
+            background-color: #000; 
+            color: #ff3333; 
+            font-family: 'JetBrains Mono', monospace; 
+            border: 1px solid #ff3333; 
+            overflow: hidden;
+            position: relative;
+        }
+        .theme-163::before {
+            content: "TOP SECRET // CLASSIFIED // TOP SECRET";
+            position: absolute; top: 50%; left: -50%; width: 200%;
+            font-size: 100px; color: rgba(255, 51, 51, 0.05);
+            font-weight: 800; transform: rotate(-30deg);
+            pointer-events: none; white-space: nowrap;
+        }
+        .redacted { background: #ff3333; color: #ff3333; cursor: help; transition: 0.2s; }
+        .theme-163:hover .redacted { background: transparent; color: #fff; }
+        .stamp {
+            border: 2px solid #ff3333;
+            color: #ff3333;
+            padding: 2px 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
 
         /* 174: Comics */
         .theme-174 { background-color: #ffffff; color: #000; border: 3px solid #000; box-shadow: 6px 6px 0px #000; font-family: 'Bangers', cursive; }
@@ -93,34 +158,41 @@
     <!-- HEADER -->
     <header class="mb-16 md:mb-24 flex justify-between items-end border-b border-white/10 pb-8 relative z-20">
         <div>
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-2">THE THEMES</h1>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-2">THE ARCHIVES</h1>
             <p class="text-white/40 text-sm md:text-base font-mono tracking-widest uppercase">Select a specific frequency</p>
         </div>
-        <a href="gallery.html" class="text-xs font-bold uppercase tracking-widest border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-colors">Back to Portal</a>
+        <a href="../gallery.html" class="text-xs font-bold uppercase tracking-widest border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-colors">Back to Portal</a>
     </header>
 
     <!-- GRID -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-7xl mx-auto pb-20 relative z-10">
 
-        <!-- 127 -->
+        <!-- 127: The Game Master -->
         <a href="../students/127.html" class="card-container block group">
-            <div class="theme-127 h-64 p-6 relative overflow-hidden rounded-xl flex flex-col justify-between">
-                <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(#00FFBA 1px, transparent 1px), linear-gradient(90deg, #00FFBA 1px, transparent 1px); background-size: 20px 20px;"></div>
+            <div class="theme-127 h-72 p-6 relative overflow-hidden rounded-xl flex flex-col justify-between">
+                <!-- Background Shapes -->
+                <div class="absolute top-[-20px] right-[-20px] text-[150px] leading-none text-[#FF007A] opacity-10 font-bold rotate-12">△</div>
+                <div class="absolute bottom-[-30px] left-[-20px] text-[150px] leading-none text-[#00FFBA] opacity-10 font-bold rotate-[-12deg]">○</div>
+                
+                <!-- Roll Number -->
+                <div class="absolute top-4 right-4 text-7xl font-bold opacity-60 text-[#FF007A] tracking-tighter">127</div>
+                
                 <div class="relative z-10 flex justify-between items-start">
-                    <span class="text-neon-pink text-xs tracking-widest uppercase border border-neon-pink px-2 py-0.5 rounded">Bio-Hazard</span>
-                    <span class="text-neon-green font-bold">● ONLINE</span>
+                    <span class="text-[#FF007A] text-xs tracking-widest uppercase border border-[#FF007A] px-2 py-0.5 rounded">Player</span>
+                    <i class="text-[#00FFBA] font-bold text-xl">□</i>
                 </div>
                 <div class="relative z-10">
-                    <h2 class="text-4xl font-bold text-white mb-1 group-hover:text-neon-green transition-colors">127</h2>
-                    <p class="text-sm text-gray-400 uppercase tracking-widest">The Architect</p>
+                    <h2 class="text-4xl font-bold text-white mb-1 group-hover:text-[#00FFBA] transition-colors uppercase">The Game Master</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest">Biology // Elimination</p>
                 </div>
-                <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-neon-pink blur-[50px] opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                <!-- Microscope/Squint Effect Overlay -->
+                <div class="absolute inset-0 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.8)_100%)] opacity-60 pointer-events-none"></div>
             </div>
         </a>
 
-        <!-- 130 -->
+        <!-- 130: The Urban Chronicle -->
         <a href="../students/130.html" class="card-container block group">
-            <div class="theme-130 h-64 p-6 relative overflow-hidden flex flex-col justify-between">
+            <div class="theme-130 h-72 p-6 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-0 right-0 p-4 opacity-10">
                     <h2 class="font-anton text-9xl leading-none">130</h2>
                 </div>
@@ -128,77 +200,137 @@
                     <div class="bg-brand-blue text-white inline-block px-2 py-1 text-xs font-bold uppercase tracking-widest mb-2">Urban</div>
                 </div>
                 <div class="relative z-10">
-                    <h2 class="font-anton text-5xl uppercase leading-none mb-1 group-hover:text-brand-blue transition-colors">The<br>Chronicle</h2>
+                    <h2 class="font-anton text-5xl uppercase leading-none mb-1 group-hover:text-brand-blue transition-colors">The Urban<br>Chronicle</h2>
                     <div class="h-1 w-12 bg-brand-yellow mt-2 group-hover:w-full transition-all duration-500"></div>
                 </div>
             </div>
         </a>
 
-        <!-- 141 -->
+        <!-- 141: TVA Loki -->
         <a href="../students/141.html" class="card-container block group">
-            <div class="theme-141 h-64 p-6 relative overflow-hidden flex flex-col justify-center text-center">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-tva-orange/5 to-transparent h-2 w-full animate-[spin_2s_linear_infinite]" style="animation: scan 4s linear infinite;"></div>
-                <div class="border border-tva-orange/30 p-4 h-full flex flex-col justify-center items-center group-hover:border-tva-orange transition-colors">
-                    <h3 class="text-tva-orange text-xs tracking-[0.3em] uppercase mb-2">Variant</h3>
-                    <h2 class="font-retro text-6xl mb-2 text-tva-cream">141</h2>
-                    <p class="text-[10px] uppercase tracking-widest opacity-60">Burdened with Purpose</p>
+            <div class="theme-141 h-72 p-6 flex flex-col justify-center text-center relative overflow-hidden">
+                <!-- Monitor Scanlines -->
+                <div class="absolute top-4 right-4 text-[10px] text-tva-orange border border-tva-orange px-1 animate-pulse">REC</div>
+                
+                <!-- Roll Number -->
+                <div class="absolute bottom-2 right-4 text-6xl opacity-40 font-bold tva-glow pointer-events-none">141</div>
+                
+                <div class="relative z-10">
+                    <h3 class="text-[#d68041] text-xs tracking-[0.3em] uppercase mb-4 opacity-70">Sacred Timeline</h3>
+                    <h2 class="font-retro text-5xl mb-2 text-[#F5E6C8] tva-glow">TVA: LOKI</h2>
+                    <div class="w-full h-[1px] bg-[#d68041] my-4 opacity-30"></div>
+                    <p class="text-[10px] uppercase tracking-widest text-[#d68041]">Variant Detected</p>
                 </div>
             </div>
         </a>
 
-        <!-- 144 -->
+        <!-- 144: Vintage Gold Executive -->
         <a href="../students/144.html" class="card-container block group">
-            <div class="theme-144 h-64 p-8 relative flex flex-col justify-center items-center text-center">
-                <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
-                <p class="font-sans text-[10px] tracking-[0.3em] text-lux-gold uppercase mb-4">Executive</p>
-                <h2 class="text-5xl italic font-bold mb-4 group-hover:scale-110 transition-transform duration-700">144</h2>
-                <div class="w-8 h-[1px] bg-lux-gold group-hover:w-24 transition-all duration-500"></div>
+            <div class="theme-144 h-72 p-8 relative flex flex-col justify-center items-center text-center">
+                <!-- Decorative Border corners -->
+                <div class="absolute top-2 left-2 w-4 h-4 border-l border-t border-[#c5a059]"></div>
+                <div class="absolute top-2 right-2 w-4 h-4 border-r border-t border-[#c5a059]"></div>
+                <div class="absolute bottom-2 left-2 w-4 h-4 border-l border-b border-[#c5a059]"></div>
+                <div class="absolute bottom-2 right-2 w-4 h-4 border-r border-b border-[#c5a059]"></div>
+
+                <!-- Roll Number -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl italic font-bold opacity-25 pointer-events-none whitespace-nowrap">144</div>
+
+                <p class="font-sans text-[9px] tracking-[0.4em] text-[#e0e0e0] uppercase mb-6 opacity-60">Est. 2024</p>
+                <h2 class="text-4xl italic font-bold mb-4 group-hover:scale-105 transition-transform duration-700 text-lux-gold">Vintage Gold<br>Executive</h2>
+                <div class="w-12 h-[2px] bg-[#c5a059] group-hover:w-32 transition-all duration-500"></div>
             </div>
         </a>
 
-        <!-- 157 -->
+        <!-- 152: The Relativity Age -->
+        <a href="../students/152.html" class="card-container block group">
+            <div class="theme-152 h-72 p-6 relative overflow-hidden flex flex-col justify-between">
+                <!-- Film Grain Overlay -->
+                <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                
+                <!-- Roll Number -->
+                <div class="absolute top-0 right-20 p-4 text-9xl opacity-20 font-editorial italic text-white pointer-events-none">152</div>
+                
+                <div class="relative z-10 flex justify-between items-center">
+                    <span class="font-mono text-[9px] tracking-[0.3em] uppercase text-gray-500">E = mc²</span>
+                    <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                </div>
+                
+                <div class="relative z-10 text-center">
+                    <h2 class="font-editorial text-5xl text-white italic group-hover:tracking-wider transition-all duration-700">The Relativity<br>Age</h2>
+                    <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-gray-400 mt-4 border-t border-white/20 pt-2 inline-block">Time Dilation Active</p>
+                </div>
+
+                <div class="absolute -bottom-10 -right-10 text-9xl font-editorial opacity-5 italic select-none">t</div>
+            </div>
+        </a>
+
+        <!-- 157: The Scrapbook -->
         <a href="../students/157.html" class="card-container block group">
-            <div class="theme-157 h-64 p-6 relative flex flex-col justify-between shadow-lg transform rotate-1 group-hover:rotate-0 transition-transform">
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/20 backdrop-blur-sm rotate-2"></div>
+            <div class="theme-157 h-72 p-6 relative flex flex-col justify-between shadow-lg transform rotate-1 group-hover:rotate-0 transition-transform">
+                <!-- Tape -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/40 backdrop-blur-sm rotate-2 shadow-sm"></div>
+                
+                <!-- Roll Number -->
+                <div class="absolute top-5 left-4 text-6xl font-hand opacity-50 text-[#2c3e50] -rotate-12 pointer-events-none">#157</div>
+
                 <div class="text-right">
-                    <span class="font-hand text-xl text-gold">The Scrapbook</span>
+                    <span class="font-hand text-2xl text-gold">Memories</span>
                 </div>
                 <div>
-                    <h2 class="font-sans text-5xl font-bold text-cream mb-1">157</h2>
-                    <p class="font-sans text-xs tracking-widest text-gold/60 uppercase">Memories & Friends</p>
+                    <h2 class="font-sans text-5xl font-bold text-[#2c3e50] mb-1">The<br>Scrapbook</h2>
+                    <p class="font-sans text-xs tracking-widest text-gold/80 uppercase mt-2">Captured Moments</p>
                 </div>
             </div>
         </a>
 
-        <!-- 163 -->
+        <!-- 163: Confidential - Code Red -->
         <a href="../students/163.html" class="card-container block group">
-            <div class="theme-163 h-64 p-6 relative flex flex-col justify-between overflow-hidden">
-                <div class="absolute inset-0 font-mono text-[8px] text-green-900/20 break-all leading-none pointer-events-none p-2">
-                    0101010101001011101010010101010100101110101001010101010010111010100101010101001011101010010101010100101110101001010101010010111010100101010101001011101010
+            <div class="theme-163 h-72 p-6 relative flex flex-col justify-between">
+                <!-- Background Glitch/Code -->
+                <div class="absolute inset-0 font-mono text-[8px] text-[#ff3333]/10 break-all leading-none pointer-events-none p-2 opacity-50">
+                    ERROR_404_SECURE_CHANNEL_BROKEN_SYSTEM_FAILURE_REDACTED_DATA_CORRUPTION_DETECTED_INITIATE_PROTOCOL_OMEGA_
                 </div>
+                
+                <!-- Roll Number -->
+                <div class="absolute top-0 right-0 p-2 text-8xl font-bold opacity-10 text-red-500 pointer-events-none">163</div>
+                
                 <div class="flex justify-between items-start relative z-10">
-                    <span class="text-[10px] text-accent border border-accent px-1">CONFIDENTIAL</span>
-                    <div class="w-2 h-2 bg-accent animate-pulse"></div>
+                    <div class="stamp">CLASSIFIED</div>
+                    <div class="w-3 h-3 bg-[#ff3333] animate-[ping_1s_infinite]"></div>
                 </div>
+                
                 <div class="relative z-10">
-                    <h2 class="font-grotesk text-5xl font-bold mb-2 group-hover:text-accent glitch-hover">163</h2>
-                    <p class="font-mono text-[10px] text-gray-500">> Access Granted</p>
+                    <h2 class="font-grotesk text-4xl font-bold mb-2 group-hover:text-white transition-colors uppercase">
+                        Confidential<br><span class="text-white bg-[#ff3333] px-1">Code Red</span>
+                    </h2>
+                    <p class="font-mono text-[10px] text-[#ff3333] mt-2">
+                        > ACCESS: <span class="redacted">DENIED</span><br>
+                        > STATUS: CRITICAL
+                    </p>
                 </div>
             </div>
         </a>
 
-        <!-- 174 -->
+        <!-- 174: Comics -->
         <a href="../students/174.html" class="card-container block group">
-            <div class="theme-174 h-64 p-0 relative overflow-hidden bg-white">
+            <div class="theme-174 h-72 p-0 relative overflow-hidden bg-white">
+                <!-- Dots Pattern -->
                 <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#000 2px, transparent 2px); background-size: 8px 8px;"></div>
-                <div class="absolute top-0 left-0 bg-hero-red text-white font-bold px-3 py-1 border-r-2 border-b-2 border-black z-10">
+                
+                <!-- Roll Number (Enhanced Issue Number) -->
+                 <div class="absolute bottom-[-10px] left-[-5px] text-9xl text-gray-800 opacity-50 font-bold rotate-2 pointer-events-none">174</div>
+
+                <div class="absolute top-0 left-0 bg-hero-red text-white font-bold px-3 py-1 border-r-2 border-b-2 border-black z-10 shadow-[2px_2px_0px_#000]">
                     ISSUE #174
                 </div>
-                <div class="h-full flex items-center justify-center relative z-0 group-hover:scale-110 transition-transform duration-300">
-                    <h2 class="text-7xl text-black drop-shadow-[4px_4px_0_#F9E216]" style="-webkit-text-stroke: 2px black; color: white;">POW!</h2>
+                
+                <div class="h-full flex items-center justify-center relative z-0 group-hover:scale-110 transition-transform duration-300 transform rotate-[-2deg]">
+                    <h2 class="text-7xl text-white drop-shadow-[4px_4px_0_#000]" style="-webkit-text-stroke: 2px black;">COMICS</h2>
                 </div>
-                <div class="absolute bottom-4 right-4 bg-hero-yellow border-2 border-black px-4 py-2 rotate-[-2deg] group-hover:rotate-2 transition-transform">
-                    <span class="text-xl">The Hero</span>
+                
+                <div class="absolute bottom-4 right-4 bg-hero-yellow border-2 border-black px-4 py-2 rotate-2 group-hover:-rotate-1 transition-transform shadow-[4px_4px_0px_#000]">
+                    <span class="text-xl font-bold">The Protagonist</span>
                 </div>
             </div>
         </a>

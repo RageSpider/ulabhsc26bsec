@@ -133,6 +133,9 @@
 </head>
 <body class="font-data selection:bg-tva-orange selection:text-tva-dark">
 
+    <!-- AUDIO: Dynamic Load to prevent IDM interception -->
+    <audio id="bg-music" loop preload="none"></audio>
+
     <!-- FX LAYERS -->
     <div class="crt-overlay"></div>
     <div class="vignette"></div>
@@ -338,7 +341,7 @@
                     Variant 141 has been successfully archived. The timeline is stable. Proceeding to next variance.
                 </p>
 
-                <button id="exit-btn" class="group relative px-8 py-3 bg-tva-dark border border-tva-orange text-tva-orange font-bold uppercase tracking-widest overflow-hidden">
+                <button id="exit-btn" class="group relative px-8 py-3 bg-tva-dark border border-tva-orange text-tva-orange font-bold uppercase tracking-widest overflow-hidden cursor-pointer">
                     <span class="relative z-10 group-hover:text-tva-dark transition-colors duration-300">Close File</span>
                     <div class="absolute inset-0 bg-tva-orange transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out"></div>
                 </button>
@@ -355,10 +358,18 @@
         const timedoorPanel = document.getElementById('timedoor-panel');
         const timedoorContent = document.getElementById('timedoor-content');
         const mainContent = document.getElementById('main-content');
+        const audio = document.getElementById('bg-music');
         let isLeaving = false;
 
         // 1. OPENING SEQUENCE
         startOverlay.addEventListener('click', () => {
+            // Audio: Set source dynamically to avoid IDM
+            if(!audio.src) {
+                audio.src = "../music/141.mp3";
+            }
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio Error/Blocked:", e));
+
             const tl = gsap.timeline();
 
             // Fade out overlay content
@@ -414,6 +425,9 @@
         function exitSequence(targetUrl) {
             if(isLeaving) return;
             isLeaving = true;
+
+            // Audio Fade out
+            gsap.to(audio, { volume: 0, duration: 0.8 });
 
             const tl = gsap.timeline({
                 onComplete: () => window.location.href = targetUrl
