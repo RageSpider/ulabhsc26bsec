@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>152 | The Relativity</title>
     
-    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
 
-    <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <!-- CONFIG -->
     <script>
         tailwind.config = {
             theme: {
@@ -69,6 +66,10 @@
         }
         .img-wrapper:hover { filter: grayscale(0%); }
         .img-wrapper img { transition: transform 0.7s ease; width: 100%; height: 100%; object-fit: cover; opacity: 0; } /* Hidden by default for smooth fade-in */
+        
+        /* Prevent cropping for specific images */
+        .img-wrapper.contain-img img { object-fit: contain; }
+
         .img-wrapper.loaded img { opacity: 1; }
         .img-wrapper:hover img { transform: scale(1.05); }
         
@@ -153,15 +154,12 @@
 </head>
 <body class="selection:bg-white selection:text-black">
 
-    <!-- AUDIO: PRELOAD NONE to stop bandwidth hogging -->
     <audio id="bg-music" loop preload="none">
         <source src="../music/152.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- FX LAYERS -->
     <div class="grain"></div>
 
-    <!-- NAVIGATION -->
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-4 mix-blend-difference text-white flex justify-between items-center">
         <div class="flex items-center gap-2">
             <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -173,7 +171,6 @@
         </div>
     </nav>
 
-    <!-- OPENING SEQUENCE -->
     <div id="opening-screen">
         <div class="relative w-64 h-64 md:w-96 md:h-96 mb-8">
             <img src="../images/152/opening_anim.png" class="w-full h-full object-contain animate-pulse opacity-80" alt="CO2 Animation" loading="eager">
@@ -185,10 +182,8 @@
     </div>
 
 
-    <!-- MAIN CONTENT -->
     <main id="main-content" class="relative z-10 opacity-0">
 
-        <!-- HERO -->
         <header class="min-h-screen flex flex-col justify-center items-center px-4 relative">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full pointer-events-none opacity-5">
                 <span class="font-editorial text-[10vw] md:text-[8vw] leading-none whitespace-nowrap block">RELATIVITY</span>
@@ -197,18 +192,20 @@
 
             <div class="relative z-10 max-w-4xl w-full">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <!-- Photo -->
                     <div class="img-wrapper aspect-[3/4] border border-white/20 p-2 bg-white/5 rotate-2 hover:rotate-0 transition-transform duration-500 lazy-load-wrapper" data-src="../images/152/main.jpg">
                         <div class="skeleton-loader"></div>
                         <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white bg-black px-2 z-10">ROLL: 152</div>
                     </div>
                     
-                    <!-- Identity -->
                     <div class="text-right md:text-left space-y-6">
                         <h1 class="font-editorial text-5xl md:text-7xl leading-tight">
                             MAHIDUL<br>ISLAM<br><span class="italic text-gray-400">AHNAF</span>
                         </h1>
+
+                        <p class="font-mono text-sm text-gray-300 tracking-[0.2em] uppercase">President - ULPC</p>
+                        
                         <div class="h-[1px] w-24 bg-white/50 md:ml-0 ml-auto"></div>
+                        
                         <blockquote class="font-mono text-xs md:text-sm text-gray-400 max-w-sm ml-auto md:ml-0 leading-relaxed border-l border-white/20 pl-4">
                             "Life - A cage built from relativity."
                         </blockquote>
@@ -223,7 +220,6 @@
         </header>
 
 
-        <!-- SECTION 1: SHURUTA -->
         <section class="py-24 px-4 md:px-12 max-w-7xl mx-auto border-t border-white/10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 
@@ -236,8 +232,6 @@
                     </div>
                 </div>
 
-                <!-- Gallery: Precise filenames to prevent 404s -->
-                <!-- Converted to independent lazy loaders -->
                 <div class="lg:col-span-7 grid grid-cols-2 gap-4">
                     <div class="img-wrapper aspect-[3/4] col-span-2 lazy-load-wrapper" data-src="../images/152/start/6.jpg"><div class="skeleton-loader"></div></div>
                     <div class="img-wrapper aspect-square lazy-load-wrapper" data-src="../images/152/start/1.jpg"><div class="skeleton-loader"></div></div>
@@ -250,7 +244,6 @@
         </section>
 
 
-        <!-- SECTION 2: PIZZU -->
         <section class="py-24 bg-white/5 border-y border-white/10">
             <div class="max-w-4xl mx-auto px-6 text-center">
                 <span class="font-mono text-xs text-gray-500 mb-4 block">FLASHBACK</span>
@@ -263,7 +256,6 @@
         </section>
 
 
-        <!-- SECTION 3: CLUBBING (PAGINATED GRID) -->
         <section class="py-24 px-4">
             <div class="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/20 pb-8">
                 <div class="max-w-2xl">
@@ -279,26 +271,21 @@
                 </div>
             </div>
 
-            <!-- The Grid -->
             <div class="contact-sheet max-w-[1400px] mx-auto mb-8" id="club-grid">
-                <!-- Javascript will populate this in chunks -->
-            </div>
+                </div>
             
-            <!-- Load More Button -->
             <button id="club-load-btn" class="load-btn">Decrypt More Data [+]</button>
         </section>
 
 
-        <!-- SECTION 4: NONSENSE -->
         <section class="invert-section py-24 px-4 md:px-12 relative overflow-hidden">
             <div class="absolute inset-0 opacity-10 lazy-load-wrapper" data-src="../images/152/black_and_white_nonsense.jpg" data-is-bg="true">
-                <!-- BG Image loaded here -->
-            </div>
+                </div>
 
             <div class="relative z-10 max-w-4xl mx-auto">
                 <div class="flex items-center gap-4 mb-8">
                     <div class="w-16 h-[2px] bg-black"></div>
-                    <h2 class="font-editorial text-4xl italic text-black">Black & White Nonsense</h2>
+                    <h2 class="font-bangla text-4xl text-black">সাদা-কালো ননসেন্স</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -309,14 +296,12 @@
                     </div>
                     <div class="border-4 border-black p-2 bg-white rotate-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lazy-load-wrapper" data-src="../images/152/black_and_white_nonsense.jpg">
                         <div class="skeleton-loader"></div>
-                        <!-- img injected here -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </section>
 
 
-        <!-- SECTION 5: LAST WORDS -->
         <section class="py-24 px-4 md:px-12 max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="font-bangla text-4xl text-white mb-6">শেষ কথা</h2>
@@ -326,12 +311,10 @@
                 </p>
             </div>
             
-            <!-- Gallery injected via JS for performance -->
             <div id="last-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[200px]"></div>
         </section>
 
 
-        <!-- FOOTER -->
         <footer class="bg-white text-black py-20 px-6 text-center relative overflow-hidden">
             <div class="relative z-10 max-w-2xl mx-auto">
                 <div class="w-full aspect-video border-4 border-black p-2 bg-white shadow-[10px_10px_0px_0px_#000] mb-8 rotate-1 lazy-load-wrapper" data-src="../images/152/last_image.jpg">
@@ -349,7 +332,6 @@
 
     </main>
 
-    <!-- JS LOGIC -->
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
@@ -362,11 +344,6 @@
             '19.JPG','22.JPG','23.JPG','24.JPG','25.JPG','26.JPG','27.JPG','28.JPG','29.JPG','30.JPG','31.JPG','32.JPG','33.JPG',
             // jpgs (Lowercase)
             '18.jpg','20.jpg','21.jpg','34.jpg','35.jpg','36.jpg','37.jpg','38.jpg'
-        ];
-
-        const lastImages = [
-            '1.png','2.png','3.png','4.png','10.png','11.png','12.png',
-            '5.jpeg','7.jpg','8.jpg','6.JPG','9.JPG'
         ];
 
         // --- 2. INDEPENDENT LOAD SYSTEM (Lazy Loader) ---
@@ -508,16 +485,57 @@
 
         function initLastGrid() {
             const lastGrid = document.getElementById('last-grid');
-            const lastFragment = document.createDocumentFragment();
-            lastImages.forEach((img, i) => {
+            lastGrid.innerHTML = ''; // Clear previous
+
+            // Helper for standard image block
+            function createImg(src, classes) {
                 const div = document.createElement('div');
-                const spanClass = (i % 5 === 0) ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1';
-                div.className = `img-wrapper bg-white/5 border border-white/10 ${spanClass} lazy-load-wrapper`;
-                div.dataset.src = `../images/152/last_part/${img}`;
+                div.className = `img-wrapper bg-black border border-white/10 lazy-load-wrapper contain-img ${classes}`;
+                div.dataset.src = `../images/152/last_part/${src}`;
                 div.innerHTML = `<div class="skeleton-loader"></div>`;
-                lastFragment.appendChild(div);
-            });
-            lastGrid.appendChild(lastFragment);
+                lastGrid.appendChild(div);
+            }
+            
+            // Helper for HTML string return (used in nested grids)
+            function getImgHTML(src, classes) {
+                return `
+                    <div class="img-wrapper bg-black border border-white/10 lazy-load-wrapper contain-img ${classes}" data-src="../images/152/last_part/${src}">
+                        <div class="skeleton-loader"></div>
+                    </div>
+                `;
+            }
+
+            // --- ROW 1: 1, 2 (Square, 50% each) ---
+            createImg('1.png', 'col-span-1 md:col-span-2 aspect-square');
+            createImg('2.png', 'col-span-1 md:col-span-2 aspect-square');
+
+            // --- ROW 2: 3 (Left), 6 (Middle Wide), 4 (Right) ---
+            // Mobile: Order ensures 3 and 4 are side-by-side, 6 is below full width
+            createImg('3.png', 'col-span-1 md:col-span-1 aspect-[3/4] order-1'); 
+            createImg('6.JPG', 'col-span-2 md:col-span-2 aspect-[3/2] order-3 md:order-2');
+            createImg('4.png', 'col-span-1 md:col-span-1 aspect-[3/4] order-2 md:order-3');
+
+            // --- ROW 3: 7, 8 (Landscape, 50% each) ---
+            createImg('7.jpg', 'col-span-1 md:col-span-2 aspect-[3/2] order-4');
+            createImg('8.jpg', 'col-span-1 md:col-span-2 aspect-[3/2] order-5');
+
+            // --- ROW 4: 5, 9, 10 (3 Portrait Images) ---
+            // We use a nested grid here to fit 3 items into the 4-column parent
+            const row4 = document.createElement('div');
+            // Mobile: 2 cols inside this block. Desktop: 3 cols.
+            // Order logic helps specific spanning on mobile if needed
+            row4.className = 'col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 order-6';
+            row4.innerHTML = `
+                ${getImgHTML('5.jpeg', 'aspect-[3/4] col-span-1')}
+                ${getImgHTML('9.JPG', 'aspect-[3/4] col-span-1')}
+                ${getImgHTML('10.png', 'aspect-[3/4] col-span-2 md:col-span-1')} 
+            `;
+            // Note: 10.png spans 2 on mobile to center it/make it full width below the other 2
+            lastGrid.appendChild(row4);
+
+            // --- ROW 5: 11, 12 (Poster/Portrait, 50% each) ---
+            createImg('11.png', 'col-span-1 md:col-span-2 aspect-[3/4] order-7');
+            createImg('12.png', 'col-span-1 md:col-span-2 aspect-[3/4] order-8');
         }
 
         function initScrollAnims() {
