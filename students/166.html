@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>166 | The Eclipse</title>
+    
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lato:wght@300;400;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+
+    <!-- CONFIG -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'en-bg': '#050a14',
+                        'en-text': '#e2e8f0',
+                        'en-accent': '#38bdf8', 
+                        'bn-bg': '#1f0505', /* Slightly deeper red-black */
+                        'bn-text': '#fff1f2',
+                        'bn-accent': '#fb7185',
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'lato': ['Lato', 'sans-serif'],
+                        'bangla': ['Noto Serif Bengali', 'serif'],
+                    },
+                    backgroundImage: {
+                        'noise': "url('https://grainy-gradients.vercel.app/noise.svg')",
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CORE */
+        body {
+            background-color: var(--bg-curr);
+            color: var(--text-curr);
+            transition: background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), color 1.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* DYNAMIC VARIABLES */
+        :root {
+            --bg-curr: #050a14;
+            --text-curr: #e2e8f0;
+            --accent-curr: #38bdf8;
+            --line-color: rgba(56, 189, 248, 0.2);
+            --orb-shadow: 0 0 50px rgba(56, 189, 248, 0.3);
+            --card-border: rgba(56, 189, 248, 0.3);
+        }
+
+        body.mode-bangla {
+            --bg-curr: #1f0505;
+            --text-curr: #fff1f2;
+            --accent-curr: #fb7185;
+            --line-color: rgba(251, 113, 133, 0.2);
+            --orb-shadow: 0 0 60px rgba(251, 113, 133, 0.4);
+            --card-border: rgba(251, 113, 133, 0.3);
+        }
+
+        /* Enforce Fonts based on Mode */
+        body.mode-bangla h1, body.mode-bangla h2, body.mode-bangla h3, body.mode-bangla p, body.mode-bangla span, body.mode-bangla button {
+            font-family: 'Noto Serif Bengali', serif !important;
+        }
+        
+        /* THE ECLIPSE OVERLAY */
+        #eclipse-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 9998;
+            transform: scaleX(0); transform-origin: left; pointer-events: none;
+        }
+
+        /* CELESTIAL BODY (Sun/Moon in Background) */
+        #celestial-body {
+            position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%);
+            width: 60vh; height: 60vh; border-radius: 50%;
+            z-index: 0; pointer-events: none;
+            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.8;
+            /* Default: Moon */
+            background: radial-gradient(circle at 30% 30%, #e2e8f0, #0f172a);
+            box-shadow: 0 0 100px rgba(56, 189, 248, 0.1);
+        }
+        body.mode-bangla #celestial-body {
+            /* Sun Mode */
+            background: radial-gradient(circle at 50% 50%, #fbbf24, #be123c);
+            box-shadow: 0 0 180px rgba(251, 113, 133, 0.4);
+            top: 40%;
+        }
+
+        /* POLAROID STYLES */
+        .polaroid {
+            position: relative; overflow: hidden;
+            border: 1px solid var(--card-border);
+            transition: border-color 1.2s ease, transform 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(5px);
+        }
+        .polaroid img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%) contrast(1.1) sepia(20%);
+            transition: filter 0.5s ease, transform 1.5s ease;
+        }
+        .polaroid:hover img { filter: grayscale(0%) contrast(1) sepia(0%); transform: scale(1.05); }
+        .polaroid:hover {
+            border-color: var(--accent-curr);
+            box-shadow: 0 25px 60px -10px rgba(0,0,0,0.7), 0 0 20px var(--line-color);
+        }
+
+        /* SWITCHER BUTTON (Enhanced) */
+        .eclipse-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-curr);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9000; cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 1.2s ease, box-shadow 0.3s ease;
+            box-shadow: var(--orb-shadow);
+        }
+        .eclipse-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px var(--accent-curr); }
+        
+        /* The Icon inside the button */
+        .eclipse-icon {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 28px; transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .eclipse-btn:hover .eclipse-icon { transform: translate(-50%, -50%) rotate(15deg); }
+
+        /* OPENING MASK */
+        #opening-mask {
+            position: fixed; inset: 0; z-index: 10000;
+            background: #000;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+        .circle-mask {
+            width: 0; height: 0; border-radius: 50%;
+            box-shadow: 0 0 0 150vmax #000; /* Giant shadow creates the "hole" */
+        }
+
+        /* SVG THREAD */
+        .thread-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; overflow: hidden;
+        }
+
+        /* Special Text Effects */
+        .hero-text-glow {
+            text-shadow: 0 0 30px var(--line-color);
+            transition: text-shadow 1.2s ease;
+        }
+    </style>
+</head>
+<body class="mode-english">
+
+    <audio id="bg-music" loop>
+        <source src="../music/166.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- OPENING ANIMATION -->
+    <div id="opening-mask">
+        <div class="text-center relative z-10">
+            <h1 class="font-cinzel text-5xl md:text-7xl text-white tracking-[0.2em] mb-4 opacity-0" id="open-title">166</h1>
+            <p class="font-lato text-xs text-gray-400 tracking-[0.5em] uppercase opacity-0" id="open-sub">Click to Begin</p>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="circle-mask" id="aperture"></div>
+        </div>
+    </div>
+
+    <!-- TRANSITION OVERLAY -->
+    <div id="eclipse-overlay"></div>
+
+    <!-- BACKGROUND ELEMENTS -->
+    <div class="fixed inset-0 bg-noise opacity-[0.04] pointer-events-none z-50"></div>
+    <div id="stars" class="fixed inset-0 opacity-60 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] transition-opacity duration-1000"></div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-40 mix-blend-difference text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-[1px] bg-white"></div>
+            <span class="font-cinzel text-xs tracking-widest font-bold">ANIKA Z. MAHMUD</span>
+        </div>
+        <div class="flex gap-8 font-lato text-[10px] uppercase tracking-[0.2em] font-bold">
+            <a href="../gallery.html" class="hover:text-gray-400 transition-colors">Gallery</a>
+            <a href="../index.html" class="hover:text-gray-400 transition-colors">Exit</a>
+        </div>
+    </nav>
+
+    <!-- LANGUAGE SWITCHER FAB -->
+    <button class="eclipse-btn" id="lang-switch" title="Change Reality">
+        <!-- Moon Icon (Visible when in Sun Mode - i.e. when body is Bangla, button shows Moon to switch to English) -->
+        <span class="eclipse-icon" id="icon-moon" style="opacity: 0;">🌑</span>
+        <!-- Sun Icon (Visible when in Moon Mode - i.e. when body is English, button shows Sun to switch to Bangla) -->
+        <span class="eclipse-icon" id="icon-sun" style="opacity: 1;">☀️</span>
+    </button>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 w-full overflow-hidden opacity-0" id="main-content">
+        
+        <!-- THREAD -->
+        <svg class="thread-container" preserveAspectRatio="none">
+            <path id="thread-path" d="M100,0" fill="none" stroke="var(--line-color)" stroke-width="1" class="transition-colors duration-1000"></path>
+        </svg>
+
+        <!-- HERO SECTION -->
+        <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+            <!-- The Celestial Body (Background) -->
+            <div id="celestial-body" class="animate-pulse-slow"></div>
+            
+            <div class="relative z-10 hero-text-glow">
+                <p class="font-lato text-xs tracking-[0.5em] uppercase text-accent mb-6 mix-blend-screen" id="hero-tag">The Chronicle</p>
+                
+                <!-- Main Title with Color Play -->
+                <h1 class="font-cinzel text-5xl md:text-8xl lg:text-9xl mb-8 leading-none mix-blend-screen" id="hero-title">
+                    THE<br><span class="text-accent italic">BLUE HOUR</span>
+                </h1>
+                
+                <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-white to-transparent my-4 mx-auto"></div>
+
+                <p class="max-w-md mx-auto font-lato text-sm md:text-base leading-relaxed opacity-80 mix-blend-screen" id="hero-desc">
+                    Roll 166 • A story of fear turning into home.
+                </p>
+            </div>
+        </section>
+
+        <!-- CHAPTER 1 -->
+        <section class="py-32 px-6 md:px-12 relative max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1 trigger-block relative">
+                    <span class="font-cinzel text-9xl text-accent opacity-10 absolute -left-12 -top-20 z-0 select-none">I</span>
+                    <h2 class="font-cinzel text-3xl md:text-4xl mb-6 relative z-10" id="ch1-title">The Unfamiliar</h2>
+                    <p class="font-lato text-lg leading-loose opacity-80 text-justify relative z-10" id="ch1-text">
+                        The first day I stepped into ULAB, my heart carried an unfamiliar fear. A new college, new classes, and a crowd of unfamiliar faces. I felt completely alone.
+                    </p>
+                </div>
+                <div class="order-1 md:order-2 trigger-block">
+                    <div class="polaroid aspect-[3/4] w-full max-w-sm mx-auto md:rotate-2">
+                        <img src="../images/166/1.jpeg" alt="Portrait">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 2 -->
+        <section class="py-32 px-6 md:px-12 relative max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="trigger-block">
+                    <div class="polaroid aspect-video w-full max-w-lg mx-auto md:-rotate-1">
+                        <img src="../images/166/friends1.jpeg" alt="Friends">
+                    </div>
+                </div>
+                <div class="trigger-block pl-0 md:pl-12 relative">
+                    <span class="font-cinzel text-9xl text-accent opacity-10 absolute -right-12 -top-20 z-0 select-none">II</span>
+                    <h2 class="font-cinzel text-3xl md:text-4xl mb-6 relative z-10" id="ch2-title">Nill DP</h2>
+                    <p class="font-lato text-lg leading-loose opacity-80 text-justify relative z-10" id="ch2-text">
+                        Then came the Freshers’ Reception, and with it, a boy whose Facebook profile picture was blue. Riyaz. From that day on, he became our “Nill DP.”
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 3 -->
+        <section class="py-40 px-6 text-center relative max-w-4xl mx-auto trigger-block">
+            <div class="mb-12">
+                <h2 class="font-cinzel text-4xl md:text-6xl mb-4" id="ch3-title">The Trinity</h2>
+                <div class="w-24 h-[1px] bg-accent mx-auto"></div>
+            </div>
+
+            <div class="relative w-full aspect-video polaroid mb-12 shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+                <img src="../images/166/friends2.jpeg" alt="The Trio">
+            </div>
+
+            <p class="font-lato text-lg md:text-xl leading-relaxed opacity-90" id="ch3-text">
+                At first, we couldn't tolerate each other. But time changes everything. Soon, Nisa, Nill DP, and I became an unexpectedly beautiful trio. Endless talks, laughter, and memories.
+            </p>
+        </section>
+
+        <!-- CHAPTER 4 (Highlight) -->
+        <section class="py-32 px-6 relative max-w-6xl mx-auto">
+            <div class="border border-accent/30 bg-accent/5 p-8 md:p-20 relative overflow-hidden trigger-block backdrop-blur-sm rounded-lg">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-accent"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-accent"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="font-cinzel text-3xl md:text-4xl mb-8 text-accent" id="ch4-title">The Quiet Message</h2>
+                        <p class="font-lato text-lg md:text-xl leading-loose opacity-90" id="ch4-text">
+                            That same night, a simple message appeared: "Can you send the Freshers’ photos?" Someone I had never noticed quietly opened the door to conversation. Slowly, words turned into feelings. That unnoticed stranger became irreplaceable.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="polaroid aspect-square rotate-3 transform hover:scale-105 transition-transform"><img src="../images/166/friends3.jpeg"></div>
+                        <div class="polaroid aspect-square -rotate-2 mt-12 transform hover:scale-105 transition-transform"><img src="../images/166/3.jpeg"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINALE -->
+        <section class="py-40 px-6 text-center relative max-w-4xl mx-auto trigger-block">
+            <h2 class="font-cinzel text-5xl md:text-7xl mb-12" id="fin-title">Colors of Life</h2>
+            
+            <div class="flex flex-wrap justify-center gap-6 mb-16 font-cinzel text-sm tracking-widest text-accent uppercase opacity-70" id="friend-list">
+                <span>Ahnaf</span> • <span>Rafiu</span> • <span>Nisa</span> • <span>Riyaz</span> • <span>Antu</span> • <span>Erin</span> • <span>Rahil</span> • <span>Azaan</span>
+            </div>
+
+            <p class="font-lato text-lg md:text-2xl leading-relaxed opacity-80 max-w-3xl mx-auto" id="fin-text">
+                Bunking classes, endless gossip behind campus, running from Sir Borun and Sir Jamil. These moments, these people, and these days at ULAB will forever remain the most colorful chapter of my life.
+            </p>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-20 text-center border-t border-gray-800/50">
+            <button id="end-btn" class="font-cinzel text-lg uppercase tracking-[0.3em] hover:text-accent transition-colors border-b border-transparent hover:border-accent pb-1">
+                End Chapter
+            </button>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPT -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+        // --- CONTENT DATA ---
+        const content = {
+            en: {
+                heroTag: "The Chronicle",
+                heroTitle: "THE<br><span class='text-accent italic'>BLUE HOUR</span>",
+                heroDesc: "Roll 166 • A story of fear turning into home.",
+                ch1Title: "The Unfamiliar",
+                ch1Text: "The first day I stepped into ULAB, my heart carried an unfamiliar fear. A new college, new classes, and a crowd of unfamiliar faces. I felt completely alone.",
+                ch2Title: "Nill DP",
+                ch2Text: "Then came the Freshers’ Reception, and with it, a boy whose Facebook profile picture was blue. Riyaz. From that day on, he became our “Nill DP.”",
+                ch3Title: "The Trinity",
+                ch3Text: "At first, we couldn't tolerate each other. But time changes everything. Soon, Nisa, Nill DP, and I became an unexpectedly beautiful trio. Endless talks, laughter, and memories.",
+                ch4Title: "The Quiet Message",
+                ch4Text: "That same night, a simple message appeared: \"Can you send the Freshers’ photos?\" Someone I had never noticed quietly opened the door to conversation. Slowly, words turned into feelings. That unnoticed stranger became irreplaceable.",
+                finTitle: "Colors of Life",
+                finText: "Bunking classes, endless gossip behind campus, running from Sir Borun and Sir Jamil. These moments, these people, and these days at ULAB will forever remain the most colorful chapter of my life.",
+                endBtn: "End Chapter"
+            },
+            bn: {
+                heroTag: "রোল ১৬৬",
+                heroTitle: "গোধূলি<br><span class='text-accent italic'>লগ্ন</span>", // Corrected spelling
+                heroDesc: "ভয় থেকে ভালোবাসায় রূপান্তর। একটি কলেজ জীবনের গল্প।",
+                ch1Title: "অচেনা শুরু",
+                ch1Text: "ইউল্যাবে পা রাখার প্রথম দিন, মনের ভেতর জমে ছিল অজানা এক ভয়। নতুন কলেজ, নতুন ক্লাস, চারপাশে অচেনা মুখের ভিড়। নিজেকে বড্ড একা মনে হচ্ছিল।",
+                ch2Title: "নীল ডিপি",
+                ch2Text: "এরপর এল নবীনবরণ, আর তার সাথে এক নীল প্রোফাইল পিকচারের ছেলে—রিয়াজ। সেদিন থেকেই সে আমাদের “Nill DP” হয়ে গেল।",
+                ch3Title: "অটুট বন্ধন",
+                ch3Text: "শুরুতে একে অপরকে সহ্য করতে পারতাম না। কিন্তু সময় সব বদলে দেয়। নিসা, নীল ডিপি আর আমি—হয়ে উঠলাম এক অদ্ভুত সুন্দর ট্রিও। অফুরন্ত গল্প, হাসি আর স্মৃতি।",
+                ch4Title: "নীরব আগমন",
+                ch4Text: "সেই রাতে একটা ছোট্ট মেসেজ এল: \"নবীনবরণের ছবিগুলো কি দেওয়া যাবে?\" ভিড়ের মাঝে যাকে খেয়াল করিনি, সেই অচেনা মানুষটাই নিঃশব্দে কথার দরজা খুলে দিল। ধীরে ধীরে কথা অনুভূতিতে রূপ নিল। সেই অচেনা মানুষটাই আজ অপরিহার্য।",
+                finTitle: "রঙিন অধ্যায়",
+                finText: "ক্লাস বাঙ্ক করা, ক্যাম্পাসের পেছনে অফুরন্ত আড্ডা, বরুণ স্যার আর জামিল স্যারের দৌড়ানি। এই মুহূর্তগুলো, এই মানুষগুলো আর ইউল্যাবের এই দিনগুলো—চিরকাল আমার জীবনের সবচেয়ে রঙিন অধ্যায় হয়ে থাকবে।",
+                endBtn: "সমাপ্তি"
+            }
+        };
+
+        // --- DOM REFS ---
+        const body = document.body;
+        const openingMask = document.getElementById('opening-mask');
+        const aperture = document.getElementById('aperture');
+        const eclipseOverlay = document.getElementById('eclipse-overlay');
+        const langSwitch = document.getElementById('lang-switch');
+        const mainContent = document.getElementById('main-content');
+        const threadPath = document.getElementById('thread-path');
+        const audio = document.getElementById('bg-music');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoon = document.getElementById('icon-moon');
+        
+        let currentLang = 'en';
+
+        // --- OPENING SEQUENCE ---
+        window.addEventListener('load', () => {
+            gsap.to(['#open-title', '#open-sub'], { opacity: 1, y: 0, duration: 1, stagger: 0.2, delay: 0.5 });
+        });
+
+        openingMask.addEventListener('click', () => {
+            audio.volume = 0.5;
+            audio.play().catch(() => {});
+
+            const tl = gsap.timeline();
+
+            // 1. Fade Text
+            tl.to(['#open-title', '#open-sub'], { opacity: 0, scale: 0.9, duration: 0.5 });
+
+            // 2. Open Aperture
+            tl.to(aperture, { 
+                boxShadow: "0 0 0 0vmax #000", // Shrink shadow to reveal
+                duration: 2, 
+                ease: "power2.inOut",
+                onComplete: () => {
+                    openingMask.style.display = 'none';
+                    initThread();
+                }
+            });
+
+            // 3. Reveal Hero
+            tl.to(mainContent, { opacity: 1, duration: 1 }, "-=1");
+            tl.from("#hero-title", { y: 100, opacity: 0, duration: 1.5, ease: "power3.out" }, "-=0.5");
+            tl.from("#celestial-body", { scale: 0.5, opacity: 0, duration: 2, ease: "power3.out" }, "-=1.5");
+        });
+
+        // --- SVG THREAD ANIMATION ---
+        function initThread() {
+            const height = document.body.scrollHeight;
+            const width = document.body.scrollWidth;
+            
+            // Draw path
+            const d = `M${width/2},0 
+                       C${width/2},${height*0.1} ${width*0.2},${height*0.2} ${width*0.2},${height*0.3} 
+                       S${width*0.8},${height*0.5} ${width*0.8},${height*0.6} 
+                       S${width/2},${height*0.8} ${width/2},${height}`;
+            
+            threadPath.setAttribute('d', d);
+            
+            const length = threadPath.getTotalLength();
+            threadPath.style.strokeDasharray = length;
+            threadPath.style.strokeDashoffset = length;
+
+            gsap.to(threadPath, {
+                strokeDashoffset: 0,
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                }
+            });
+
+            // Reveal Sections
+            gsap.utils.toArray('.trigger-block').forEach(block => {
+                gsap.from(block, {
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 60,
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: "power3.out"
+                });
+            });
+        }
+
+        // --- LANGUAGE SWITCH (ECLIPSE) ---
+        langSwitch.addEventListener('click', () => {
+            const nextLang = currentLang === 'en' ? 'bn' : 'en';
+            const isBangla = nextLang === 'bn';
+
+            // 1. ECLIPSE OVERLAY
+            const tl = gsap.timeline();
+            
+            // Sweep in
+            tl.to(eclipseOverlay, { 
+                scaleX: 1, 
+                transformOrigin: "left",
+                duration: 1.0, 
+                ease: "power2.inOut" 
+            });
+
+            // 2. SWITCH STATE (While Hidden)
+            tl.call(() => {
+                // Toggle Body Class
+                if (isBangla) {
+                    body.classList.remove('mode-english');
+                    body.classList.add('mode-bangla');
+                    iconSun.style.opacity = 0;
+                    iconMoon.style.opacity = 1;
+                } else {
+                    body.classList.remove('mode-bangla');
+                    body.classList.add('mode-english');
+                    iconSun.style.opacity = 1;
+                    iconMoon.style.opacity = 0;
+                }
+
+                // Update Text
+                const c = content[nextLang];
+                document.getElementById('hero-tag').innerHTML = c.heroTag;
+                document.getElementById('hero-title').innerHTML = c.heroTitle;
+                document.getElementById('hero-desc').innerText = c.heroDesc;
+                document.getElementById('ch1-title').innerText = c.ch1Title;
+                document.getElementById('ch1-text').innerText = c.ch1Text;
+                document.getElementById('ch2-title').innerText = c.ch2Title;
+                document.getElementById('ch2-text').innerText = c.ch2Text;
+                document.getElementById('ch3-title').innerText = c.ch3Title;
+                document.getElementById('ch3-text').innerText = c.ch3Text;
+                document.getElementById('ch4-title').innerText = c.ch4Title;
+                document.getElementById('ch4-text').innerText = c.ch4Text;
+                document.getElementById('fin-title').innerText = c.finTitle;
+                document.getElementById('fin-text').innerText = c.finText;
+                document.getElementById('end-btn').innerText = c.endBtn;
+
+                currentLang = nextLang;
+            });
+
+            // 3. REVEAL NEW REALITY
+            tl.to(eclipseOverlay, { 
+                scaleX: 0, 
+                transformOrigin: "right",
+                duration: 1.0, 
+                ease: "power2.inOut" 
+            });
+        });
+
+        // --- CLOSING SEQUENCE (Enhanced) ---
+        document.querySelectorAll('a, #end-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const isLink = btn.tagName === 'A';
+                if (isLink) e.preventDefault();
+                const target = isLink ? btn.href : '../index.html';
+
+                // Fade Audio
+                gsap.to(audio, { volume: 0, duration: 1.5 });
+
+                const tl = gsap.timeline({ onComplete: () => window.location.href = target });
+
+                if (currentLang === 'en') {
+                    // IMPLOSION (English)
+                    // 1. Suck everything into the center
+                    tl.to("main", { 
+                        scale: 0, 
+                        rotation: 360,
+                        opacity: 0, 
+                        duration: 1.2, 
+                        ease: "expo.in" 
+                    });
+                    // 2. Flash to black
+                    tl.to("body", { backgroundColor: "#000", duration: 0.1 });
+                } else {
+                    // GOLDEN FADE (Bangla)
+                    // 1. Wash out with light
+                    tl.to("body", { 
+                        backgroundColor: "#FFF5E6", // Warm white
+                        duration: 1.5, 
+                        ease: "power2.inOut" 
+                    });
+                    tl.to("main", { 
+                        opacity: 0, 
+                        filter: "blur(20px)",
+                        y: -100,
+                        duration: 1.5,
+                        ease: "power2.inOut"
+                    }, "<");
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

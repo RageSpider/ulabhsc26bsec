@@ -8,7 +8,7 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -135,6 +135,26 @@
             letter-spacing: 2px;
             transform: rotate(-5deg);
             display: inline-block;
+        }
+
+        /* 166: The Celestial Cycle (Eclipse) */
+        .theme-166 {
+            background: radial-gradient(circle at top right, #0f172a, #000);
+            color: #e2e8f0;
+            font-family: 'Cinzel', serif;
+            border: 1px solid #38bdf8;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        .theme-166:hover {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+            border-color: #fb7185; /* Transition to Warm Red border on hover */
+        }
+        .star-dust {
+            position: absolute; inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3; pointer-events: none;
         }
 
         /* 174: Comics */
@@ -308,6 +328,33 @@
                         > ACCESS: <span class="redacted">DENIED</span><br>
                         > STATUS: CRITICAL
                     </p>
+                </div>
+            </div>
+        </a>
+
+        <!-- 166: The Celestial Cycle -->
+        <a href="../students/166.html" class="card-container block group">
+            <div class="theme-166 h-72 p-6 flex flex-col justify-between relative">
+                <div class="star-dust"></div>
+                <!-- Eclipse Visual -->
+                <div class="absolute top-[-50px] right-[-50px] w-40 h-40 rounded-full bg-black shadow-[0_0_40px_#38bdf8] group-hover:shadow-[0_0_60px_#fb7185] transition-shadow duration-700"></div>
+                <div class="absolute top-[-50px] right-[-50px] w-36 h-36 rounded-full bg-[#050a14] z-10"></div>
+
+                <!-- Roll -->
+                <div class="absolute top-4 right-4 z-20 text-3xl font-bold opacity-80 font-cinzel">166</div>
+
+                <div class="relative z-10 pt-2">
+                    <span class="text-[9px] uppercase tracking-[0.3em] text-[#38bdf8] group-hover:text-[#fb7185] transition-colors border border-white/20 px-2 py-1 rounded-full">Eclipse</span>
+                </div>
+
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold mb-2 leading-tight">The Celestial<br>Cycle</h2>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="w-2 h-2 rounded-full bg-[#38bdf8]"></span>
+                        <span class="h-[1px] w-8 bg-white/20"></span>
+                        <span class="w-2 h-2 rounded-full bg-[#fb7185]"></span>
+                    </div>
+                    <p class="text-[9px] uppercase tracking-widest mt-2 opacity-60 text-gray-400">Blue Hour <span class="mx-1 text-white">/</span> Golden Hour</p>
                 </div>
             </div>
         </a>
