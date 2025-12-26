@@ -8,8 +8,8 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Added Righteous, Rajdhani, Quicksand for new themes -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Added Permanent Marker, Courier Prime for new themes -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -79,6 +79,25 @@
         .font-anton { font-family: 'Anton', sans-serif; }
         .bg-brand-blue { background-color: #0044CC; }
         .text-brand-yellow { color: #FFD700; }
+
+        /* 133: The Backbencher */
+        .theme-133 {
+            background-color: #111;
+            color: #f3f3f3;
+            font-family: 'Permanent Marker', cursive;
+            border: 2px solid #333;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+        }
+        .theme-133:hover {
+            border-color: #FF003C;
+            box-shadow: 5px 5px 0px #FF003C;
+            transform: translate(-2px, -2px);
+        }
+        .scribble-text {
+            text-shadow: 2px 2px 0px #000;
+        }
 
         /* 141: TVA: Loki (Retro Monitor) */
         .theme-141 { 
@@ -275,6 +294,30 @@
                 <div class="relative z-10">
                     <h2 class="font-anton text-5xl uppercase leading-none mb-1 group-hover:text-brand-blue transition-colors">The Urban<br>Chronicle</h2>
                     <div class="h-1 w-12 bg-brand-yellow mt-2 group-hover:w-full transition-all duration-500"></div>
+                </div>
+            </div>
+        </a>
+
+        <!-- 133: The Backbencher -->
+        <a href="../students/133.html" class="card-container block group">
+            <div class="theme-133 h-72 p-6 relative flex flex-col justify-between overflow-hidden">
+                <!-- Graffiti BG -->
+                <div class="absolute top-10 right-4 text-7xl font-hand opacity-10 text-[#FF003C] rotate-12 pointer-events-none">X</div>
+                <div class="absolute bottom-10 left-4 text-7xl font-hand opacity-10 text-[#FF003C] -rotate-12 pointer-events-none">O</div>
+                
+                <!-- Tape -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/40 backdrop-blur-sm rotate-1 shadow-sm"></div>
+
+                <div class="relative z-10 flex justify-between items-start">
+                    <span class="font-mono text-xs bg-[#FF003C] text-black px-2 py-1 font-bold transform -rotate-2">LATE</span>
+                    <span class="font-hand text-4xl text-[#F9E216] scribble-text">133</span>
+                </div>
+
+                <div class="relative z-10 text-center">
+                    <h2 class="font-hand text-5xl text-white mb-1 group-hover:text-[#FF003C] transition-colors scribble-text leading-none">The<br>Backbencher</h2>
+                    <div class="bg-white text-black px-2 py-1 font-mono text-[9px] uppercase tracking-widest inline-block mt-2 transform rotate-1">
+                        Forced Scholar
+                    </div>
                 </div>
             </div>
         </a>
