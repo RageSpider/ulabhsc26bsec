@@ -1,0 +1,11 @@
+../images/133/classroom_friends.jpg
+../images/133/free_fire_squad.jpg
+../images/133/friends_and_jersey.jpg
+../images/133/friends_in_park.jpg
+../images/133/in_canteen.jpg
+../images/133/main.jpg
+../images/133/nobinboron.jpg
+../images/133/rain.jpg
+../images/133/solo.jpg
+../images/133/with_close_friends.jpg
+../images/133/with_friends.jpg
