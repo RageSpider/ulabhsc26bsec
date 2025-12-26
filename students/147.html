@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>147 | The Passenger</title>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Righteous (Display), Rajdhani (Technical/Train UI), Tiro Bangla (Bengali) -->
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Rajdhani:wght@300;500;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- CONFIG -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0B1026',
+                        'track-metal': '#4B5563',
+                        'signal-yellow': '#FFD700',
+                        'steam-white': '#E5E7EB',
+                        'seat-leather': '#8B4513',
+                    },
+                    fontFamily: {
+                        'display': ['Righteous', 'cursive'],
+                        'tech': ['Rajdhani', 'sans-serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    },
+                    backgroundImage: {
+                        'noise': "url('https://grainy-gradients.vercel.app/noise.svg')",
+                        'metal-gradient': "linear-gradient(135deg, #1f2937 0%, #111827 100%)",
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(255, 215, 0, 0.3)',
+                        'window': 'inset 0 0 50px rgba(0,0,0,0.8)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B1026;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+
+        /* TRAIN TRACKS */
+        .track-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #4B5563;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        .sleeper {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 8px;
+            background: #1F2937;
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        /* TRAIN WINDOW */
+        .train-window {
+            position: relative;
+            background: #000;
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid #374151;
+            overflow: hidden;
+        }
+        .train-window img {
+            opacity: 0.8;
+            transition: transform 1s ease, opacity 0.5s ease;
+        }
+        .train-window:hover img {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .reflection {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.05) 45%, transparent 50%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* STEAM EFFECT */
+        .steam {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        /* TICKET OPENING */
+        #ticket-overlay {
+            position: fixed; inset: 0;
+            background: #0B1026;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .ticket {
+            background: #F3F4F6;
+            color: #1F2937;
+            width: 300px;
+            height: 140px;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            overflow: hidden;
+            mask-image: radial-gradient(circle at 0 50%, transparent 10px, black 11px), radial-gradient(circle at 100% 50%, transparent 10px, black 11px);
+            cursor: pointer;
+            transform-origin: center;
+        }
+        .ticket-stub {
+            border-right: 2px dashed #9CA3AF;
+            width: 80px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: #E5E7EB;
+        }
+        .ticket-body {
+            flex-grow: 1;
+            padding: 15px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+
+        /* NAVIGATION SIGN */
+        .station-sign {
+            background: #1F2937;
+            border: 2px solid #FFF;
+            color: #FFF;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+    </style>
+</head>
+<body class="selection:bg-signal-yellow selection:text-midnight">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/147.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- NOISE -->
+    <div class="fixed inset-0 bg-noise opacity-[0.05] pointer-events-none z-50"></div>
+
+    <!-- TICKET OPENING -->
+    <div id="ticket-overlay">
+        <div class="ticket hover:scale-105 transition-transform duration-300" id="start-btn">
+            <div class="ticket-stub">
+                <span class="rotate-[-90deg] font-tech font-bold text-xl tracking-widest text-gray-500">ADMIT</span>
+            </div>
+            <div class="ticket-body">
+                <h2 class="font-display text-2xl text-midnight">ROLL 147</h2>
+                <p class="font-tech text-sm text-gray-600 uppercase tracking-widest">The Passenger</p>
+                <div class="mt-2 flex justify-between items-end">
+                    <span class="text-[10px] font-mono">STATION: ULAB</span>
+                    <span class="text-xs font-bold text-signal-yellow bg-midnight px-2 py-0.5 rounded">CLICK TO BOARD</span>
+                </div>
+            </div>
+            <!-- Stamp Effect -->
+            <div id="stamp" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-red-600 text-red-600 font-bold p-2 rotate-[-15deg] opacity-0 text-xl uppercase tracking-widest">
+                BOARDED
+            </div>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-4 flex justify-between items-center bg-gradient-to-b from-midnight to-transparent pointer-events-none">
+        <div class="pointer-events-auto flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full bg-signal-yellow animate-pulse"></div>
+            <span class="font-tech text-lg tracking-[0.2em] text-steam-white">MD TANVIR ALAM</span>
+        </div>
+        <div class="pointer-events-auto flex gap-4">
+            <a href="../gallery.html" class="station-sign text-[10px] hover:bg-white hover:text-midnight transition-colors">GALLERY</a>
+            <a href="../index.html" class="station-sign text-[10px] hover:bg-red-600 hover:border-red-600 transition-colors">EXIT</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 opacity-0" id="main-content">
+        
+        <!-- TRACKS DECORATION (Background) -->
+        <div class="fixed inset-0 pointer-events-none z-0">
+            <div class="track-line"></div>
+            <!-- Sleepers generated by JS -->
+            <div id="sleepers-container"></div>
+        </div>
+
+        <!-- HERO SECTION -->
+        <section class="min-h-screen flex flex-col justify-center items-center relative py-20 px-4">
+            <div class="train-window w-full max-w-md aspect-[4/5] mb-8 relative z-10 rotate-1">
+                <img src="../images/147/main.jpg" alt="Tanvir Profile" class="w-full h-full object-cover">
+                <div class="reflection"></div>
+            </div>
+            
+            <div class="text-center relative z-5 bg-midnight/80 p-4 backdrop-blur-sm border border-white/10 rounded-lg">
+                <h1 class="font-display text-5xl md:text-7xl text-white mb-2 tracking-wide">THE PASSENGER</h1>
+                <p class="font-tech text-signal-yellow text-sm md:text-base tracking-[0.3em] uppercase">Route: Life • Class: First • Seat: 147</p>
+            </div>
+
+            <!-- QUOTE TICKER -->
+            <div class="absolute bottom-6 md:bottom-0 left-0 w-full flex justify-center px-4 z-20">
+                <div class="bg-black/60 border border-white/20 px-6 py-3 rounded-xl md:rounded-full backdrop-blur-md shadow-lg max-w-3xl">
+                    <p class="font-tech text-gray-300 text-xs md:text-sm tracking-widest uppercase text-center leading-relaxed">
+                        "Live life the way it’s meant to be. Don’t burden yourself with pressure. Time is far too short."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- METAPHOR SECTION -->
+        <section class="py-24 px-4 relative max-w-4xl mx-auto">
+            <div class="bg-[#1a1f35] border-l-4 border-signal-yellow p-8 md:p-12 shadow-2xl relative z-10">
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-4xl">🚂</span>
+                    <h2 class="font-bangla text-3xl md:text-4xl text-white">জীবনটা চলন্ত ট্রেনের মত!</h2>
+                </div>
+                
+                <div class="font-bangla text-lg md:text-xl text-gray-300 leading-loose space-y-6 text-justify">
+                    <p>
+                        প্রতিটি স্টেশনে কিছু যাত্রী নামে আবার কিছু যাত্রী নতুন উঠে। আবার কিছু যাত্রী এমন থাকে যারা শুরুর স্টেশন থেকে শুরু করে শেষ পর্যন্ত যায়।
+                    </p>
+                    <p>
+                        জীবন নামক ট্রেনের একটি স্টেশন কলেজ লাইফ। আগের স্টেশনগুলোতে যেমন কিছু যাত্রী নামিয়ে আসতে হয়েছে, হয়তবা পরবর্তী স্টেশনেও এখানের কিছু যাত্রীকে নামাতে হবে। হয়ত আর কখনও দেখা হবে না তাদের সাথে। এটাই জীবনের নিয়ম।
+                    </p>
+                    <p class="text-signal-yellow/90 font-bold border-t border-white/10 pt-4">
+                        তারপরও ভ্রমণের মাঝখানটায় কিছু মানুষ, কিছু অনুভূতি হৃদয়ে জায়গা করে নেয় চিরদিনের মত, যাদের ছাপ অত্যন্ত গভীর।
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- GALLERY: THE WINDOWS -->
+        <section class="py-20 px-4 relative">
+            <div class="text-center mb-16 relative z-10">
+                <span class="font-tech text-xs tracking-[0.5em] text-gray-500 uppercase block mb-2">Window Views</span>
+                <h2 class="font-display text-4xl md:text-5xl text-white">STATION MEMORIES</h2>
+            </div>
+
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+                
+                <!-- GROUP 1: THE VIBE -->
+                <div class="train-window aspect-square rotate-1 hover:rotate-0 transition-transform scroll-reveal">
+                    <img src="../images/147/with_friends_sitting_at_museum.jpeg" alt="Museum Friends" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                    <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center font-tech text-xs tracking-widest text-gray-300">MUSEUM STOP</div>
+                </div>
+
+                <div class="train-window aspect-square -rotate-1 hover:rotate-0 transition-transform scroll-reveal">
+                    <img src="../images/147/classroom_pic_with_friends.jpeg" alt="Classroom" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                     <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center font-tech text-xs tracking-widest text-gray-300">CLASSROOM CHAOS</div>
+                </div>
+
+                <div class="train-window aspect-square rotate-2 hover:rotate-0 transition-transform scroll-reveal">
+                    <img src="../images/147/science_fest_selfie_with_friends.jpeg" alt="Science Fest" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                     <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center font-tech text-xs tracking-widest text-gray-300">SCIENCE FEST</div>
+                </div>
+
+                <!-- GROUP 2: MOMENTS -->
+                <div class="train-window aspect-[4/3] md:col-span-2 scroll-reveal">
+                    <img src="../images/147/at_museum_with_friends.jpeg" alt="Museum Group" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                </div>
+
+                <div class="train-window aspect-[3/4] scroll-reveal">
+                    <img src="../images/147/me_and_siam.jpeg" alt="Siam & Me" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                </div>
+
+                <!-- GROUP 3: RANDOM -->
+                <div class="train-window aspect-video scroll-reveal">
+                     <img src="../images/147/free_fire.jpg" alt="Gaming" class="w-full h-full object-cover">
+                     <div class="reflection"></div>
+                     <div class="absolute top-2 right-2 bg-red-600 text-white px-2 font-tech text-xs font-bold">GAMING ARC</div>
+                </div>
+                 <div class="train-window aspect-video scroll-reveal">
+                     <img src="../images/147/eating_fruit.jpeg" alt="Eating" class="w-full h-full object-cover">
+                     <div class="reflection"></div>
+                </div>
+                <div class="train-window aspect-video scroll-reveal">
+                     <img src="../images/147/free_fire_clown.jpeg" alt="Prize" class="w-full h-full object-cover">
+                     <div class="reflection"></div>
+                </div>
+
+                <!-- ARTISTIC -->
+                <div class="train-window aspect-[3/4] md:col-span-1 scroll-reveal">
+                    <img src="../images/147/looking_at_mona_lisa.jpeg" alt="Mona Lisa" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                    <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center font-tech text-xs tracking-widest text-gray-300">OBSERVING ART</div>
+                </div>
+                
+                 <div class="train-window aspect-[3/4] md:col-span-1 scroll-reveal">
+                    <img src="../images/147/prize_book.jpeg" alt="Clown" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                </div>
+                 <div class="train-window aspect-[3/4] md:col-span-1 scroll-reveal">
+                    <img src="../images/147/in_scince_fest_friends.jpeg" alt="Fest" class="w-full h-full object-cover">
+                    <div class="reflection"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- THE UNKNOWN FUTURE -->
+        <section class="py-32 px-4 relative">
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <div class="w-16 h-16 mx-auto bg-signal-yellow rounded-full flex items-center justify-center mb-8 shadow-glow animate-pulse">
+                    <span class="text-2xl text-black">⚠</span>
+                </div>
+                
+                <h2 class="font-bangla text-3xl md:text-5xl text-white mb-8">জানিনা পরে কি হবে...</h2>
+                <p class="font-bangla text-lg md:text-xl text-gray-400 leading-relaxed mb-8">
+                    জীবনের ট্রেন কোথায় নিয়ে যাবে তবে এই স্টেশনে আর ফেরা হবে না। হয়ত কোনো কোনো সময় হঠাৎ করে কারো কথা মনে পড়বে, হয়ত উদাস হয়ে জীবনের এই সময়ের মুহূর্তগুলোর কথা চিন্তা করতে থাকবো কোনো এক কোণে বসে... বলা হয় না।
+                </p>
+
+                <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+                <div class="font-bangla text-xl md:text-2xl text-signal-yellow font-bold leading-relaxed">
+                    "শেষে শুধু বলতে চাই, সবাই জীবনে সফলতার শীর্ষ পৌঁছাক, ULab HSC 26 ব্যাচ হোক ভবিষ্যতের উজ্জ্বল নক্ষত্র।"
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="py-12 bg-black border-t border-gray-800 text-center relative z-10">
+            <h1 class="font-display text-[15vw] leading-none text-white/5 select-none absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none">147</h1>
+            <div class="relative z-10">
+                <p class="font-tech text-gray-500 tracking-[0.3em] uppercase mb-4">Station 147 • End of Line</p>
+                <button id="exit-btn" class="text-xs font-bold text-red-500 border border-red-500 px-6 py-2 hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest">
+                    Depart Train
+                </button>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. GENERATE SLEEPERS (Train Tracks)
+        const sleepersContainer = document.getElementById('sleepers-container');
+        const totalHeight = Math.max(document.body.scrollHeight, 4000); // Estimate
+        const gap = 60; // Distance between sleepers
+        const count = Math.ceil(totalHeight / gap);
+
+        for(let i=0; i<count; i++) {
+            const sleeper = document.createElement('div');
+            sleeper.className = 'sleeper';
+            sleeper.style.top = `${i * gap}px`;
+            sleepersContainer.appendChild(sleeper);
+        }
+
+        // 2. OPENING SEQUENCE
+        const startBtn = document.getElementById('start-btn');
+        const ticketOverlay = document.getElementById('ticket-overlay');
+        const mainContent = document.getElementById('main-content');
+        const stamp = document.getElementById('stamp');
+        const audio = document.getElementById('bg-music');
+
+        startBtn.addEventListener('click', () => {
+            // Audio
+            audio.volume = 0.4;
+            audio.play().catch(e => console.log("Audio prevented"));
+
+            const tl = gsap.timeline();
+
+            // Stamp Effect
+            tl.to(stamp, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.out" });
+            
+            // Ticket Slide out
+            tl.to(startBtn, { x: "150%", opacity: 0, duration: 0.6, ease: "power2.in", delay: 0.3 });
+            
+            // Overlay Fade
+            tl.to(ticketOverlay, { opacity: 0, duration: 0.5, onComplete: () => ticketOverlay.style.display = 'none' });
+
+            // Content Reveal
+            tl.to(mainContent, { opacity: 1, duration: 1 }, "-=0.2");
+
+            // Hero Anim
+            tl.from("h1", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.5");
+        });
+
+        // 3. SCROLL ANIMATIONS
+        // Parallax for Windows
+        gsap.utils.toArray('.train-window').forEach((window, i) => {
+            gsap.from(window, {
+                scrollTrigger: {
+                    trigger: window,
+                    start: "top 90%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out",
+                delay: i % 3 * 0.1 // Stagger grid items
+            });
+        });
+
+        // Track Movement Effect (Parallax the sleepers)
+        gsap.to(".sleeper", {
+            y: -100, // Move sleepers up slightly as we scroll down to enhance speed feel
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1
+            }
+        });
+
+        // 4. EXIT
+        document.getElementById('exit-btn').addEventListener('click', () => {
+             gsap.to(audio, { volume: 0, duration: 1 });
+             gsap.to("body", { backgroundColor: "#000", duration: 1 });
+             gsap.to(mainContent, { x: "-100%", duration: 0.8, ease: "power2.in", onComplete: () => window.location.href = '../index.html' });
+        });
+
+    </script>
+</body>
+</html>

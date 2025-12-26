@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>119 | The Smile Collector</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Dancing Script (Headers), Quicksand (Body - Soft & Round), Tiro Bangla (Bengali) -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Quicksand:wght@300;400;600&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- CONFIG -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sakura-pink': '#FFB7C5',
+                        'sakura-light': '#FFF0F5',
+                        'sakura-dark': '#FF9EAE',
+                        'bark': '#5D4037',
+                        'leaf': '#98B4A6',
+                    },
+                    fontFamily: {
+                        'hand': ['Dancing Script', 'cursive'],
+                        'body': ['Quicksand', 'sans-serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-sakura': 'linear-gradient(to bottom, #FFF0F5 0%, #FFDEE9 100%)',
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 30px -10px rgba(255, 158, 174, 0.4)',
+                        'glow': '0 0 20px rgba(255, 183, 197, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(to bottom, #FFF5F7, #FFE4E1);
+            color: #5D4037;
+            overflow-x: hidden;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #FFF0F5; }
+        ::-webkit-scrollbar-thumb { background: #FFB7C5; border-radius: 3px; }
+
+        /* SAKURA PETAL ANIMATION ELEMENTS */
+        .petal {
+            position: fixed;
+            background: #FFC0CB;
+            border-radius: 100% 0 100% 0;
+            z-index: 0;
+            pointer-events: none;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* IMAGE FRAMES (Soft & Dreamy) */
+        .dream-frame {
+            position: relative;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px -5px rgba(255, 183, 197, 0.5);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            overflow: hidden;
+            display: inline-block; /* Helps with fitting content */
+        }
+        .dream-frame img {
+            border-radius: 12px;
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 1.2s ease;
+        }
+        .dream-frame:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px -5px rgba(255, 183, 197, 0.8);
+        }
+        .dream-frame:hover img {
+            transform: scale(1.05);
+        }
+
+        /* BRANCH DECORATION */
+        .branch-decor {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        /* SWAY ANIMATION FOR IMAGES */
+        @keyframes sway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        .sway-slow { animation: sway 6s ease-in-out infinite; }
+        .sway-fast { animation: sway 4s ease-in-out infinite reverse; }
+
+        /* OPENING OVERLAY */
+        #opening-screen {
+            position: fixed; inset: 0;
+            background: #FFB7C5;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+        
+        /* Bloom Effect */
+        .bloom-circle {
+            width: 20px; height: 20px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse-bloom 2s infinite;
+        }
+        @keyframes pulse-bloom {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+    </style>
+</head>
+<body class="selection:bg-sakura-pink selection:text-white">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/119.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- PETAL CONTAINER -->
+    <div id="petals-container"></div>
+
+    <!-- OPENING SCREEN -->
+    <div id="opening-screen">
+        <div class="text-center relative z-10">
+            <div class="bloom-circle mx-auto mb-8"></div>
+            <h1 class="font-hand text-6xl text-white drop-shadow-md mb-2 opacity-0 tracking-wide" id="intro-title">Sakura Dreams</h1>
+            <p class="font-body text-white/90 tracking-[0.3em] uppercase text-xs opacity-0" id="intro-sub">Click to Bloom</p>
+        </div>
+        <!-- Reveal Mask -->
+        <div class="absolute inset-0 bg-[#FFF0F5] rounded-full scale-0" id="reveal-mask"></div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-sm bg-white/30 border-b border-white/20">
+        <div class="flex items-center gap-2">
+            <!-- Flower Icon -->
+            <svg class="w-5 h-5 text-sakura-dark" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C12 2 14 5 14 8C14 11 12 12 12 12C12 12 10 11 10 8C10 5 12 2 12 2ZM12 22C12 22 10 19 10 16C10 13 12 12 12 12C12 12 14 13 14 16C14 19 12 22 12 22ZM2 12C2 12 5 10 8 10C11 10 12 12 12 12C12 12 11 14 8 14C5 14 2 12 2 12ZM22 12C22 12 19 14 16 14C13 14 12 12 12 12C12 12 13 10 16 10C19 10 22 12 22 12Z"/></svg>
+            <span class="font-body text-xs font-bold tracking-widest text-bark">AMRIN HASAN</span>
+        </div>
+        <div class="flex gap-6 font-body text-[10px] font-bold tracking-widest uppercase text-bark/60">
+            <a href="../gallery.html" class="hover:text-sakura-dark transition-colors nav-link">Gallery</a>
+            <a href="../index.html" class="hover:text-sakura-dark transition-colors nav-link">Index</a>
+        </div>
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 pt-28 pb-20 px-4 md:px-12 max-w-6xl mx-auto opacity-0" id="main-content">
+
+        <!-- HEADER -->
+        <header class="text-center mb-24 relative">
+            <div class="inline-block relative">
+                <h1 class="font-hand text-7xl md:text-9xl text-sakura-dark mb-2 relative z-10 drop-shadow-sm">The Smile Collector</h1>
+                <!-- Underline Brush Stroke -->
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-sakura-pink/30 rounded-full blur-sm"></div>
+            </div>
+            <div class="mt-6 flex flex-col items-center gap-1">
+                <p class="font-body text-sm text-bark/60 tracking-widest uppercase">Roll 119 • Amrin Hasan</p>
+                <div class="w-1 h-8 bg-sakura-pink/50 mt-2"></div>
+            </div>
+        </header>
+
+        <!-- INTRO SECTION -->
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center mb-40">
+            <!-- Main Photo -->
+            <div class="md:col-span-5 relative flex justify-center md:justify-end">
+                <!-- Using aspect-[3/4] to enforce portrait -->
+                <div class="dream-frame w-72 md:w-80 sway-slow">
+                    <img src="../images/119/main.jpeg" alt="Amrin Hasan" class="aspect-[3/4] object-cover">
+                </div>
+            </div>
+
+            <!-- Intro Text -->
+            <div class="md:col-span-7 space-y-6 text-center md:text-left relative">
+                <!-- Decorative branch SVG behind text -->
+                <svg class="branch-decor -top-10 -left-10 w-40 h-40 text-sakura-pink" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M10,50 Q30,40 50,50 T90,50" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="20" cy="45" r="3" fill="#FFB7C5"/>
+                    <circle cx="60" cy="55" r="4" fill="#FFB7C5"/>
+                </svg>
+
+                <p class="font-body text-lg md:text-xl leading-relaxed text-bark/80">
+                    <span class="font-hand text-4xl text-sakura-dark mr-2">"</span>
+                    I was a whole different person before entering ULAB, a quite studious girl who never knew what was waiting for her at the end of this journey! I can happily say now that bunking classes, carrying phone secretly and recording every moment, the events added some colorful pages in my life...
+                </p>
+            </div>
+        </section>
+
+
+        <!-- SECTION 1: BLOSSOM SQUAD -->
+        <section class="mb-40 relative">
+             <!-- Section Connector Line -->
+             <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-20 h-20 w-[1px] bg-gradient-to-b from-transparent to-sakura-dark/30"></div>
+
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/2 order-2 md:order-1 space-y-6 pl-4 md:pl-12 border-l-2 border-sakura-light">
+                    <h2 class="font-hand text-5xl text-sakura-dark">The Blossom Squad</h2>
+                    <div class="font-body text-base md:text-lg leading-loose text-bark/70 text-justify">
+                        <p>
+                            Coming from a highly competitive school, I walked in unsure of making friends. A simple <span class="font-bold text-sakura-dark">“hi”</span> from <span class="font-bold">Shimla Mirch</span> became the start of a bond that felt written in the stars. 
+                        </p>
+                        <p class="mt-4">
+                            <span class="font-bold">Sugarcube</span> Kashfia’s gentle eyes on orientation day made me want to protect that warmth, and Suchi’s sudden, tight hug melted a heart I didn’t know was still frozen. I may not always be the best friend, but they gave me a belonging I never knew I was searching for.
+                        </p>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2 flex justify-center">
+                    <div class="dream-frame w-full max-w-sm sway-fast">
+                        <img src="../images/119/blossom_squad.jpeg" alt="The Blossom Squad" class="object-contain max-h-[600px]">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: IQ OVER NOISE -->
+        <section class="mb-40 relative">
+            <div class="bg-white/40 backdrop-blur-md rounded-[3rem] p-8 md:p-12 shadow-soft border border-white">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center">
+                        <!-- Adjusted for Portrait: aspect-[3/4] instead of square -->
+                        <div class="dream-frame w-64 md:w-72 -rotate-2">
+                            <img src="../images/119/rumman_iq.jpeg" alt="Rumman" class="aspect-[3/4] object-cover">
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h2 class="font-hand text-4xl mb-6 text-bark">IQ Over Noise!</h2>
+                        <p class="font-body text-lg leading-relaxed text-bark/80">
+                            I met a quiet, low-key nice guy, <span class="font-bold text-sakura-dark">Rumman</span>... Our intellectually spirited rivalry over exams was invigorating, marked by confidence, collaboration, and genuine camaraderie. Though ostensibly introverted, he proved surprisingly loquacious, making the experience both stimulating and memorable!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: THE 3 IDIOTS -->
+        <section class="mb-40">
+            <div class="text-center mb-16">
+                <span class="font-body text-xs tracking-[0.4em] text-sakura-dark uppercase block mb-2">Friendship</span>
+                <h2 class="font-hand text-6xl text-bark mb-4">The 3 Idiots</h2>
+                <p class="font-bangla text-sakura-dark text-xl">"বন্ধুত্ব মানেই পাগলামি"</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                <div class="md:col-span-7 font-body text-lg leading-loose text-bark/80 space-y-6 text-justify md:text-left order-2 md:order-1">
+                    <p>
+                        TBH, I was scared to make male friends, but <span class="font-bold text-bark">Farhan's</span> extrovert talking made me a little secure. Then I met <span class="font-bold text-bark">Fahim</span> and <span class="font-bold text-bark">Rakin</span> — they were my first male friends.
+                    </p>
+                    <div class="bg-sakura-light/50 p-6 rounded-2xl border border-sakura-pink/20 relative">
+                        <!-- Tiny flower icon absolute -->
+                        <span class="absolute -top-3 -left-3 text-2xl">🎁</span>
+                        <p>
+                            The first birthday gift from a ULABian guy, Fahim — a book — will always be my favorite. The <span class="font-bangla font-bold text-sakura-dark">নবীনবরণ</span> (Nobinboron) was great! We would pair up with Erin or Shimla sometimes and it would make it fabulous.
+                        </p>
+                    </div>
+                </div>
+                <div class="md:col-span-5 flex justify-center order-1 md:order-2">
+                    <div class="dream-frame w-full max-w-sm rotate-2">
+                        <!-- Portrait friendly -->
+                        <img src="../images/119/three_idiots.jpeg" alt="The 3 Idiots" class="aspect-[3/4] object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: FOUND FAMILY -->
+        <section class="mb-40 relative">
+            <div class="flex flex-col md:flex-row gap-16 items-center">
+                <div class="md:w-1/2 order-2 md:order-1 relative">
+                    <!-- Background Circle -->
+                    <div class="absolute inset-0 bg-sakura-pink/20 rounded-full blur-3xl scale-90 -z-10"></div>
+                    <!-- Portrait friendly -->
+                    <div class="dream-frame w-full max-w-sm sway-slow">
+                        <img src="../images/119/the_found_family.jpeg" alt="Found Family" class="aspect-[3/4] object-cover">
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2 space-y-8">
+                    <h2 class="font-hand text-5xl text-sakura-dark">The Found Family</h2>
+                    <div class="font-body text-lg leading-relaxed text-bark/80 space-y-6">
+                        <p>
+                            ULAB has given me a soul sister, <span class="font-bangla font-bold">বড় ভাই</span> (Boro Bhai), and a lifelong <span class="font-bangla font-bold">ডাল-ভাত</span> (Dal-Bhat) for 50 years!
+                        </p>
+                        <p>
+                            I was always a giver, but my restless heart finally found peace. Those countless late-night call sessions with <span class="font-bold text-sakura-dark">Erin</span>, the brotherly scolding and guidance from <span class="font-bold text-sakura-dark">Antu</span>, mostly the unexpected knocking on the door of my heart from the nerd guy is something I would like to keep forever.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- CONCLUSION -->
+        <section class="text-center max-w-4xl mx-auto mb-24 relative">
+             <!-- Falling Petal Decoration Background -->
+             <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+                 <div class="absolute top-10 left-10 text-sakura-pink/20 text-4xl animate-pulse">🌸</div>
+                 <div class="absolute bottom-10 right-10 text-sakura-pink/20 text-6xl animate-pulse delay-700">🌸</div>
+             </div>
+
+             <!-- Full Portrait Handling for Rollercoaster -->
+            <div class="dream-frame w-full max-w-sm mx-auto mb-12 rotate-0 hover:rotate-0 transform transition-none">
+                <img src="../images/119/overall_rollercoaster.jpeg" alt="Overall Rollercoaster" class="w-full h-auto block rounded-xl">
+                <div class="p-4 bg-white/80 backdrop-blur-sm absolute bottom-0 left-0 w-full rounded-b-xl">
+                    <p class="font-hand text-2xl text-bark">The Overall Rollercoaster</p>
+                </div>
+            </div>
+            
+            <p class="font-body text-xl md:text-2xl leading-relaxed text-bark/90 italic mb-12">
+                "Although I wasn't so sure of ULAB at first but looking back, I did have a very good time and now as it is ending I would say—If I ever were to live the '<span class="font-bold text-sakura-dark">HSC PERIOD</span>' once again, I would definitely like to be classmates with these people again!"
+            </p>
+
+            <button id="close-book-btn" class="group relative px-8 py-3 bg-white border border-sakura-pink rounded-full text-sakura-dark font-body font-bold tracking-widest uppercase overflow-hidden hover:text-white transition-colors duration-300">
+                <span class="relative z-10">End Chapter</span>
+                <div class="absolute inset-0 bg-sakura-pink transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+            </button>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-12 border-t border-sakura-pink/20">
+            <p class="font-hand text-2xl text-sakura-dark mb-2">Amrin Hasan</p>
+            <p class="font-body text-[10px] tracking-[0.3em] text-bark/50 uppercase">Sakura Dreams • Memory Archive 119</p>
+        </footer>
+
+    </main>
+
+    <!-- JS LOGIC -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 1. SAKURA PETAL GENERATOR ---
+        const petalContainer = document.getElementById('petals-container');
+        // Various shades of pink
+        const colors = ['#FFB7C5', '#FFC0CB', '#FFD1DC', '#FFF0F5'];
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Random Size
+            const size = Math.random() * 10 + 8;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            
+            // Random Start Position (mostly top, some left)
+            if(Math.random() > 0.5) {
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.top = `-20px`;
+            } else {
+                petal.style.left = `-20px`;
+                petal.style.top = `${Math.random() * 50}vh`;
+            }
+            
+            petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Random shape variation
+            petal.style.borderRadius = `${Math.random() * 100}% 0 ${Math.random() * 100}% 0`;
+            
+            petalContainer.appendChild(petal);
+
+            // Falling Animation
+            gsap.to(petal, {
+                y: '110vh',
+                x: `+=${Math.random() * 200 + 50}`, // Drift right
+                rotation: `+=${Math.random() * 720}`,
+                duration: Math.random() * 10 + 8, // Slow fall
+                ease: "none",
+                onComplete: () => petal.remove()
+            });
+        }
+
+        // Start Petals
+        setInterval(createPetal, 400); // Constant gentle fall
+
+        // --- 2. OPENING ANIMATION ---
+        const openingScreen = document.getElementById('opening-screen');
+        const revealMask = document.getElementById('reveal-mask');
+        const introTitle = document.getElementById('intro-title');
+        const introSub = document.getElementById('intro-sub');
+        const mainContent = document.getElementById('main-content');
+        const audio = document.getElementById('bg-music');
+
+        window.addEventListener('load', () => {
+             gsap.to([introTitle, introSub], { opacity: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power2.out" });
+        });
+
+        openingScreen.addEventListener('click', () => {
+            // Audio
+            audio.volume = 0.4;
+            audio.play().catch(() => {});
+
+            const tl = gsap.timeline();
+
+            // Text Fade Out
+            tl.to([introTitle, introSub, '.bloom-circle'], { opacity: 0, scale: 0.9, duration: 0.5 });
+
+            // Reveal Bloom
+            tl.to(revealMask, { 
+                scale: 30, 
+                duration: 2, 
+                ease: "power2.inOut",
+                onComplete: () => {
+                    openingScreen.style.display = 'none';
+                }
+            });
+
+            // Content Fade In
+            tl.to(mainContent, { opacity: 1, duration: 1.5 }, "-=1.5");
+
+            // Header Elements Float Up
+            tl.from("header h1", { y: 50, opacity: 0, duration: 1.2, ease: "back.out(1.7)" }, "-=1");
+            tl.from("header p, header div", { opacity: 0, duration: 1 }, "-=0.8");
+            
+            // First Image
+            tl.from(".dream-frame", { 
+                y: 50, 
+                opacity: 0, 
+                duration: 1.2,
+                stagger: 0.2, 
+                ease: "power3.out"
+            }, "-=0.8");
+        });
+
+        // --- 3. SCROLL TRIGGERS ---
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.from(section.children, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.2,
+                ease: "power2.out"
+            });
+        });
+
+        // --- 4. CLOSING ANIMATION ---
+        let isLeaving = false;
+        function closeBook(targetUrl) {
+            if (isLeaving) return;
+            isLeaving = true;
+
+            gsap.to(audio, { volume: 0, duration: 1.5 });
+
+            const tl = gsap.timeline({
+                onComplete: () => window.location.href = targetUrl
+            });
+
+            // Fade to white
+            tl.to("body", { backgroundColor: "#FFF", duration: 0.5 });
+            tl.to(mainContent, { 
+                filter: "blur(10px) brightness(1.5)", 
+                opacity: 0, 
+                duration: 1 
+            }, "<");
+        }
+
+        document.getElementById('close-book-btn').addEventListener('click', () => closeBook('../index.html'));
+        
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeBook(link.href);
+            });
+        });
+
+    </script>
+</body>
+</html>

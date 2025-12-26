@@ -8,7 +8,8 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&display=swap" rel="stylesheet">
+    <!-- Added Righteous, Rajdhani, Quicksand for new themes -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -39,6 +40,24 @@
 
         /* --- THEME SPECIFIC STYLES --- */
 
+        /* 119: Sakura Dreams */
+        .theme-119 {
+            background: linear-gradient(to bottom, #FFF5F7, #FFE4E1);
+            color: #5D4037;
+            font-family: 'Dancing Script', cursive;
+            border: 1px solid #FFB7C5;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-119:hover {
+            border-color: #FF9EAE;
+            box-shadow: 0 0 25px rgba(255, 183, 197, 0.5);
+        }
+        .theme-119 .petal-deco {
+            position: absolute; font-size: 24px; opacity: 0.6;
+            animation: float 3s ease-in-out infinite;
+        }
+
         /* 127: The Game Master (Bio + Squid Game) */
         .theme-127 { 
             font-family: 'Oxanium', monospace; 
@@ -54,7 +73,6 @@
             pointer-events: none;
         }
         .theme-127:hover { border-color: #FF007A; box-shadow: 0 0 20px rgba(255, 0, 122, 0.3); }
-        .squid-shape { font-size: 100px; position: absolute; opacity: 0.1; font-weight: 900; z-index: 0; pointer-events: none; }
 
         /* 130: The Urban Chronicle */
         .theme-130 { font-family: 'DM Sans', sans-serif; background: #CBD5E1; color: #101010; }
@@ -92,6 +110,20 @@
         }
         .theme-144:hover { box-shadow: 0 0 25px rgba(197, 160, 89, 0.4); transform: translateY(-8px); }
         .text-lux-gold { color: #c5a059; background: linear-gradient(45deg, #c5a059, #eacda3, #c5a059); -webkit-background-clip: text; color: transparent; }
+
+        /* 147: Midnight Express */
+        .theme-147 {
+            background-color: #0B1026;
+            color: #E5E7EB;
+            font-family: 'Righteous', cursive;
+            border: 1px solid #4B5563;
+            box-shadow: inset 0 0 30px #000;
+            position: relative;
+        }
+        .theme-147:hover {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
 
         /* 152: The Relativity Age (Noir Physics) */
         .theme-152 { 
@@ -187,6 +219,27 @@
     <!-- GRID -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-7xl mx-auto pb-20 relative z-10">
 
+        <!-- 119: Sakura Dreams -->
+        <a href="../students/119.html" class="card-container block group">
+            <div class="theme-119 h-72 p-6 relative flex flex-col justify-between">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-30"></div>
+                <!-- Decorative Petals -->
+                <div class="absolute top-4 right-10 text-xl animate-pulse text-[#FFB7C5]">🌸</div>
+                <div class="absolute bottom-10 left-4 text-lg animate-bounce text-[#FFB7C5]" style="animation-duration: 3s;">🌸</div>
+
+                <div class="absolute top-2 right-2 text-6xl font-hand text-[#FFB7C5] opacity-50 rotate-12 pointer-events-none">119</div>
+                
+                <div class="relative z-10">
+                     <span class="bg-white/50 text-[#5D4037] px-2 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full border border-[#FFB7C5]">Sakura</span>
+                </div>
+
+                <div class="relative z-10 text-center">
+                    <h2 class="font-hand text-5xl text-[#5D4037] mb-1 group-hover:scale-110 transition-transform duration-500 leading-none">Sakura<br>Dreams</h2>
+                    <p class="font-sans text-[10px] uppercase tracking-widest text-[#98B4A6] mt-2">The Smile Collector</p>
+                </div>
+            </div>
+        </a>
+
         <!-- 127: The Game Master -->
         <a href="../students/127.html" class="card-container block group">
             <div class="theme-127 h-72 p-6 relative overflow-hidden rounded-xl flex flex-col justify-between">
@@ -259,6 +312,27 @@
                 <p class="font-sans text-[9px] tracking-[0.4em] text-[#e0e0e0] uppercase mb-6 opacity-60">Est. 2024</p>
                 <h2 class="text-4xl italic font-bold mb-4 group-hover:scale-105 transition-transform duration-700 text-lux-gold">Vintage Gold<br>Executive</h2>
                 <div class="w-12 h-[2px] bg-[#c5a059] group-hover:w-32 transition-all duration-500"></div>
+            </div>
+        </a>
+
+        <!-- 147: Midnight Express -->
+        <a href="../students/147.html" class="card-container block group">
+            <div class="theme-147 h-72 p-6 relative flex flex-col justify-between text-center overflow-hidden">
+                <!-- Tracks Background -->
+                <div class="absolute top-0 bottom-0 left-1/2 w-[2px] bg-[#374151] -translate-x-1/2 opacity-50"></div>
+                <div class="absolute top-0 bottom-0 left-1/2 w-16 border-x border-dashed border-[#374151] -translate-x-1/2 opacity-20"></div>
+                
+                <div class="absolute top-0 left-0 p-4 text-9xl font-display text-white opacity-5 pointer-events-none leading-none">147</div>
+
+                <div class="relative z-10 flex justify-between items-start">
+                     <div class="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse shadow-[0_0_10px_#FFD700]"></div>
+                     <span class="font-sans text-[10px] uppercase tracking-widest text-gray-500">Station 147</span>
+                </div>
+
+                <div class="relative z-10 bg-[#0B1026]/90 backdrop-blur-sm p-4 border border-[#FFD700]/30 rounded-lg">
+                    <h2 class="font-display text-4xl text-white mb-1 group-hover:text-[#FFD700] transition-colors uppercase leading-none drop-shadow-lg">Midnight<br>Express</h2>
+                    <p class="font-sans text-[9px] uppercase tracking-[0.3em] text-gray-400 mt-2">The Passenger</p>
+                </div>
             </div>
         </a>
 
