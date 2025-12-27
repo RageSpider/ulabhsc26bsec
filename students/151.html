@@ -2,1511 +2,559 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System 151 | JB Shrabon</title>
-
-    <meta property="og:title" content="System 151 | JB Shrabon">
-    <meta property="og:description" content="JB Shrabon's Profile - ULAB HSC Batch 26">
-    <meta property="og:image" content="https://ulabhsc26bsec.netlify.app/images/151/main.jpeg"> <meta property="og:url" content="https://ulabhsc26bsec.netlify.app/students/151.html">
-    <meta property="og:type" content="profile">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>151 | The Neon Underground</title>
+    
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Press+Start+2P&family=Tiro+Bangla:ital@0;1&family=VT323&display=swap" rel="stylesheet">
+    <!-- Monoton (Headers), Rajdhani (UI), Tiro Bangla (Content), Orbitron (Tech) -->
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
 
     <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- CONFIG -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'win-gray': '#c0c0c0',
-                        'win-dark': '#808080',
-                        'win-blue': '#000080',
-                        'win-light': '#ffffff',
+                        'neon-pink': '#FF0055',
+                        'neon-cyan': '#00FFFF',
+                        'neon-purple': '#BD00FF',
+                        'neon-green': '#00FF99',
+                        'neon-yellow': '#FAFF00',
+                        'dark-void': '#050505',
+                        'panel-bg': 'rgba(20, 20, 20, 0.8)',
                     },
                     fontFamily: {
-                        'pixel': ['"Press Start 2P"', 'cursive'],
-                        'terminal': ['"VT323"', 'monospace'],
-                        'bangla': ['"Tiro Bangla"', 'serif'],
-                        'note': ['"Courier Prime"', 'monospace'],
+                        'neon': ['Monoton', 'cursive'],
+                        'tech': ['Rajdhani', 'sans-serif'],
+                        'cyber': ['Orbitron', 'sans-serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    },
+                    backgroundImage: {
+                        'grid': "linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
                     },
                     boxShadow: {
-                        'out': 'inset 1.5px 1.5px #fff, inset -1.5px -1.5px #000, 1.5px 1.5px #000',
-                        'in': 'inset 1.5px 1.5px #000, inset -1.5px -1.5px #fff',
-                        'raised': 'inset 1px 1px #fff, inset -1px -1px #000, 2px 2px 5px rgba(0,0,0,0.3)',
+                        'neon-pink': '0 0 10px #FF0055, 0 0 20px #FF0055',
+                        'neon-cyan': '0 0 10px #00FFFF, 0 0 20px #00FFFF',
                     }
                 }
             }
         }
     </script>
 
+    <!-- CUSTOM STYLES -->
     <style>
-        :root {
-            --bg-color: #008080;
-            --active-color: #000080; /* Default Active Color */
-            --active-gradient-end: #1084d0;
-            --win-gray: #c0c0c0;
-        }
-
         body {
-            background-color: var(--bg-color);
+            background-color: #030303;
+            color: #fff;
+            overflow-x: hidden;
+            /* Lighter texture for performance */
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 100%);
+        }
+
+        /* LIGHTING EFFECT */
+        #ambient-light {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.05), transparent 60%);
+            pointer-events: none; z-index: 0;
+        }
+
+        /* NEON TEXT CLASSES (Performance Optimized) */
+        .text-glow-pink { text-shadow: 0 0 10px #FF0055; }
+        .text-glow-cyan { text-shadow: 0 0 10px #00FFFF; }
+        .text-glow-green { text-shadow: 0 0 10px #00FF99; }
+        
+        /* BORDERS & BOXES */
+        .neon-border {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
-            height: 100vh;
-            height: 100dvh;
-            width: 100vw;
-            cursor: default;
-            user-select: none;
-            font-smooth: never;
-            -webkit-font-smoothing: none;
-            transition: background-color 0.5s;
-            -webkit-tap-highlight-color: transparent;
         }
-
-        /* CRT Effects */
-        .scanlines {
-            position: fixed; inset: 0; pointer-events: none; z-index: 9000;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px;
-            opacity: 0.6;
+        .neon-border::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
         }
-        .crt-overlay {
-            position: fixed; inset: 0; pointer-events: none; z-index: 9001;
-            background: radial-gradient(circle, rgba(18, 16, 16, 0) 60%, rgba(0, 0, 0, 0.2) 100%);
-        }
-
-        /* Window Structure */
-        .window {
-            background: var(--win-gray);
-            border-top: 2px solid #fff; border-left: 2px solid #fff;
-            border-right: 2px solid #000; border-bottom: 2px solid #000;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-            position: absolute;
-            display: flex; flex-direction: column;
-            min-width: 200px;
-            visibility: hidden; 
-            opacity: 0;
-            transform: scale(0.95);
-        }
-
-        .window.active {
-            z-index: 100;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.5);
-            outline: 1px solid #000; /* Crisp outline */
-        }
+        .neon-border:hover::before { left: 100%; }
         
-        .window.maximized {
-            width: 100% !important; height: calc(100% - 34px) !important;
-            transform: translate(0px, 0px) !important; /* Force reset transform */
-            top: 0 !important; left: 0 !important;
-            border: none;
-            box-shadow: none;
+        .neon-border-pink:hover { border-color: #FF0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.3); }
+        .neon-border-cyan:hover { border-color: #00FFFF; box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); }
+        .neon-border-green:hover { border-color: #00FF99; box-shadow: 0 0 15px rgba(0, 255, 153, 0.3); }
+
+        /* MASONRY GRID */
+        .masonry-grid {
+            column-count: 1; gap: 1rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+
+        .masonry-item {
+            break-inside: avoid; margin-bottom: 1rem;
+            opacity: 0; transform: translateY(20px); /* For GSAP */
         }
 
-        .title-bar {
-            background: #808080;
-            padding: 3px 4px;
-            display: flex; justify-content: space-between; align-items: center;
-            color: #c0c0c0; cursor: default;
-            height: 24px; flex-shrink: 0;
-            font-family: 'Press Start 2P', cursive; font-size: 9px;
-            letter-spacing: 1px;
-            transition: background 0.2s;
+        /* ANIMATIONS */
+        @keyframes flicker-in {
+            0% { opacity: 0; } 10% { opacity: 1; } 20% { opacity: 0; }
+            30% { opacity: 1; } 40% { opacity: 0; } 50% { opacity: 1; }
+            100% { opacity: 1; }
         }
-        
-        .window.active .title-bar { 
-            background: linear-gradient(90deg, var(--active-color), var(--active-gradient-end)); 
-            color: white;
-        }
+        .flicker-active { animation: flicker-in 0.8s forwards; }
 
-        .window-controls button {
-            width: 16px; height: 16px;
-            background: #c0c0c0; color: black;
-            border-top: 1px solid #fff; border-left: 1px solid #fff;
-            border-right: 1px solid #000; border-bottom: 1px solid #000;
-            font-family: 'Courier New', monospace; font-weight: bold; font-size: 10px;
-            display: flex; justify-content: center; align-items: center;
+        /* SPLASH SCREEN */
+        #splash-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .power-btn {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background: #111;
+            color: #333;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
             cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
         }
-        .window-controls button:active {
-            border-top: 1px solid #000; border-left: 1px solid #000;
-            border-right: 1px solid #fff; border-bottom: 1px solid #fff;
-        }
-
-        .window-body {
-            flex: 1; display: flex; flex-direction: column;
-            padding: 2px; overflow: hidden;
+        .power-btn:hover {
+            border-color: #00FFFF;
+            color: #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
         }
 
-        /* Desktop Icons */
-        .desktop-area {
-            position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 40px);
-            z-index: 10;
-        }
-        .desktop-icon {
-            width: 80px; position: absolute;
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center; cursor: pointer; color: white;
-            padding: 4px;
-            border: 1px dotted transparent;
-        }
-        .desktop-icon:hover { border: 1px dotted rgba(255,255,255,0.5); }
-        .desktop-icon.selected { background: rgba(0,0,128,0.5); border: 1px dotted #fff; }
-        .desktop-icon img { width: 36px; height: 36px; margin-bottom: 4px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5)); pointer-events: none; }
-        .desktop-icon span { 
-            font-family: 'VT323'; font-size: 14px; text-shadow: 1px 1px #000; 
-            background: rgba(0,0,0,0.3); padding: 0 4px; pointer-events: none;
-            line-height: 1.1;
-        }
-        .desktop-icon.selected span { background: #000080; }
-
-        /* File Icon within Windows */
-        .file-icon {
-            display: flex; flex-direction: column; align-items: center;
-            width: 80px; text-align: center; cursor: pointer; color: black;
-            padding: 4px; margin: 4px;
-        }
-        .file-icon:hover { background: #e0e0e0; outline: 1px dotted #000; }
-        .file-icon img { width: 32px; height: 32px; margin-bottom: 2px; }
-        .file-icon span { font-family: 'VT323'; font-size: 14px; line-height: 1.1; }
-
-        /* Taskbar */
-        #taskbar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 34px;
-            background: #c0c0c0; border-top: 2px solid #fff;
-            display: flex; align-items: center; padding: 2px; z-index: 9999;
-        }
-        .start-btn {
-            display: flex; align-items: center; gap: 4px; padding: 2px 6px;
-            height: 26px; margin-right: 4px;
-            box-shadow: inset 1px 1px #fff, inset -1px -1px #000, 1px 1px #000;
-            cursor: pointer; font-family: 'Press Start 2P'; font-size: 10px; font-weight: bold;
-        }
-        .start-btn.active, .start-btn:active {
-            box-shadow: inset 1px 1px #000, inset -1px -1px #fff;
-            background: #d4d0c8; transform: translate(1px, 1px);
+        /* CRT SHUTDOWN EFFECT */
+        #crt-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            background: white; opacity: 0; display: none;
         }
 
-        .taskbar-divider { width: 2px; height: 20px; border-left: 1px solid #808080; border-right: 1px solid #fff; margin: 0 4px; }
+        /* Hide scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #00FFFF; }
 
-        .task-item {
-            width: 140px; height: 26px; margin-right: 2px;
-            display: flex; align-items: center; padding: 0 6px; gap: 6px;
-            background: #c0c0c0;
-            box-shadow: inset 1px 1px #fff, inset -1px -1px #000, 1px 1px #000;
-            font-family: 'VT323'; font-size: 16px; cursor: pointer; user-select: none;
+        /* Image Styling */
+        .neon-img {
+            width: 100%; height: auto;
+            display: block;
+            filter: grayscale(100%) contrast(1.1);
+            transition: filter 0.5s ease, transform 0.5s ease;
         }
-        .task-item.active {
-            box-shadow: inset 1px 1px #000, inset -1px -1px #fff;
-            background: #e0e0e0;
-            background-image: linear-gradient(45deg, #e0e0e0 25%, #ffffff 25%, #ffffff 50%, #e0e0e0 50%, #e0e0e0 75%, #ffffff 75%, #ffffff 100%);
-            background-size: 4px 4px;
+        .neon-border:hover .neon-img {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.03);
         }
-
-        /* Start Menu */
-        #start-menu {
-            position: fixed; bottom: 36px; left: 2px;
-            width: 220px; background: #c0c0c0;
-            border-top: 2px solid #fff; border-left: 2px solid #fff;
-            border-right: 2px solid #000; border-bottom: 2px solid #000;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-            display: flex; z-index: 10000; padding: 3px;
-            transform-origin: bottom left; display: none;
-        }
-        .start-strip {
-            width: 24px; background: linear-gradient(180deg, var(--active-color), var(--active-gradient-end));
-            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px;
-        }
-        .start-strip span { transform: rotate(-90deg); color: white; font-family: 'Press Start 2P'; font-size: 12px; white-space: nowrap; }
-        .start-content { flex: 1; display: flex; flex-direction: column; }
-        .menu-item {
-            padding: 8px 12px; font-family: 'VT323'; font-size: 18px; display: flex; align-items: center; gap: 8px;
-            cursor: pointer; color: black; text-decoration: none;
-        }
-        .menu-item:hover { background: var(--active-color); color: white; }
-
-        /* Calendar Widget */
-        #calendar-widget {
-            position: fixed; bottom: 36px; right: 2px; width: 220px;
-            background: #c0c0c0; border: 2px solid #fff; border-right-color: #000; border-bottom-color: #000;
-            padding: 4px; z-index: 10000; display: none;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-        }
-
-        /* Context Menu */
-        #context-menu {
-            position: fixed; background: #c0c0c0;
-            border-top: 2px solid #fff; border-left: 2px solid #fff;
-            border-right: 2px solid #000; border-bottom: 2px solid #000;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            min-width: 160px; z-index: 11000; display: none;
-        }
-        .context-option {
-            padding: 6px 12px; font-family: 'VT323'; font-size: 16px; cursor: pointer; display: block;
-        }
-        .context-option:hover { background: var(--active-color); color: white; }
-        .context-hr { border-bottom: 1px solid #808080; border-top: 1px solid #fff; margin: 2px 0; }
-
-        /* Properties Dialog */
-        #properties-modal { display: none; }
-
-        /* Screens */
-        #boot-screen, #shutdown-screen, #bsod-screen {
-            position: fixed; inset: 0; z-index: 20000; font-family: 'VT323'; font-size: 18px;
-        }
-        #boot-screen { background: #000; color: #fff; padding: 40px; }
-        #shutdown-screen { background: #000; color: #ff8c00; display: none; align-items: center; justify-content: center; text-align: center; }
-        #bsod-screen { background: #0000aa; color: #fff; padding: 40px; display: none; }
-
-        /* Utilities */
-        .win-inset { box-shadow: inset 1.5px 1.5px #000, inset -1.5px -1.5px #fff; background: white; }
-        .scroll-y { overflow-y: auto; }
-        ::-webkit-scrollbar { width: 14px; background: #dfdfdf; }
-        ::-webkit-scrollbar-button { background: #c0c0c0; height: 14px; border: 1px solid #808080; }
-        ::-webkit-scrollbar-thumb { background: #c0c0c0; border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000; }
-    
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .window { width: 95% !important; left: 2.5% !important; height: auto !important; max-height: 80vh; }
-            .desktop-icon { width: 70px; }
-        }
-
-        /* Calculator Keys */
-        .calc-btn {
-            background: #c0c0c0; border-top: 1px solid #fff; border-left: 1px solid #fff;
-            border-right: 1px solid #000; border-bottom: 1px solid #000;
-            font-family: 'Courier Prime', monospace; font-weight: bold;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer;
-        }
-        .calc-btn:active { border-top: 1px solid #000; border-left: 1px solid #000; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body class="font-tech">
 
-    <div class="scanlines"></div>
-    <div class="crt-overlay"></div>
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/151.mp3" type="audio/mpeg">
+    </audio>
 
-    <!-- BOOT SCREEN -->
-    <div id="boot-screen" onclick="skipBoot()">
-        <div class="mb-8">SYSTEM 151 BIOS (C) 2024 JB Corp.<br>Released: 12/27/2025</div>
-        <div id="boot-log"></div>
-        <div class="fixed bottom-10 left-10">Press DEL to enter SETUP</div>
-        <div class="fixed bottom-10 right-10 text-gray-500">[ Click to Skip ]</div>
-    </div>
+    <!-- AMBIENT LIGHT -->
+    <div id="ambient-light"></div>
+    <div id="crt-overlay"></div>
 
-    <!-- SHUTDOWN SCREEN -->
-    <div id="shutdown-screen" onclick="location.reload()">
-        <div>
-            <h1 class="text-4xl mb-4 font-pixel">It is now safe to turn off your computer.</h1>
-            <p class="text-gray-500 animate-pulse">[ Click to Restart ]</p>
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="power-btn mb-8" id="power-btn">
+            <i data-lucide="power"></i>
         </div>
+        <h1 class="font-neon text-4xl text-gray-800 tracking-widest" id="splash-text">OFFLINE</h1>
+        <div class="h-1 w-0 bg-neon-cyan mt-4 transition-all duration-300" id="loader-bar"></div>
     </div>
 
-    <!-- BSOD SCREEN -->
-    <div id="bsod-screen" onclick="location.reload()">
-        <p class="mb-4 bg-gray-300 text-blue-900 inline-block px-1">Windows</p>
-        <p class="mb-8 text-xl">A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
-        <p class="mb-4">The current application will be terminated.</p>
-        <p class="mb-8">* Press any key to terminate the current application.<br>* Press CTRL+ALT+DEL to restart your computer.</p>
-        <p class="animate-pulse">Press any key to continue _</p>
-    </div>
-
-    <!-- CALENDAR WIDGET -->
-    <div id="calendar-widget">
-        <div id="cal-header" class="bg-blue-900 text-white font-bold text-center py-1 font-pixel text-xs mb-1">DATE</div>
-        <div class="grid grid-cols-7 text-center font-terminal text-sm gap-1 mb-1">
-            <span class="text-red-800">S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 w-full z-50 p-4 md:p-6 flex justify-between items-center mix-blend-difference">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-neon-pink rounded-full animate-pulse shadow-neon-pink"></div>
+            <span class="font-cyber text-lg tracking-widest text-white">SYSTEM <span class="text-neon-pink">151</span></span>
         </div>
-        <div id="cal-grid" class="grid grid-cols-7 text-center font-terminal text-sm gap-1">
-            <!-- Populated by JS -->
+        <div class="flex gap-6 font-tech font-bold text-xs tracking-[0.2em] text-gray-400">
+            <a href="../gallery.html" class="hover:text-neon-cyan transition-colors nav-link">ARCHIVE</a>
+            <a href="../index.html" class="hover:text-neon-pink transition-colors nav-link">LOGOUT</a>
         </div>
-        <div class="text-xs text-center mt-2 text-gray-600">System 151 Clock</div>
-    </div>
+    </nav>
 
-    <!-- CONTEXT MENU -->
-    <div id="context-menu">
-        <!-- Populated dynamically -->
-    </div>
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="relative z-10 opacity-0 px-4 md:px-8 pb-20">
 
-    <!-- PROPERTIES MODAL -->
-    <div id="properties-modal" class="window" style="width: 300px; z-index: 20000;">
-        <div class="title-bar">
-            <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/info--v1.png" class="w-3"><span>Properties</span></div>
-            <div class="window-controls flex gap-1"><button onclick="document.getElementById('properties-modal').style.display='none'">×</button></div>
-        </div>
-        <div class="window-body p-4 bg-[#c0c0c0]">
-            <div class="flex gap-4 mb-4">
-                <img id="prop-icon" src="" class="w-12 h-12">
+        <!-- HERO -->
+        <header class="min-h-screen flex flex-col justify-center items-center text-center relative">
+            <!-- Background Grid -->
+            <div class="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+
+            <h1 class="font-neon text-6xl md:text-9xl mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600 animate-pulse">
+                JB SHRABON
+            </h1>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <span class="px-3 py-1 border border-neon-cyan text-neon-cyan text-xs tracking-[0.3em] font-bold bg-black/50">AGENT 151</span>
+                <span class="px-3 py-1 border border-neon-pink text-neon-pink text-xs tracking-[0.3em] font-bold bg-black/50">TARGET: ULAB</span>
+            </div>
+
+            <!-- Hero Image Frame -->
+            <div class="relative w-full max-w-sm neon-border neon-border-cyan group p-2 bg-black/50">
+                <div class="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-neon-cyan"></div>
+                <div class="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-neon-cyan"></div>
+                <img src="../images/151/main.jpeg" alt="Shrabon Main" class="neon-img">
+                <div class="absolute bottom-4 right-4 bg-neon-cyan text-black font-cyber text-xs px-2 py-1 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    STATUS: ACTIVE
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 animate-bounce text-neon-cyan/50">
+                <i data-lucide="chevrons-down" class="w-8 h-8"></i>
+            </div>
+        </header>
+
+
+        <!-- INTRO TEXT -->
+        <section class="max-w-4xl mx-auto py-24 border-t border-gray-800">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-4 text-right md:text-right">
+                    <h2 class="font-cyber text-4xl text-neon-pink mb-2">ERROR</h2>
+                    <p class="font-tech text-gray-500 tracking-widest text-sm">INITIAL CALCULATION FAILURE</p>
+                </div>
+                <div class="md:col-span-8 bg-panel-bg p-8 border-l-2 border-neon-pink">
+                    <div class="font-bangla text-lg text-gray-300 leading-loose space-y-4">
+                        <p><span class="text-neon-pink font-bold">"আমার জীবনের সবচেয়ে বড় ভুল সিদ্ধান্ত ছিল ULAB-এ ভর্তি হওয়া।"</span> — কলেজে প্রথম দিকে যখন এর কার্যক্রমগুলো দেখতাম, তখন নিজের ভেতরে বারবার এই কথাটাই ঘুরে ফিরত।</p>
+                        <p>প্রতিনিয়ত হতাশায় ভুগতাম। কিন্তু এই হতাশার মধ্যেই কলেজে যাওয়া–আসা, পড়াশোনা—সবকিছুর সঙ্গে ধীরে ধীরে অভ্যস্ত হয়ে উঠলাম।</p>
+                        <p class="text-white italic border-l-2 border-gray-600 pl-4">তখনও বুঝতে পারিনি—যে কলেজ জীবনটাকে আমি ঘৃণা করতাম, সেই কলেজ জীবনেই আমি আমার জীবনের কিছু সেরা মুহূর্ত কাটাচ্ছি।</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- THE SQUAD (GAMING) -->
+        <section class="py-24 max-w-6xl mx-auto">
+            <div class="flex items-end justify-between mb-12 border-b border-gray-800 pb-4">
                 <div>
-                    <p class="font-bold mb-1" id="prop-name">Name</p>
-                    <div class="border-t border-white border-b border-gray-600 my-1"></div>
-                    <p class="text-xs">Type: System Object</p>
-                    <p class="text-xs">Location: Desktop</p>
-                    <p class="text-xs">Size: 0 bytes</p>
+                    <h2 class="font-neon text-4xl md:text-6xl text-neon-green text-glow-green">THE SQUAD</h2>
+                    <p class="font-tech text-gray-500 tracking-[0.5em] mt-2">ORIGIN: GAMING LOBBY</p>
+                </div>
+                <i data-lucide="gamepad-2" class="w-12 h-12 text-neon-green"></i>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Text Card -->
+                <div class="lg:col-span-1 bg-panel-bg p-6 border border-neon-green/30 neon-border-green">
+                    <p class="font-bangla text-gray-300 text-lg leading-relaxed">
+                        ভিডিও গেমের সূত্র ধরে প্রথমে <span class="text-neon-green">অভিজিৎ ও গালিবের</span> সঙ্গে পরিচয় হয়, এরপর তানভীর। প্রতিদিন কলেজে যাওয়া–আসার সঙ্গী হয়ে ওঠে সাজিদ। ধীরে ধীরে বাপ্পি, মিহাদ, প্রান্ত, তনয়, তাজিম, তানজিল, ইমাম—এভাবেই সবাই হয়ে ওঠে আমার কলেজ জীবনের অংশ।
+                    </p>
+                </div>
+
+                <!-- Squad Image 1 -->
+                <div class="neon-border neon-border-green group">
+                    <img src="../images/151/free_fire_squad.jpeg" alt="Squad" class="neon-img h-64 object-cover">
+                    <div class="absolute top-2 left-2 bg-black/80 text-neon-green px-2 py-0.5 text-xs font-mono">FF_CHAMPS</div>
+                </div>
+
+                <!-- Squad Image 2 -->
+                <div class="neon-border neon-border-green group">
+                    <img src="../images/151/free_fire_ingame.jpeg" alt="In Game" class="neon-img h-64 object-cover">
+                    <div class="absolute top-2 left-2 bg-black/80 text-neon-green px-2 py-0.5 text-xs font-mono">GAMEPLAY_FOOTAGE</div>
                 </div>
             </div>
-            <div class="flex justify-end"><button class="px-4 py-1 bg-[#c0c0c0] shadow-out active:shadow-in font-bold text-xs" onclick="document.getElementById('properties-modal').style.display='none'">OK</button></div>
-        </div>
-    </div>
+        </section>
 
-    <!-- DESKTOP AREA -->
-    <div id="desktop" class="desktop-area" onmousedown="wm.handleDesktopClick(event)">
-        <!-- Icons (Initially positioned by JS) -->
-        <div class="desktop-icon" id="icon-intro" ondblclick="wm.open('intro')" data-name="My Computer" data-type="System">
-            <img src="https://img.icons8.com/color/96/my-computer--v1.png">
-            <span>My Computer</span>
-        </div>
-         <div class="desktop-icon" id="icon-about" ondblclick="wm.open('about')" data-name="Me.exe" data-type="Application">
-            <img src="https://img.icons8.com/color/96/user-male-circle--v1.png">
-            <span>Me.exe</span>
-        </div>
-        <div class="desktop-icon" id="icon-gallery" ondblclick="wm.open('gallery')" data-name="Memories" data-type="Folder">
-            <img src="https://img.icons8.com/color/96/folder-invoices--v1.png">
-            <span>Memories</span>
-        </div>
-        <div class="desktop-icon" id="icon-music" ondblclick="wm.open('music')" data-name="Winamp" data-type="Application">
-            <img src="https://img.icons8.com/color/96/audio-wave--v1.png">
-            <span>Winamp</span>
-        </div>
-        <div class="desktop-icon" id="icon-gaming" ondblclick="wm.open('gaming')" data-name="Free Fire" data-type="Game">
-            <img src="https://img.icons8.com/color/96/controller.png">
-            <span>Free_Fire</span>
-        </div>
-        <div class="desktop-icon" id="icon-notepad" ondblclick="wm.open('notepad')" data-name="Reflections" data-type="Text Document">
-            <img src="https://img.icons8.com/color/96/notepad.png">
-            <span>Reflections</span>
-        </div>
-        <div class="desktop-icon" id="icon-trash" ondblclick="wm.open('trash')" data-name="Regrets" data-type="Recycle Bin">
-            <img src="https://img.icons8.com/color/96/full-trash.png">
-            <span>Regrets</span>
-        </div>
-        <div class="desktop-icon" id="icon-help" ondblclick="wm.open('help-folder')" data-name="Help" data-type="Folder">
-            <img src="https://img.icons8.com/color/96/help--v1.png">
-            <span>Help</span>
-        </div>
-    </div>
 
-    <!-- WINDOWS CONTAINER -->
-    <div id="window-layer">
-
-        <!-- 1. MY COMPUTER (Intro) -->
-        <div id="intro" class="window" style="width: 500px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/my-computer--v1.png" class="w-3"><span>SYSTEM_151</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('intro')">_</button>
-                    <button onclick="wm.maximize('intro')">□</button>
-                    <button onclick="wm.close('intro')">×</button>
+        <!-- STREET ARCHIVE (MASONRY GRID - ALL MISSING IMAGES) -->
+        <section class="py-24 max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-neon text-5xl md:text-7xl text-neon-yellow text-glow-yellow mb-4">STREET ARCHIVE</h2>
+                <div class="inline-flex items-center gap-4 border border-neon-yellow px-6 py-2 rounded-full bg-black/50">
+                    <span class="w-2 h-2 bg-neon-yellow rounded-full animate-ping"></span>
+                    <span class="font-tech text-xs tracking-[0.3em] text-neon-yellow">LOADING MEMORIES...</span>
                 </div>
             </div>
-            <div class="window-body">
-                <div class="bg-white p-4 h-full flex flex-col items-center justify-center text-center font-bangla gap-4 win-inset">
-                    <h1 class="font-pixel text-xl text-blue-800">SYSTEM 151</h1>
-                    <p class="text-lg">Welcome, User.</p>
-                    <div class="border-t border-b border-gray-300 py-2 w-full text-left pl-4 text-sm">
-                        <p><strong>System:</strong> JB Shrabon's Mind</p>
-                        <p><strong>Version:</strong> Final Chapter (242916)</p>
-                        <p><strong>Status:</strong> Nostalgic</p>
+
+            <div class="masonry-grid" id="archive-grid">
+                
+                <!-- 1. Friends after college -->
+                <div class="masonry-item neon-border neon-border-pink group bg-black">
+                    <img src="../images/151/friends_after_college_pic.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-pink text-sm mb-1">THE GANG</h4>
+                        <p class="font-bangla text-gray-400 text-xs">কলেজ শেষের আড্ডা</p>
                     </div>
-                    <p class="text-sm italic text-gray-600 mt-2">"Double click the icons to recover lost data."</p>
                 </div>
-            </div>
-        </div>
 
-        <!-- 2. ABOUT ME (Profile) -->
-         <div id="about" class="window" style="width: 550px; height: 450px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/user-male-circle--v1.png" class="w-3"><span>PROFILE.EXE</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('about')">_</button>
-                    <button onclick="wm.maximize('about')">□</button>
-                    <button onclick="wm.close('about')">×</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <div class="flex flex-col md:flex-row gap-2 h-full p-1 bg-[#c0c0c0]">
-                    <div class="w-full md:w-32 bg-black p-1 win-inset shadow-in flex flex-col items-center justify-start flex-shrink-0">
-                        <div class="w-full h-32 bg-gray-800 flex items-center justify-center text-gray-500 font-pixel text-[8px] border border-white/20">
-                            [IMG_JB]
-                        </div>
-                        <div class="mt-2 text-green-500 font-terminal text-center">JB SHRABON</div>
-                        <div class="text-green-700 font-terminal text-center text-xs">ONLINE</div>
+                <!-- 2. Rickshaw -->
+                <div class="masonry-item neon-border neon-border-cyan group bg-black">
+                    <img src="../images/151/me_and_sazid_in_rickshaw.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-cyan text-sm mb-1">TRANSIT</h4>
+                        <p class="font-bangla text-gray-400 text-xs">সাজিদের সাথে রিক্সায়</p>
                     </div>
-                    <div class="flex-1 bg-white win-inset p-3 font-bangla text-sm overflow-y-auto leading-relaxed">
-                        <h2 class="font-bold border-b border-black mb-2 text-blue-800">Making Friends</h2>
-                        <p class="mb-4">
-                            কলেজে শুরুতে রাফায়েল ছাড়া কাউকেই চিনতাম না। ভিডিও গেমের সূত্র ধরে প্রথমে অভিজিৎ ও গালিবের সঙ্গে পরিচয় হয়, এরপর তানভীর। প্রতিদিন কলেজে যাওয়া–আসার সঙ্গী হয়ে ওঠে সাজিদ। ধীরে ধীরে বাপ্পি, মিহাদ, প্রান্ত, তনয়, তাজিম, তানজিল, ইমাম—এভাবেই সবাই হয়ে ওঠে আমার কলেজ জীবনের অংশ।
+                </div>
+
+                <!-- 3. Eating Squash -->
+                <div class="masonry-item neon-border neon-border-yellow group bg-black">
+                    <img src="../images/151/eating_squash.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-yellow text-sm mb-1">FUEL</h4>
+                        <p class="font-bangla text-gray-400 text-xs">স্কোয়াশ খাওয়া</p>
+                    </div>
+                </div>
+
+                <!-- 4. DU Canteen -->
+                <div class="masonry-item neon-border neon-border-green group bg-black">
+                    <img src="../images/151/in_du_canteen.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-green text-sm mb-1">DU CANTEEN</h4>
+                        <p class="font-bangla text-gray-400 text-xs">খিচুড়ি আর ফ্রাইড রাইস</p>
+                    </div>
+                </div>
+
+                <!-- 5. Cycling -->
+                <div class="masonry-item neon-border neon-border-purple group bg-black">
+                    <img src="../images/151/me_riding_cycle.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-purple text-sm mb-1">RIDE</h4>
+                        <p class="font-bangla text-gray-400 text-xs">সাইক্লিং মোমেন্টস</p>
+                    </div>
+                </div>
+
+                <!-- 6. Nobinboron -->
+                <div class="masonry-item neon-border neon-border-pink group bg-black">
+                    <img src="../images/151/nobinboron.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-pink text-sm mb-1">EVENT</h4>
+                        <p class="font-bangla text-gray-400 text-xs">নবীনবরণ</p>
+                    </div>
+                </div>
+
+                <!-- 7. Science Fest -->
+                <div class="masonry-item neon-border neon-border-cyan group bg-black">
+                    <img src="../images/151/science_fest.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-cyan text-sm mb-1">SCIENCE FEST</h4>
+                        <p class="font-bangla text-gray-400 text-xs">সায়েন্স ফেস্টের স্মৃতি</p>
+                    </div>
+                </div>
+
+                <!-- 8. Jersey -->
+                <div class="masonry-item neon-border neon-border-yellow group bg-black">
+                    <img src="../images/151/wearing_jersey_with_friends.jpeg" class="neon-img">
+                    <div class="p-4">
+                        <h4 class="font-cyber text-neon-yellow text-sm mb-1">JERSEY DAY</h4>
+                        <p class="font-bangla text-gray-400 text-xs">জামরুল পাড়ার জার্সি</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- THE CHAMPION (FEATURE) -->
+        <section class="py-24 max-w-5xl mx-auto">
+            <div class="relative neon-border neon-border-pink p-8 bg-gradient-to-r from-black to-gray-900">
+                <div class="absolute top-0 right-0 bg-neon-pink text-black px-4 py-1 font-cyber font-bold">WINNER</div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <img src="../images/151/cricket_champion_and_holding_trophy.jpeg" alt="Champion" class="w-full h-auto grayscale hover:grayscale-0 transition-all duration-500 rounded-lg shadow-2xl">
+                    </div>
+                    <div>
+                        <h2 class="font-neon text-4xl md:text-5xl text-neon-pink mb-6">THE FINALE</h2>
+                        <p class="font-bangla text-xl text-gray-300 leading-relaxed mb-6">
+                            কলেজ জীবনের শেষদিকে এসে ক্রিকেট টুর্নামেন্টে চ্যাম্পিয়ন হওয়ার আনন্দও যোগ হলো। হাজারো স্মৃতি রয়ে গেছে—এত কিছু লিখে শেষ করা সম্ভব নয়।
                         </p>
-                        
-                        <h2 class="font-bold border-b border-black mb-2 text-blue-800">College Memories</h2>
-                        <p class="mb-2"><strong>ফ্রি ফায়ার:</strong> শুরুর কথা বলতে হলে ফ্রি ফায়ারের কথাই আগে আসে—যেটা আমাকে অনেকের সঙ্গে এক করে দিয়েছিল। আমি, অভিজিৎ, তানভীর আর রুম্মান কলেজ ফ্রি ফায়ার টুর্নামেন্টে চ্যাম্পিয়ন হয়েছিলাম।</p>
-                        <p class="mb-2"><strong>আড্ডা ও ভ্রমণ:</strong> কলেজ শেষে ঢাকা বিশ্ববিদ্যালয়ের ক্যান্টিনে খিচুড়ি আর ফ্রাইড রাইস খেতে যেতাম—আমি, অভিজিৎ, সাজিদ আর রাজিন। সাজিদের সঙ্গে মেট্রোতে করে মতিঝিল, তারপর মিল্ক ভিটার দই খেয়ে মিডলাইন বাসে যাত্রীর ভিড়ে কোনোরকম জায়গা করে নেওয়া—সবই এখন স্মৃতি।</p>
-                        <p class="mb-2"><strong>জামরুল পাড়া:</strong> মিহাদ, ইমাম, তানভীর, বাপ্পি, তনয়—আমরা সবাই মিলে কলেজের জামরুল পাড়া। মাত্র ৯ জন মিলে বানিয়েছিলাম আমাদের কলেজ জার্সি।</p>
-                        <p class="mb-2"><strong>সায়েন্স ফেস্ট ও ক্রিকেট:</strong> সায়েন্স ফেস্টে আমি, আহনাফ, রাফিউ, রুম্মান, তানভীর আর বাপ্পি একসঙ্গে ছিলাম। কলেজ জীবনের শেষদিকে এসে ক্রিকেট টুর্নামেন্টে চ্যাম্পিয়ন হওয়ার আনন্দও যোগ হলো।</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. NOTEPAD (Reflections) -->
-        <div id="notepad" class="window" style="width: 500px; height: 400px;">
-            <div class="title-bar bg-gradient-to-r from-teal-800 to-teal-600">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/notepad.png" class="w-3"><span>Reflections.txt</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('notepad')">_</button>
-                    <button onclick="wm.maximize('notepad')">□</button>
-                    <button onclick="wm.close('notepad')">×</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <div class="flex text-xs bg-[#c0c0c0] p-1 gap-2 border-b border-white">
-                    <span class="cursor-pointer hover:underline" onclick="wm.saveNote()">File (Save)</span><span>Edit</span><span>Format</span><span>Help</span>
-                </div>
-                <textarea id="note-area" class="flex-1 resize-none p-2 font-bangla text-sm leading-relaxed border-none outline-none win-inset bg-white" spellcheck="false"></textarea>
-            </div>
-        </div>
-
-        <!-- 4. MUSIC (Winamp) -->
-        <div id="music" class="window" style="width: 300px;">
-            <div class="title-bar bg-[#222]">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/audio-wave--v1.png" class="w-3"><span>WINAMP</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('music')">_</button>
-                    <button onclick="wm.close('music')">×</button>
-                </div>
-            </div>
-            <div class="window-body bg-[#222] p-2">
-                <div class="bg-black border border-gray-600 p-2 mb-2 font-terminal text-green-500 text-lg relative overflow-hidden h-8">
-                    <div id="winamp-text" class="whitespace-nowrap absolute">01. THEME.MP3 - COLLEGE MEMORIES [128kbps] *** </div>
-                </div>
-                <div class="flex gap-2 h-16 mb-2">
-                    <canvas id="visualizer" width="180" height="64" class="bg-black border border-gray-600 flex-1"></canvas>
-                    <div class="w-20 bg-[#333] border border-gray-600 p-1 flex flex-col justify-between">
-                        <div class="text-[10px] text-green-500 font-pixel">02:45</div>
-                        <div class="text-[10px] text-green-500 font-pixel">STEREO</div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center bg-[#333] p-1 border border-gray-600">
-                    <div class="flex gap-1">
-                        <button class="w-6 h-6 bg-[#c0c0c0] text-[10px] win-outset border border-white border-b-black border-r-black active:border-inset">⏮</button>
-                        <button onclick="audioPlayer.play()" class="w-6 h-6 bg-[#c0c0c0] text-[10px] win-outset border border-white border-b-black border-r-black active:border-inset">▶</button>
-                        <button onclick="audioPlayer.stop()" class="w-6 h-6 bg-[#c0c0c0] text-[10px] win-outset border border-white border-b-black border-r-black active:border-inset">⏹</button>
-                        <button class="w-6 h-6 bg-[#c0c0c0] text-[10px] win-outset border border-white border-b-black border-r-black active:border-inset">⏭</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. GAMING (Free Fire) -->
-        <div id="gaming" class="window" style="width: 600px; height: 400px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/controller.png" class="w-3"><span>Garena Free Fire</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('gaming')">_</button>
-                    <button onclick="wm.maximize('gaming')">□</button>
-                    <button onclick="wm.close('gaming')">×</button>
-                </div>
-            </div>
-            <div class="window-body bg-black text-green-500 font-terminal p-2">
-                <div class="flex h-full gap-2">
-                    <div class="w-1/3 border border-green-800 p-2 flex flex-col">
-                        <div class="text-center border-b border-green-800 pb-1 mb-2">SQUAD (Champion)</div>
-                        <ul class="text-sm space-y-1 overflow-y-auto flex-1">
-                            <li class="text-white hover:bg-green-900 cursor-pointer">[Cpt] JB_Shrabon</li>
-                            <li class="text-gray-400 hover:bg-green-900 cursor-pointer">Abhijit_007</li>
-                            <li class="text-gray-400 hover:bg-green-900 cursor-pointer">Tanvir_Sniper</li>
-                            <li class="text-gray-400 hover:bg-green-900 cursor-pointer">Rumman_Killer</li>
-                        </ul>
-                    </div>
-                    <div class="flex-1 border border-green-800 p-2 flex flex-col relative">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-                            <img src="https://img.icons8.com/color/96/controller.png" class="w-32 h-32 grayscale">
-                        </div>
-                        <div class="flex-1 overflow-y-auto text-sm space-y-1" id="chat-log">
-                            <p><span class="text-blue-400">System:</span> Tournament Started.</p>
-                            <p><span class="text-white">You:</span> Rush B!</p>
-                            <p><span class="text-yellow-400">Tanvir:</span> Enemy spotted.</p>
-                            <p><span class="text-green-500">System:</span> <strong>BOOYAH!</strong> Team JB Won.</p>
-                        </div>
-                        <div class="mt-2 flex gap-1">
-                            <input type="text" class="flex-1 bg-gray-900 border border-green-800 text-green-500 px-1 outline-none" placeholder="Chat...">
-                            <button class="px-2 bg-green-900 text-black font-bold">SEND</button>
+                        <div class="flex gap-4">
+                            <div class="text-center">
+                                <span class="block font-cyber text-2xl text-white">1st</span>
+                                <span class="text-xs text-gray-500 tracking-widest">POSITION</span>
+                            </div>
+                            <div class="text-center border-l border-gray-700 pl-4">
+                                <span class="block font-cyber text-2xl text-white">151</span>
+                                <span class="text-xs text-gray-500 tracking-widest">MVP</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
+
+
+        <!-- OUTRO -->
+        <section class="py-32 px-4 text-center">
+            <div class="max-w-3xl mx-auto border-y border-gray-800 py-12">
+                <i data-lucide="cpu" class="w-12 h-12 text-gray-500 mx-auto mb-6"></i>
+                
+                <p class="font-bangla text-2xl text-gray-300 leading-loose mb-8">
+                    এখনো পর্যন্ত জীবনের প্রকৃত অর্থটা ঠিকভাবে বুঝে উঠতে পারিনি। জীবনের এই যাত্রায় অনেক অভিজ্ঞতা অর্জন করেছি... <br>
+                    <span class="text-neon-cyan">তবুও চলছি—কারণ হয়তো এই অপ্রাপ্তিগুলোর মধ্যেই লুকিয়ে আছে নিজেকে খুঁজে পাওয়ার গল্প।</span>
+                </p>
+                
+                <h2 class="font-neon text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple opacity-80 mb-4">
+                    242916
+                </h2>
+                <p class="font-tech text-gray-500 tracking-[0.5em] text-xs uppercase">"Life is meaningless if it holds no nostalgic memories."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="fixed bottom-0 w-full z-40 bg-black/90 border-t border-gray-800 p-2 md:p-4 flex justify-between items-center backdrop-blur-md">
+        <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
+            <span class="font-tech text-[10px] md:text-xs text-neon-green tracking-widest">SYSTEM ONLINE // 151</span>
         </div>
+        <button id="shutdown-btn" class="bg-neon-pink/10 border border-neon-pink text-neon-pink px-4 py-1 font-tech font-bold hover:bg-neon-pink hover:text-black transition-all uppercase text-[10px] md:text-xs tracking-widest">
+            POWER OFF
+        </button>
+    </footer>
 
-        <!-- 6. GALLERY (Memories) -->
-        <div id="gallery" class="window" style="width: 550px; height: 400px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/folder-invoices--v1.png" class="w-3"><span>C:\Memories</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('gallery')">_</button>
-                    <button onclick="wm.maximize('gallery')">□</button>
-                    <button onclick="wm.close('gallery')">×</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <div class="bg-white win-inset p-2 h-full overflow-y-auto grid grid-cols-4 gap-4 align-start content-start" id="gallery-grid">
-                    <!-- Populated by JS -->
-                </div>
-                <div class="bg-[#c0c0c0] border-t border-white px-2 py-1 text-xs flex justify-between">
-                    <span id="gallery-count">0 items</span>
-                    <span>1.44 MB</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. HELP FOLDER -->
-        <div id="help-folder" class="window" style="width: 400px; height: 300px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/help--v1.png" class="w-3"><span>C:\Help</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('help-folder')">_</button>
-                    <button onclick="wm.maximize('help-folder')">□</button>
-                    <button onclick="wm.close('help-folder')">×</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <div class="bg-white win-inset p-4 h-full flex flex-wrap gap-4 align-start content-start">
-                    <div class="file-icon" onclick="wm.openFile('cmd_instructions.txt')">
-                        <img src="https://img.icons8.com/color/48/txt.png"><span>CMD_Help.txt</span>
-                    </div>
-                    <div class="file-icon" onclick="wm.openFile('pc_instructions.txt')">
-                        <img src="https://img.icons8.com/color/48/txt.png"><span>PC_Guide.txt</span>
-                    </div>
-                    <div class="file-icon" onclick="wm.openFile('mobile_instructions.txt')">
-                        <img src="https://img.icons8.com/color/48/txt.png"><span>Mobile.txt</span>
-                    </div>
-                </div>
-                <div class="bg-[#c0c0c0] border-t border-white px-2 py-1 text-xs flex justify-between">
-                    <span>3 items</span>
-                    <span>12 KB</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. IMAGE VIEWER -->
-        <div id="image-viewer" class="window" style="width: 600px; height: 500px;">
-            <div class="title-bar bg-blue-900">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/image-file.png" class="w-3"><span>Image Preview</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('image-viewer')">_</button>
-                    <button onclick="wm.maximize('image-viewer')">□</button>
-                    <button onclick="wm.close('image-viewer')">×</button>
-                </div>
-            </div>
-            <div class="window-body bg-[#c0c0c0] p-1">
-                <div class="flex gap-2 mb-1">
-                    <button onclick="wm.prevImage()" class="px-3 py-1 bg-[#c0c0c0] shadow-out active:shadow-in text-xs font-bold">Prev</button>
-                    <button onclick="wm.nextImage()" class="px-3 py-1 bg-[#c0c0c0] shadow-out active:shadow-in text-xs font-bold">Next</button>
-                    <div class="flex-1"></div>
-                    <div class="px-2 py-1 bg-white shadow-in text-xs" id="img-counter">1 / 10</div>
-                </div>
-                <div class="flex-1 bg-gray-800 shadow-in flex items-center justify-center overflow-hidden p-2 relative">
-                    <img id="viewer-img" src="" class="max-w-full max-h-full object-contain border border-gray-600">
-                </div>
-                <div class="mt-1 text-center font-terminal text-sm" id="img-caption">Filename.jpg</div>
-            </div>
-        </div>
-
-        <!-- 9. TRASH (Regrets) -->
-        <div id="trash" class="window" style="width: 450px;">
-            <div class="title-bar bg-red-800">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/full-trash.png" class="w-3"><span>Recycle Bin</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('trash')">_</button>
-                    <button onclick="wm.close('trash')">×</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <div class="bg-white win-inset p-4 flex gap-4">
-                    <img src="https://img.icons8.com/color/96/error--v1.png" class="w-12 h-12 flex-shrink-0">
-                    <div class="font-bangla text-sm">
-                        <h3 class="font-bold text-red-600 mb-2">Restored: Initial Regrets</h3>
-                        <p class="mb-2">কলেজে প্রথম দিকে যখন এর কার্যক্রমগুলো দেখতাম, তখন নিজের ভেতরে বারবার একটাই কথা ঘুরে ফিরত— <span class="bg-yellow-200">আমার জীবনের সবচেয়ে বড় ভুল সিদ্ধান্ত ছিল ULAB-এ ভর্তি হওয়া।</span></p>
-                        <p>প্রতিনিয়ত হতাশায় ভুগতাম, ভাবতাম কেন এই কলেজে ভর্তি হয়ে নিজের একাডেমিক জীবন নষ্ট করলাম।</p>
-                        <p class="mt-2 text-green-700"><strong>Status:</strong> Resolved. Regrets transformed into Memories.</p>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2 p-2">
-                    <button onclick="wm.close('trash')" class="px-4 py-1 bg-[#c0c0c0] shadow-out active:shadow-in font-bold text-xs">Empty Bin</button>
-                    <button onclick="wm.close('trash')" class="px-4 py-1 bg-[#c0c0c0] shadow-out active:shadow-in font-bold text-xs">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 10. CALCULATOR -->
-        <div id="calc" class="window" style="width: 250px; height: 320px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/calculator--v1.png" class="w-3"><span>Calculator</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('calc')">_</button>
-                    <button onclick="wm.close('calc')">×</button>
-                </div>
-            </div>
-            <div class="window-body p-2">
-                <div class="bg-white win-inset h-10 mb-2 flex items-center justify-end px-2 font-mono text-xl" id="calc-display">0</div>
-                <div class="grid grid-cols-4 gap-1 flex-1">
-                    <button class="calc-btn text-red-800" onclick="calc.clear()">C</button>
-                    <button class="calc-btn" onclick="calc.op('/')">/</button>
-                    <button class="calc-btn" onclick="calc.op('*')">*</button>
-                    <button class="calc-btn" onclick="calc.bs()">←</button>
-                    <button class="calc-btn" onclick="calc.num(7)">7</button>
-                    <button class="calc-btn" onclick="calc.num(8)">8</button>
-                    <button class="calc-btn" onclick="calc.num(9)">9</button>
-                    <button class="calc-btn" onclick="calc.op('-')">-</button>
-                    <button class="calc-btn" onclick="calc.num(4)">4</button>
-                    <button class="calc-btn" onclick="calc.num(5)">5</button>
-                    <button class="calc-btn" onclick="calc.num(6)">6</button>
-                    <button class="calc-btn" onclick="calc.op('+')">+</button>
-                    <button class="calc-btn" onclick="calc.num(1)">1</button>
-                    <button class="calc-btn" onclick="calc.num(2)">2</button>
-                    <button class="calc-btn" onclick="calc.num(3)">3</button>
-                    <button class="calc-btn row-span-2" onclick="calc.solve()">=</button>
-                    <button class="calc-btn col-span-2" onclick="calc.num(0)">0</button>
-                    <button class="calc-btn" onclick="calc.num('.')">.</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 11. RUN DIALOG -->
-        <div id="run" class="window" style="width: 350px;">
-            <div class="title-bar">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/console.png" class="w-3"><span>Run</span></div>
-                <div class="window-controls flex gap-1"><button onclick="wm.close('run')">×</button></div>
-            </div>
-            <div class="window-body p-4 flex gap-3">
-                <img src="https://img.icons8.com/color/96/console.png" class="w-10 h-10">
-                <div class="flex-1">
-                    <p class="text-xs mb-3">Type the name of a program, folder, document, or Internet resource, and System 151 will open it for you.</p>
-                    <div class="flex gap-2 items-center mb-4">
-                        <span class="text-xs font-bold">Open:</span>
-                        <input type="text" id="run-input" class="flex-1 win-inset px-1 text-sm outline-none" onkeydown="if(event.key==='Enter') wm.runCommand()">
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button class="px-4 py-1 bg-[#c0c0c0] shadow-out active:shadow-in font-bold text-xs" onclick="wm.runCommand()">OK</button>
-                        <button class="px-4 py-1 bg-[#c0c0c0] shadow-out active:shadow-in font-bold text-xs" onclick="wm.close('run')">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 12. COMMAND PROMPT (CMD) -->
-        <div id="cmd" class="window" style="width: 500px; height: 350px;">
-             <div class="title-bar bg-black">
-                <div class="flex items-center gap-2"><img src="https://img.icons8.com/color/48/console.png" class="w-3"><span>Command Prompt</span></div>
-                <div class="window-controls flex gap-1">
-                    <button onclick="wm.minimize('cmd')">_</button>
-                    <button onclick="wm.close('cmd')">×</button>
-                </div>
-            </div>
-            <div class="window-body bg-black text-gray-300 font-terminal p-1 text-sm overflow-y-auto" onclick="document.getElementById('cmd-input').focus()">
-                <div class="mb-2">Microsoft(R) Windows DOS<br>(C) Copyright Microsoft Corp 1990-2001.</div>
-                <div id="cmd-output"></div>
-                <div class="flex">
-                    <span>C:\Users\Shrabon></span>
-                    <input type="text" id="cmd-input" class="flex-1 bg-black text-gray-300 border-none outline-none ml-1" autocomplete="off" onkeydown="wm.handleCmd(event)">
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TASKBAR -->
-    <div id="taskbar">
-        <div class="start-btn" onclick="toggleStart()">
-            <img src="https://img.icons8.com/color/48/windows-logo.png" class="w-4 h-4">
-            Start
-        </div>
-        <div class="taskbar-divider"></div>
-        <div id="task-list" class="flex flex-1 gap-1 overflow-x-auto px-1"></div>
-        <div class="taskbar-divider"></div>
-        <div class="win-inset px-2 py-0.5 bg-[#c0c0c0] font-terminal text-lg w-24 text-center cursor-help select-none" id="clock" title="Date" onclick="wm.toggleCalendar()">12:00</div>
-    </div>
-
-    <!-- START MENU -->
-    <div id="start-menu">
-        <div class="start-strip"><span>SYSTEM 151</span></div>
-        <div class="start-content">
-            <div class="menu-item" onclick="wm.open('about')"><img src="https://img.icons8.com/color/48/user-male-circle--v1.png" class="w-6"> Profile</div>
-            <div class="menu-item" onclick="wm.open('gallery')"><img src="https://img.icons8.com/color/48/folder-invoices--v1.png" class="w-6"> Gallery</div>
-            <div class="menu-item" onclick="wm.open('help-folder')"><img src="https://img.icons8.com/color/48/help--v1.png" class="w-6"> Help & Guides</div>
-            <div class="border-b border-gray-500 my-1 mx-2"></div>
-            <a href="../index.html" class="menu-item"><img src="https://img.icons8.com/color/48/internet--v1.png" class="w-6"> Main Website</a>
-            <a href="../gallery.html" class="menu-item"><img src="https://img.icons8.com/color/48/stack-of-photos--v1.png" class="w-6"> Legacy Gallery</a>
-            <div class="border-b border-gray-500 my-1 mx-2"></div>
-            <div class="menu-item" onclick="wm.open('run')"><img src="https://img.icons8.com/color/48/console.png" class="w-6"> Run...</div>
-            <div class="menu-item" onclick="wm.open('calc')"><img src="https://img.icons8.com/color/48/calculator--v1.png" class="w-6"> Calculator</div>
-            <div class="border-b border-gray-500 my-1 mx-2"></div>
-            <div class="menu-item" onclick="location.reload()"><img src="https://img.icons8.com/color/48/restart.png" class="w-6"> Restart</div>
-            <div class="menu-item" onclick="wm.shutdown()"><img src="https://img.icons8.com/color/48/shutdown.png" class="w-6"> Shutdown</div>
-        </div>
-    </div>
-
+    <!-- SCRIPTS -->
     <script>
-        // --- BOOT SEQUENCE ---
-        const bootLines = [
-            "BIOS DATE 12/27/25 12:45:00 VER: 1.5.1",
-            "CPU: Intel(R) Pentium(R) III CPU 800MHz",
-            "640K RAM System... OK",
-            "Initializing Video Adapter... OK",
-            "Loading Nostalgia.sys ... SUCCESS",
-            "Mounting Volume C: [MEMORIES] ...",
-            "Checking Friendships integrity... 100%",
-            "Booting SYSTEM 151..."
-        ];
-        
-        const bootScreen = document.getElementById('boot-screen');
-        const bootLog = document.getElementById('boot-log');
-        let bootSkipped = false;
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
 
-        function typeBoot() {
-            if(bootSkipped) return;
-            let lineIdx = 0;
-            
-            function nextLine() {
-                if(lineIdx >= bootLines.length || bootSkipped) {
-                    finishBoot();
-                    return;
-                }
-                const div = document.createElement('div');
-                div.textContent = bootLines[lineIdx];
-                bootLog.appendChild(div);
-                lineIdx++;
-                setTimeout(nextLine, Math.random() * 400 + 100);
+        const splash = document.getElementById('splash-screen');
+        const powerBtn = document.getElementById('power-btn');
+        const splashText = document.getElementById('splash-text');
+        const loaderBar = document.getElementById('loader-bar');
+        const mainContent = document.getElementById('main-content');
+        const crtOverlay = document.getElementById('crt-overlay');
+        const audio = document.getElementById('bg-music');
+        let isLeaving = false;
+
+        // 1. OPENING SEQUENCE (SYSTEM BOOT)
+        powerBtn.addEventListener('click', () => {
+            if(audio) {
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log(e));
             }
-            nextLine();
+
+            // Button glow
+            powerBtn.style.color = '#00FFFF';
+            powerBtn.style.borderColor = '#00FFFF';
+            powerBtn.style.boxShadow = '0 0 30px #00FFFF';
+            
+            // Text change
+            splashText.innerText = "BOOTING...";
+            splashText.classList.add('text-neon-cyan', 'animate-pulse');
+
+            // Loader
+            loaderBar.style.width = '200px';
+
+            const tl = gsap.timeline();
+
+            // Flash effect
+            tl.to(splash, { backgroundColor: '#111', duration: 0.1, delay: 0.5 })
+              .to(splash, { backgroundColor: '#000', duration: 0.1 })
+              .to([powerBtn, splashText, loaderBar], { opacity: 0, duration: 0.3 })
+              .to(splash, { 
+                  height: 0, 
+                  duration: 0.6, 
+                  ease: "expo.inOut",
+                  onComplete: () => {
+                      splash.style.display = 'none';
+                      initMainAnimations();
+                  }
+              });
+        });
+
+        // 2. MAIN ANIMATIONS
+        function initMainAnimations() {
+            mainContent.style.opacity = 1;
+
+            // Flicker in Hero Title
+            const title = document.querySelector('header h1');
+            title.classList.add('flicker-active');
+
+            // Scroll Triggers for Sections
+            gsap.utils.toArray('section').forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 85%",
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+            });
+
+            // Masonry Items Stagger
+            gsap.to('.masonry-item', {
+                scrollTrigger: {
+                    trigger: '#archive-grid',
+                    start: "top 80%",
+                },
+                y: 0,
+                opacity: 1,
+                stagger: 0.1,
+                duration: 0.6,
+                ease: "back.out(1.2)"
+            });
         }
 
-        function finishBoot() {
-            gsap.to(bootScreen, { opacity: 0, duration: 0.5, onComplete: () => {
-                bootScreen.style.display = 'none';
-                wm.open('intro'); 
-                playSound('startup');
-            }});
+        // 3. SHUTDOWN SEQUENCE (CRT OFF)
+        function triggerShutdown(targetUrl) {
+            if(isLeaving) return;
+            isLeaving = true;
+
+            gsap.to(audio, { volume: 0, duration: 0.5 });
+
+            const tl = gsap.timeline({
+                onComplete: () => window.location.href = targetUrl
+            });
+
+            // CRT Turn Off
+            crtOverlay.style.display = 'block';
+            
+            // 1. Flash White
+            tl.to(crtOverlay, { opacity: 1, duration: 0.1 });
+            tl.to(crtOverlay, { opacity: 0, duration: 0.1 });
+
+            // 2. Collapse X
+            tl.to("body", { 
+                scaleY: 0.005, 
+                transformOrigin: "center", 
+                duration: 0.3, 
+                ease: "power2.inOut",
+                filter: "brightness(3)"
+            });
+
+            // 3. Collapse Y (Dot)
+            tl.to("body", { 
+                scaleX: 0, 
+                duration: 0.2, 
+                ease: "power2.in"
+            });
+            
+            // 4. Blackout
+            tl.to("html", { backgroundColor: "black", duration: 0.1 });
         }
 
-        function skipBoot() {
-            bootSkipped = true;
-            finishBoot();
-        }
-        
-        // Simple Synth for UI Sounds
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            if(type === 'startup') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.5);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1);
-            }
-        }
-
-        window.onload = typeBoot;
-
-        // --- WINDOW MANAGER ---
-        const wm = {
-            zIndex: 100,
-            galleryData: [],
-            currentImgIdx: 0,
-            wallpapers: [
-                { bg: '#008080', active: '#000080' }, // Teal
-                { bg: '#2B213A', active: '#4B0082' }, // Purple
-                { bg: '#800000', active: '#A00000' }, // Red
-                { bg: '#000080', active: '#0000A0' }, // Blue
-                { bg: '#000000', active: '#444444' }  // Black
-            ],
-            currWallIdx: 0,
-            fileSystem: {
-                'cmd_instructions.txt': `COMMAND PROMPT HELP
--------------------
-Available Commands:
-
-HELP    - Show this list
-VER     - Display system version
-DATE    - Show current date
-TIME    - Show current time
-CLS     - Clear the screen
-EXIT    - Close Command Prompt
-ECHO    - Display a message (e.g. ECHO Hello)
-COLOR   - Change text color (e.g. COLOR a = green, c = red)
-WHOAMI  - Display current user`,
-                'pc_instructions.txt': `PC USER GUIDE
--------------
-1. Navigation:
-   - Double-click icons to open
-   - Click taskbar buttons to minimize/restore
-   - Drag windows by title bar
-
-2. Features:
-   - Right-click Desktop: Change Wallpaper
-   - Right-click Icons: Properties
-   - Start Menu: Access programs
-   - Click Clock: Open Calendar`,
-                'mobile_instructions.txt': `MOBILE USER GUIDE
------------------
-1. Navigation:
-   - Tap icons to select
-   - Double-tap to open (or tap fast)
-   - Long-press for Context Menu
-
-2. Windows:
-   - Drag windows by their title bar
-   - Windows auto-resize on mobile
-   
-3. Tips:
-   - Use landscape mode for better experience
-   - Tap empty space to deselect items`
-            },
-            
-            init() {
-                // Initialize Independent Window Dragging
-                const wins = document.querySelectorAll(".window");
-                wins.forEach(win => {
-                    const header = win.querySelector(".title-bar");
-                    Draggable.create(win, {
-                        type: "x,y",
-                        trigger: header, // Specific trigger prevents shared movement
-                        bounds: "#desktop",
-                        edgeResistance: 0.5,
-                        inertia: true,
-                        zIndexBoost: false,
-                        onPress: function() {
-                            wm.bringToFront(win.id);
-                            wm.closeMenus();
-                            if(win.classList.contains('maximized')) {
-                                this.disable(); // Re-enable handled in maximize toggle
-                            }
-                        }
-                    });
-                });
-
-                // Initialize Independent Icon Dragging
-                const icons = document.querySelectorAll(".desktop-icon");
-                icons.forEach(icon => {
-                    Draggable.create(icon, {
-                        type: "x,y",
-                        bounds: "#desktop",
-                        edgeResistance: 0.5,
-                        onPress: function() {
-                            selectIcon(this.target);
-                            wm.closeMenus();
-                        }
-                    });
-                    
-                    // Add Icon Context Menu
-                    icon.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        wm.showIconContext(e, icon);
-                    });
-                });
-
-                // Global Context Menu (Desktop)
-                document.getElementById('desktop').addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    if(e.target.id !== 'desktop') return;
-                    wm.showDesktopContext(e);
-                });
-
-                // Key Listener
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Meta' || e.key === 'OS') { // Windows Key
-                        toggleStart();
-                    }
-                });
-
-                this.arrangeIcons();
-                this.populateGallery();
-                this.generateCalendar();
-                this.initNotepad();
-            },
-
-            showDesktopContext(e) {
-                const menu = document.getElementById('context-menu');
-                menu.innerHTML = `
-                    <div class="context-option" onclick="wm.refreshIcons()">Refresh</div>
-                    <div class="context-option" onclick="wm.cycleWallpaper()">Change Wallpaper</div>
-                    <div class="context-hr"></div>
-                    <div class="context-option" onclick="wm.open('run')">Run...</div>
-                    <div class="context-option" onclick="wm.triggerBSOD()">System Check</div>
-                `;
-                menu.style.display = 'block';
-                menu.style.left = e.clientX + 'px';
-                menu.style.top = e.clientY + 'px';
-            },
-
-            showIconContext(e, icon) {
-                const menu = document.getElementById('context-menu');
-                const name = icon.dataset.name;
-                const type = icon.dataset.type;
-                const id = icon.id.replace('icon-', '');
-                
-                menu.innerHTML = `
-                    <div class="context-option font-bold" onclick="wm.open('${id === 'help' ? 'help-folder' : id}')">Open</div>
-                    <div class="context-hr"></div>
-                    <div class="context-option" onclick="wm.showProperties('${name}', '${type}', '${icon.querySelector('img').src}')">Properties</div>
-                `;
-                menu.style.display = 'block';
-                menu.style.left = e.clientX + 'px';
-                menu.style.top = e.clientY + 'px';
-            },
-
-            showProperties(name, type, imgSrc) {
-                const modal = document.getElementById('properties-modal');
-                document.getElementById('prop-name').innerText = name;
-                document.getElementById('prop-icon').src = imgSrc;
-                // Basic HTML update for prop details
-                const body = modal.querySelector('.window-body div div');
-                body.innerHTML = `
-                    <p class="font-bold mb-1">${name}</p>
-                    <div class="border-t border-white border-b border-gray-600 my-1"></div>
-                    <p class="text-xs">Type: ${type}</p>
-                    <p class="text-xs">Location: C:\\Desktop</p>
-                    <p class="text-xs">Size: ${Math.floor(Math.random() * 500)} KB</p>
-                `;
-                modal.style.display = 'flex';
-                this.open('properties-modal');
-                this.closeMenus();
-            },
-
-            arrangeIcons() {
-                const icons = document.querySelectorAll('.desktop-icon');
-                const startX = 10;
-                const startY = 10;
-                const gapY = 90;
-                const gapX = 90; 
-                let currentY = startY;
-                let currentX = startX;
-                const maxHeight = window.innerHeight - 60;
-
-                icons.forEach((icon) => {
-                    gsap.set(icon, { x: currentX, y: currentY });
-                    currentY += gapY;
-                    if(currentY > maxHeight) {
-                        currentY = startY;
-                        currentX += gapX;
-                    }
-                });
-            },
-
-            refreshIcons() {
-                const icons = document.querySelectorAll('.desktop-icon');
-                gsap.to(icons, { scale: 0, duration: 0.2, onComplete: () => {
-                    this.arrangeIcons();
-                    gsap.to(icons, { scale: 1, duration: 0.3, stagger: 0.05 });
-                }});
-                this.closeMenus();
-            },
-
-            cycleWallpaper() {
-                this.currWallIdx = (this.currWallIdx + 1) % this.wallpapers.length;
-                const theme = this.wallpapers[this.currWallIdx];
-                document.body.style.backgroundColor = theme.bg;
-                document.documentElement.style.setProperty('--active-color', theme.active);
-                this.closeMenus();
-            },
-
-            handleDesktopClick(e) {
-                if(e.target.id === 'desktop') {
-                    this.closeMenus();
-                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-                }
-            },
-
-            open(id) {
-                const win = document.getElementById(id);
-                if (!win) return;
-                
-                this.closeMenus();
-
-                if (win.style.visibility !== 'visible') {
-                    // Smart Cascade
-                    const activeWindows = document.querySelectorAll('.window[style*="visibility: visible"]');
-                    const offset = activeWindows.length * 30;
-                    const baseX = window.innerWidth > 768 ? 100 : 10;
-                    const baseY = window.innerWidth > 768 ? 50 : 10;
-                    
-                    if(!win.dataset.dragged && !win.classList.contains('maximized')) {
-                         gsap.set(win, { x: baseX + offset, y: baseY + offset, scale: 0.9 });
-                    }
-                    
-                    win.style.visibility = 'visible';
-                    win.style.display = 'flex';
-                    
-                    gsap.to(win, { autoAlpha: 1, scale: 1, duration: 0.25, ease: "back.out(1.2)" });
-                    this.addTask(id);
-                }
-                
-                this.bringToFront(id);
-            },
-
-            openFile(filename) {
-                const content = this.fileSystem[filename];
-                if (content) {
-                    const notepad = document.getElementById('note-area');
-                    notepad.value = content;
-                    this.open('notepad');
-                    // Update title bar
-                    const title = document.querySelector('#notepad .title-bar span');
-                    title.innerText = filename + " - Notepad";
-                }
-            },
-
-            close(id) {
-                const win = document.getElementById(id);
-                gsap.to(win, { autoAlpha: 0, scale: 0.9, duration: 0.2, onComplete: () => {
-                    win.style.visibility = 'hidden';
-                    win.classList.remove('maximized'); // Reset state
-                    const draggable = Draggable.get(win);
-                    if (draggable) draggable.enable();
-                }});
-                this.removeTask(id);
-            },
-
-            minimize(id) {
-                const win = document.getElementById(id);
-                const taskBtn = document.querySelector(`[data-task="${id}"]`);
-                
-                if (taskBtn) {
-                    const rect = taskBtn.getBoundingClientRect();
-                    const winRect = win.getBoundingClientRect();
-                    
-                    // Complex Genie-ish animation
-                    const wasMaximized = win.classList.contains('maximized');
-                    
-                    gsap.to(win, { 
-                        autoAlpha: 0, 
-                        scale: 0.1, 
-                        x: rect.left - (winRect.width/2) + (rect.width/2),
-                        y: window.innerHeight, 
-                        duration: 0.4,
-                        ease: "power2.in",
-                        onComplete: () => { 
-                            win.style.visibility = 'hidden'; 
-                            // Reset transform specifically if it wasn't maximized so it opens in right spot
-                            if(!wasMaximized) {
-                                gsap.set(win, { scale: 1, x: winRect.left, y: winRect.top });
-                            } else {
-                                gsap.set(win, { scale: 1 }); // Just reset scale for maximized
-                            }
-                        }
-                    });
-                    taskBtn.classList.remove('active');
-                } else {
-                    this.close(id);
-                }
-            },
-
-            maximize(id) {
-                const win = document.getElementById(id);
-                const draggable = Draggable.get(win);
-
-                if (win.classList.contains('maximized')) {
-                    // Restore
-                    win.classList.remove('maximized');
-                    if (draggable) draggable.enable();
-                    gsap.fromTo(win, { scale: 0.95 }, { scale: 1, duration: 0.2 });
-                } else {
-                    // Maximize
-                    win.classList.add('maximized');
-                    if (draggable) draggable.disable();
-                    gsap.fromTo(win, { scale: 0.95 }, { scale: 1, duration: 0.2 });
-                }
-                this.bringToFront(id);
-            },
-
-            bringToFront(id) {
-                const win = document.getElementById(id);
-                this.zIndex++;
-                win.style.zIndex = this.zIndex;
-                
-                document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
-                win.classList.add('active');
-
-                document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
-                const taskBtn = document.querySelector(`[data-task="${id}"]`);
-                if(taskBtn) taskBtn.classList.add('active');
-            },
-
-            addTask(id) {
-                if (document.querySelector(`[data-task="${id}"]`)) return;
-                
-                const win = document.getElementById(id);
-                const title = win.querySelector('.title-bar span').innerText;
-                const icon = win.querySelector('.title-bar img').src;
-                
-                const btn = document.createElement('div');
-                btn.className = 'task-item active';
-                btn.dataset.task = id;
-                btn.innerHTML = `<img src="${icon}" class="w-4 h-4"> <span class="truncate">${title}</span>`;
-                btn.onclick = () => {
-                    const w = document.getElementById(id);
-                    if (w.style.visibility === 'hidden') {
-                        // Restore
-                        w.style.visibility = 'visible';
-                        gsap.fromTo(w, { scale: 0.1, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.2 });
-                        wm.bringToFront(id);
-                    } else if (w.classList.contains('active')) {
-                        wm.minimize(id);
-                    } else {
-                        wm.bringToFront(id);
-                    }
-                };
-                
-                document.getElementById('task-list').appendChild(btn);
-            },
-
-            removeTask(id) {
-                const btn = document.querySelector(`[data-task="${id}"]`);
-                if(btn) btn.remove();
-            },
-
-            closeMenus() {
-                document.getElementById('start-menu').style.display = 'none';
-                document.querySelector('.start-btn').classList.remove('active');
-                document.getElementById('context-menu').style.display = 'none';
-                document.getElementById('calendar-widget').style.display = 'none';
-                document.getElementById('properties-modal').style.display = 'none';
-            },
-
-            toggleCalendar() {
-                const cal = document.getElementById('calendar-widget');
-                if(cal.style.display === 'block') cal.style.display = 'none';
-                else {
-                    this.closeMenus(); // close others
-                    cal.style.display = 'block';
-                }
-            },
-
-            shutdown() {
-                this.closeMenus();
-                const screen = document.getElementById('shutdown-screen');
-                screen.style.display = 'flex';
-            },
-            
-            triggerBSOD() {
-                this.closeMenus();
-                document.getElementById('bsod-screen').style.display = 'block';
-            },
-
-            generateCalendar() {
-                const now = new Date();
-                const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
-                document.getElementById('cal-header').innerText = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
-
-                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-                const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-                
-                let html = '';
-                // Empties
-                for(let i=0; i<firstDay; i++) {
-                    html += `<span class="text-gray-400">.</span>`;
-                }
-                // Days
-                for(let i=1; i<=daysInMonth; i++) {
-                    if(i === now.getDate()) {
-                        html += `<span class="bg-blue-800 text-white font-bold">${i}</span>`;
-                    } else {
-                        html += `<span>${i}</span>`;
-                    }
-                }
-                document.getElementById('cal-grid').innerHTML = html;
-            },
-
-            // --- NOTEPAD ---
-            initNotepad() {
-                const noteText = `কলেজ শেষে ঢাকা বিশ্ববিদ্যালয়ের ক্যান্টিনে খিচুড়ি আর ফ্রাইড রাইস খেতে যেতাম...
-সাজিদের সঙ্গে মেট্রোতে করে মতিঝিল, তারপর মিল্ক ভিটার দই খেয়ে মিডলাইন বাসে যাত্রীর ভিড়ে কোনোরকম জায়গা করে নেওয়া...
-
-এখনো পর্যন্ত জীবনের প্রকৃত অর্থটা ঠিকভাবে বুঝে উঠতে পারিনি।
-তবুও চলছি—কারণ হয়তো এই অপ্রাপ্তিগুলোর মধ্যেই লুকিয়ে আছে নিজেকে খুঁজে পাওয়ার গল্প।
-
-Happy 242916`;
-                document.getElementById('note-area').value = noteText;
-            },
-
-            saveNote() {
-                const text = document.getElementById('note-area').value;
-                const blob = new Blob([text], { type: 'text/plain' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'Reflections.txt';
-                a.click();
-            },
-
-            // --- RUN COMMAND ---
-            runCommand() {
-                const val = document.getElementById('run-input').value.toLowerCase().trim();
-                this.close('run');
-                if(val === 'calc' || val === 'calculator') this.open('calc');
-                else if(val === 'cmd' || val === 'command') this.open('cmd');
-                else if(val === 'notepad') this.open('notepad');
-                else if(val === 'about') this.open('about');
-                else if(val === 'shutdown') this.shutdown();
-                else if(val === 'format c:') alert('Nice try!');
-                else if(val) alert('Cannot find "' + val + '". Make sure you typed the name correctly.');
-                document.getElementById('run-input').value = '';
-            },
-
-            // --- CMD ---
-            handleCmd(e) {
-                if(e.key === 'Enter') {
-                    const val = e.target.value.trim();
-                    const output = document.getElementById('cmd-output');
-                    output.innerHTML += `<div>C:\\Users\\Shrabon> ${val}</div>`;
-                    
-                    const args = val.split(' ');
-                    const cmd = args[0].toLowerCase();
-
-                    if(cmd === 'help') {
-                        output.innerHTML += `<div class="text-gray-400">Available commands: VER, DIR, CLS, EXIT, DATE, TIME, ECHO, COLOR, WHOAMI</div>`;
-                    } else if(cmd === 'ver') {
-                        output.innerHTML += `<div>Microsoft Windows [Version 151.242916]</div>`;
-                    } else if(cmd === 'date') {
-                        output.innerHTML += `<div>Current date is: ${new Date().toLocaleDateString()}</div>`;
-                    } else if(cmd === 'time') {
-                        output.innerHTML += `<div>Current time is: ${new Date().toLocaleTimeString()}</div>`;
-                    } else if(cmd === 'whoami') {
-                        output.innerHTML += `<div>User</div>`;
-                    } else if(cmd === 'echo') {
-                        output.innerHTML += `<div>${val.substring(5)}</div>`;
-                    } else if(cmd === 'color') {
-                        const colorCode = args[1];
-                        if(colorCode === 'a') document.querySelector('#cmd .window-body').style.color = '#00ff00'; // Green
-                        else if(colorCode === 'c') document.querySelector('#cmd .window-body').style.color = '#ff0000'; // Red
-                        else if(colorCode === 'f') document.querySelector('#cmd .window-body').style.color = '#ffffff'; // White
-                        else output.innerHTML += `<div>Invalid color attr. Try 'color a'</div>`;
-                    } else if(cmd === 'cls') {
-                        output.innerHTML = '';
-                    } else if(cmd === 'exit') {
-                        this.close('cmd');
-                    } else if(cmd) {
-                        output.innerHTML += `<div class="text-red-400">'${cmd}' is not recognized as an internal or external command.</div>`;
-                    }
-                    
-                    e.target.value = '';
-                    e.target.scrollIntoView();
-                }
-            },
-
-            // --- GALLERY LOGIC ---
-            populateGallery() {
-                const grid = document.getElementById('gallery-grid');
-                // Updated Paths provided by user
-                const images = [
-                    "cricket_champion_and_holding_trophy.jpeg",
-                    "eating_squash.jpeg",
-                    "free_fire_ingame.jpeg",
-                    "free_fire_squad.jpeg",
-                    "friends_after_college_pic.jpeg",
-                    "in_du_canteen.jpeg",
-                    "main.jpeg",
-                    "me_and_sazid_in_rickshaw.jpeg",
-                    "me_riding_cycle.jpeg",
-                    "nobinboron.jpeg",
-                    "science_fest.jpeg",
-                    "wearing_jersey_with_friends.jpeg"
-                ];
-                
-                this.galleryData = images.map(img => ({
-                    src: `../images/151/${img}`,
-                    name: img
-                }));
-
-                document.getElementById('gallery-count').innerText = images.length + " objects";
-                grid.innerHTML = '';
-
-                this.galleryData.forEach((img, idx) => {
-                    const el = document.createElement('div');
-                    el.className = "flex flex-col items-center cursor-pointer group";
-                    el.ondblclick = () => this.openImageViewer(idx);
-                    const displayName = img.name.replace(/_/g, ' ').replace('.jpeg', '').substring(0, 15) + '...';
-
-                    el.innerHTML = `
-                        <div class="w-16 h-16 bg-blue-100 mb-1 border border-gray-400 shadow-sm flex items-center justify-center overflow-hidden">
-                             <img src="https://img.icons8.com/color/48/image-file.png" class="w-8 h-8 opacity-70">
-                        </div>
-                        <span class="text-[10px] group-hover:bg-blue-600 group-hover:text-white px-1 font-sans text-center break-all leading-tight max-w-full">${displayName}</span>
-                    `;
-                    el.title = img.name;
-                    grid.appendChild(el);
-                });
-            },
-
-            openImageViewer(idx) {
-                this.currentImgIdx = idx;
-                this.updateImageViewer();
-                this.open('image-viewer');
-            },
-
-            updateImageViewer() {
-                const data = this.galleryData[this.currentImgIdx];
-                const imgEl = document.getElementById('viewer-img');
-                const capEl = document.getElementById('img-caption');
-                const countEl = document.getElementById('img-counter');
-                
-                imgEl.src = data.src;
-                capEl.innerText = data.name;
-                countEl.innerText = `${this.currentImgIdx + 1} / ${this.galleryData.length}`;
-            },
-
-            nextImage() {
-                this.currentImgIdx = (this.currentImgIdx + 1) % this.galleryData.length;
-                this.updateImageViewer();
-            },
-
-            prevImage() {
-                this.currentImgIdx = (this.currentImgIdx - 1 + this.galleryData.length) % this.galleryData.length;
-                this.updateImageViewer();
-            }
-        };
-
-        // --- CALCULATOR LOGIC ---
-        const calc = {
-            current: '0',
-            prev: null,
-            operator: null,
-            reset: false,
-            
-            update() { document.getElementById('calc-display').innerText = this.current; },
-            
-            num(n) {
-                if(this.current === '0' || this.reset) {
-                    this.current = String(n);
-                    this.reset = false;
-                } else {
-                    this.current += String(n);
-                }
-                this.update();
-            },
-            
-            op(o) {
-                this.prev = parseFloat(this.current);
-                this.operator = o;
-                this.reset = true;
-            },
-            
-            solve() {
-                if(!this.operator || this.prev === null) return;
-                const curr = parseFloat(this.current);
-                let res = 0;
-                if(this.operator === '+') res = this.prev + curr;
-                if(this.operator === '-') res = this.prev - curr;
-                if(this.operator === '*') res = this.prev * curr;
-                if(this.operator === '/') res = this.prev / curr;
-                this.current = String(res);
-                this.operator = null;
-                this.reset = true;
-                this.update();
-            },
-            
-            clear() { this.current = '0'; this.prev = null; this.operator = null; this.update(); },
-            bs() { 
-                this.current = this.current.slice(0, -1) || '0'; 
-                this.update(); 
-            }
-        };
-
-        // --- AUDIO PLAYER ---
-        const audioPlayer = {
-            playing: false,
-            animId: null,
-            canvas: document.getElementById('visualizer'),
-            
-            play() {
-                this.playing = true;
-                this.animate();
-                gsap.to('#winamp-text', { x: -200, duration: 5, repeat: -1, ease: "linear" });
-            },
-            
-            stop() {
-                this.playing = false;
-                cancelAnimationFrame(this.animId);
-                const ctx = this.canvas.getContext('2d');
-                ctx.clearRect(0,0,180,64);
-                gsap.killTweensOf('#winamp-text');
-                gsap.set('#winamp-text', { x: 0 });
-            },
-            
-            animate() {
-                if(!this.playing) return;
-                const ctx = this.canvas.getContext('2d');
-                const w = this.canvas.width;
-                const h = this.canvas.height;
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0,0,w,h);
-                
-                const bars = 20;
-                const barW = w / bars;
-                
-                for(let i=0; i<bars; i++) {
-                    const height = Math.random() * h;
-                    const hue = (i / bars) * 360;
-                    ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
-                    ctx.fillRect(i * barW, h - height, barW - 2, height);
-                }
-                
-                this.animId = requestAnimationFrame(this.animate.bind(this));
-            }
-        };
-
-        // --- CLOCK ---
-        setInterval(() => {
-            const now = new Date();
-            let hours = now.getHours();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
-            const mins = now.getMinutes().toString().padStart(2, '0');
-            const clock = document.getElementById('clock');
-            clock.innerText = `${hours}:${mins} ${ampm}`;
-            
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            clock.title = now.toLocaleDateString(undefined, options);
-        }, 1000);
-
-        function selectIcon(el) {
-            document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        function toggleStart() {
-            const menu = document.getElementById('start-menu');
-            const btn = document.querySelector('.start-btn');
-            
-            wm.closeMenus(); // Close other menus first
-
-            if (menu.style.display === 'flex') {
-                menu.style.display = 'none';
-                btn.classList.remove('active');
-            } else {
-                menu.style.display = 'flex';
-                btn.classList.add('active');
-                wm.zIndex++;
-                menu.style.zIndex = wm.zIndex + 1; 
-            }
-        }
-
-        // Initialize
-        wm.init();
+        // Bind Exit Events
+        document.getElementById('shutdown-btn').addEventListener('click', () => triggerShutdown('../index.html'));
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                triggerShutdown(link.href);
+            });
+        });
 
     </script>
 </body>
