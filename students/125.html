@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>125 | Azmal Hossain</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- VT323 (VCR OSD), Tiro Bangla (Bengali) -->
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vcr-bg': '#050505',
+                        'vcr-blue': '#0000aa', /* Classic VCR Blue Screen */
+                        'osd-white': '#e0e0e0',
+                        'osd-green': '#00ff00',
+                        'osd-red': '#ff0000',
+                    },
+                    fontFamily: {
+                        'vcr': ['VT323', 'monospace'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    },
+                    animation: {
+                        'blink': 'blink 1.5s step-end infinite',
+                    },
+                    keyframes: {
+                        blink: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            font-size: 18px;
+            transition: filter 0.5s ease;
+        }
+
+        /* NIGHT VISION MODE */
+        body.night-vision {
+            filter: sepia(100%) hue-rotate(50deg) saturate(300%) contrast(1.2);
+            text-shadow: 0 0 5px #00ff00;
+        }
+        body.night-vision .vcr-frame {
+            border-color: #00ff00;
+        }
+        body.night-vision .osd-text, body.night-vision h1, body.night-vision h2 {
+            color: #00ff00 !important;
+        }
+
+        /* CRT SCANLINES */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.7;
+        }
+        
+        /* STATIC NOISE */
+        .static-noise {
+            position: fixed; inset: 0;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 49;
+        }
+        
+        /* RGB SHIFT (Subtle Chromatic Aberration) */
+        .rgb-shift {
+            text-shadow: 2px 0 rgba(255,0,0,0.5), -2px 0 rgba(0,255,0,0.5);
+        }
+
+        /* VCR FRAME STYLING */
+        .vcr-frame {
+            border: 2px solid #333;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            will-change: transform;
+        }
+        .vcr-frame img {
+            opacity: 0.9;
+            filter: contrast(1.2) saturation(1.2) brightness(0.9);
+            transition: opacity 0.3s;
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        
+        /* Tracking Glitch Effect on Hover/Click */
+        .vcr-frame::after {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: tracking 3s infinite linear;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .vcr-frame:hover::after, .vcr-frame.glitching::after { opacity: 1; }
+        .vcr-frame.glitching img {
+            filter: hue-rotate(90deg) contrast(200%);
+            transform: translateX(5px);
+        }
+
+        @keyframes tracking {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* OSD TEXT */
+        .osd-text {
+            font-family: 'VT323', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* BANGLA TEXT RESET */
+        .bangla-text {
+            font-family: 'Tiro Bangla', serif;
+            text-shadow: none;
+            line-height: 1.8;
+        }
+
+        /* BLUE SCREEN INTRO */
+        #blue-screen {
+            position: fixed; inset: 0;
+            background-color: #0000aa;
+            z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white;
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+        }
+        
+        /* CONTROLS */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: #00ff00;
+            cursor: pointer;
+            margin-top: -6px; 
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            background: #333;
+        }
+    </style>
+</head>
+<body class="selection:bg-osd-green selection:text-black font-vcr">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="../music/125.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- FX LAYERS -->
+    <div class="scanlines"></div>
+    <div class="static-noise"></div>
+
+    <!-- INTRO OVERLAY (BLUE SCREEN) -->
+    <div id="blue-screen">
+        <div class="text-4xl md:text-6xl mb-4 animate-pulse">PLAY ></div>
+        <div class="text-xl md:text-3xl mt-4">INSERT TAPE: 125</div>
+        <div class="absolute bottom-10 left-10 text-xl font-mono">SP 0:00:00</div>
+    </div>
+
+    <!-- NAV HUD -->
+    <nav class="fixed top-0 left-0 w-full z-40 p-4 md:p-6 flex justify-between items-start pointer-events-none mix-blend-screen">
+        <div class="pointer-events-auto">
+            <div class="text-osd-green text-3xl md:text-5xl font-bold leading-none rgb-shift">AZMAL HOSSAIN</div>
+            <div class="text-lg md:text-2xl text-white/80">ROLL 125 // SECTION B</div>
+        </div>
+        <div class="flex flex-col items-end gap-2 pointer-events-auto">
+            <div class="flex items-center gap-2 text-osd-red text-2xl animate-blink">
+                <div class="w-4 h-4 rounded-full bg-osd-red"></div> <span id="rec-timer">REC 00:00:00</span>
+            </div>
+            <div class="flex gap-4 text-xl mt-2 bg-black/50 px-2 backdrop-blur-sm">
+                <button id="mode-toggle" class="hover:text-osd-green hover:underline">[NIGHT_VIS]</button>
+                <a href="../gallery.html" class="hover:text-osd-green hover:underline">[GALLERY]</a>
+                <a href="../index.html" class="hover:text-osd-red hover:underline">[EJECT]</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- BATTERY INDICATOR -->
+    <div class="fixed bottom-6 right-6 z-30 opacity-70 hidden md:block">
+        <i data-lucide="battery-full" class="w-10 h-10 text-osd-green"></i>
+    </div>
+    
+    <!-- TIMESTAMP -->
+    <div class="fixed bottom-6 left-6 z-30 text-xl md:text-2xl font-mono text-white/80 mix-blend-difference" id="timestamp">
+        00:00:00 AM
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 opacity-0" id="main-content">
+
+        <!-- HERO: THE VIEWFINDER -->
+        <header class="min-h-screen flex flex-col justify-center items-center relative px-4 pt-20 overflow-hidden">
+            <!-- Center Crosshair -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                <div class="w-[80vw] h-[80vh] border border-white/20 relative">
+                    <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white"></div>
+                    <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-white"></div>
+                    <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-white"></div>
+                    <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white"></div>
+                    <!-- Center Cross -->
+                    <div class="absolute top-1/2 left-1/2 w-4 h-[1px] bg-white -translate-x-1/2"></div>
+                    <div class="absolute top-1/2 left-1/2 h-4 w-[1px] bg-white -translate-y-1/2"></div>
+                </div>
+            </div>
+
+            <!-- Zoom Control -->
+            <div class="absolute right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-2">
+                <span class="text-xs text-osd-green">W</span>
+                <input type="range" min="1" max="2" step="0.1" value="1" id="zoom-slider" class="h-32 -rotate-90 origin-center w-32 bg-transparent border border-white/20 p-1">
+                <span class="text-xs text-osd-green">T</span>
+            </div>
+
+            <!-- Main Title Data -->
+            <div class="relative z-10 text-center mb-12">
+                <h1 class="text-7xl md:text-[10rem] mb-2 leading-none text-white mix-blend-overlay opacity-90">CHAOS.mp4</h1>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <p class="text-xl md:text-2xl text-osd-green tracking-widest bg-black/80 px-4 py-1">BATCH: 24-25</p>
+                    <p class="text-xl md:text-2xl text-osd-white tracking-widest bg-black/80 px-4 py-1">HSC 26</p>
+                </div>
+            </div>
+
+            <!-- Image Grid (Security Cam Style) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2 w-full max-w-7xl transition-transform duration-300" id="hero-grid">
+                <!-- Main -->
+                <div class="vcr-frame aspect-video md:col-span-2 md:row-span-2 relative group cursor-crosshair" onclick="glitchEffect(this)">
+                    <img src="../images/125/main.jpg" alt="Azmal Main" decoding="async">
+                    <div class="absolute bottom-2 left-2 text-xl bg-black px-1 text-osd-white group-hover:text-osd-green">CAM 01 [MAIN]</div>
+                </div>
+                <!-- Side -->
+                <div class="vcr-frame aspect-video relative group cursor-crosshair" onclick="glitchEffect(this)">
+                    <img src="../images/125/main2.jpg" alt="Azmal Alt" decoding="async">
+                    <div class="absolute bottom-2 left-2 text-xl bg-black px-1 text-osd-white group-hover:text-osd-green">CAM 02</div>
+                </div>
+                <!-- Group -->
+                <div class="vcr-frame aspect-video relative group cursor-crosshair" onclick="glitchEffect(this)">
+                    <img src="../images/125/Full_B_section.jpg" alt="Section B" decoding="async">
+                    <div class="absolute bottom-2 left-2 text-xl bg-black px-1 text-osd-white group-hover:text-osd-green">CAM 03 [GANG]</div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center animate-bounce opacity-50">
+                <span class="text-xl">▼ SCROLL TO PLAY FOOTAGE ▼</span>
+            </div>
+        </header>
+
+        <!-- TAPE 1: THE CHAOS -->
+        <section class="py-24 px-4 md:px-12 border-t border-white/10 relative">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="order-2 lg:order-1 space-y-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-osd-green text-black px-2 text-2xl font-bold">TAPE 01</span>
+                        <h2 class="text-5xl md:text-6xl uppercase text-white">SWEET_CHAOS</h2>
+                    </div>
+                    
+                    <div class="border-l-4 border-osd-green pl-6 py-2 bg-white/5">
+                        <p class="bangla-text text-xl leading-loose text-gray-300 text-justify">
+                            কলেজ লাইফ!!! জীবনের শত শত ঘটনার মধ্যে খুব ছোট্ট একটি মূহূর্ত তবুও অনেক মধুর স্মৃতিতে ঢাকা। নতুন মুখ, শিক্ষক-শিক্ষিকা তারপর বন্ধুদের কথা তো না বললেই নয়। এই ইউল্যাব ক্যাম্পাসে কম দুষ্টামি করিনি বটে। ক্লাস বাঙ্ক থেকে শুরু করে কলেজ পালানো...
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-8">
+                        <div class="vcr-frame aspect-video rotate-1 hover:rotate-0 transition-transform duration-300" onclick="glitchEffect(this)">
+                            <img src="../images/125/chaos_with_friends.jpg" alt="Chaos" loading="lazy" decoding="async">
+                        </div>
+                        <div class="vcr-frame aspect-video -rotate-1 hover:rotate-0 transition-transform duration-300" onclick="glitchEffect(this)">
+                            <img src="../images/125/friends.jpg" alt="Friends" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Noise Decoration -->
+                <div class="order-1 lg:order-2 flex justify-center items-center">
+                    <div class="w-full h-80 md:h-[500px] border-4 border-double border-white/20 flex items-center justify-center relative bg-black">
+                        <!-- Glitch Text Background -->
+                        <div class="absolute inset-0 overflow-hidden opacity-20 pointer-events-none flex flex-col justify-between text-9xl font-bold text-gray-800 select-none">
+                            <span>NO SIGNAL</span>
+                            <span>ERROR</span>
+                            <span>NO SIGNAL</span>
+                        </div>
+                        
+                        <div class="text-6xl md:text-8xl text-white/10 font-bold select-none rotate-90 md:rotate-0 z-0">SECTION B</div>
+                        
+                        <!-- Floating Image -->
+                        <div class="absolute inset-8 md:inset-16 vcr-frame shadow-[20px_20px_0px_rgba(255,255,255,0.1)] z-10 hover:scale-105 transition-transform" onclick="glitchEffect(this)">
+                            <img src="../images/125/chaos_with_friends.jpg" class="grayscale hover:grayscale-0 transition-all duration-500" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAPE 2: RAIN & MUD -->
+        <section class="py-24 px-4 md:px-12 bg-white/5 relative overflow-hidden border-y border-white/10">
+            <!-- Rain Effect (CSS Lines) -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #0000ff 10px, #0000ff 11px);"></div>
+
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-12 border-b border-white/20 pb-4">
+                    <div>
+                        <span class="bg-vcr-blue text-white px-2 text-2xl font-bold">TAPE 02</span>
+                        <h2 class="text-5xl md:text-6xl uppercase mt-2">RAIN_AND_MUD</h2>
+                    </div>
+                    <div class="text-2xl animate-blink text-osd-red font-bold">● LIVE</div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                    <!-- Text Content -->
+                    <div class="md:col-span-5 bangla-text text-xl leading-loose text-gray-300 text-justify">
+                        করিডোরে পানি দিয়ে খেলা, বৃষ্টিতে ভেজা, ভিজতে গিয়ে একজন আরেকজনকে কাদা মাটিতে ফেলে দেওয়া, আমাদের সেই ছোট্ট মাঠটায় ফুটবল খেলা আরও যে কত কি!! তার মধ্যে বন্ধুদের আজব কান্ড আর তাদের দেওয়া আজব সব নাম কি আর বলবো।
+                    </div>
+
+                    <!-- Media Grid -->
+                    <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="vcr-frame aspect-square relative group" onclick="glitchEffect(this)">
+                            <img src="../images/125/friends_and_football.jpg" alt="Football" loading="lazy" decoding="async">
+                            <div class="absolute top-2 right-2 bg-osd-green text-black px-1 text-xl">MATCH DAY</div>
+                            <!-- Scanline Overlay on Image -->
+                            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)50%,rgba(0,0,0,0.25)50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
+                        </div>
+                        <div class="vcr-frame aspect-square relative group mt-8 sm:mt-0" onclick="glitchEffect(this)">
+                            <img src="../images/125/rain.jpg" alt="Rain" loading="lazy" decoding="async">
+                            <div class="absolute top-2 right-2 bg-vcr-blue text-white px-1 text-xl">WEATHER: RAIN</div>
+                             <!-- Scanline Overlay on Image -->
+                             <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)50%,rgba(0,0,0,0.25)50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAPE 3: FOOTAGE ARCHIVE -->
+        <section class="py-24 px-4 md:px-12">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-6xl uppercase mb-2">ARCHIVED_FOOTAGE</h2>
+                <div class="h-[2px] w-32 bg-white/50 mx-auto"></div>
+                <p class="text-xl text-gray-500 mt-2">LOCATION: ULAB CAMPUS // STORAGE: FULL</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto">
+                <!-- Item 1 -->
+                <div class="vcr-frame aspect-[3/4] group cursor-pointer hover:scale-[1.02] transition-transform" onclick="glitchEffect(this)">
+                    <img src="../images/125/rose_practical_with_friends.jpg" alt="Rose" loading="lazy" decoding="async">
+                    <div class="absolute bottom-0 left-0 w-full bg-black/80 p-1 text-center text-lg opacity-0 group-hover:opacity-100 transition-opacity text-osd-green">PRACTICAL_CLASS</div>
+                </div>
+                <!-- Item 2 -->
+                <div class="vcr-frame aspect-[3/4] group cursor-pointer hover:scale-[1.02] transition-transform" onclick="glitchEffect(this)">
+                    <img src="../images/125/flower_and_letter.jpg" alt="Letter" loading="lazy" decoding="async">
+                    <div class="absolute bottom-0 left-0 w-full bg-black/80 p-1 text-center text-lg opacity-0 group-hover:opacity-100 transition-opacity text-osd-green">GIFTS</div>
+                </div>
+                <!-- Item 3 -->
+                <div class="vcr-frame aspect-[3/4] group cursor-pointer hover:scale-[1.02] transition-transform" onclick="glitchEffect(this)">
+                    <img src="../images/125/Palestine_will_be_free.jpg" alt="Palestine" loading="lazy" decoding="async">
+                    <div class="absolute top-2 right-2 bg-osd-red text-white px-1 text-sm animate-pulse">SOLIDARITY</div>
+                </div>
+                <!-- Item 4 -->
+                 <div class="vcr-frame aspect-[3/4] group cursor-pointer hover:scale-[1.02] transition-transform" onclick="glitchEffect(this)">
+                    <img src="../images/125/chaos_with_friends.jpg" alt="More Chaos" class="grayscale" loading="lazy" decoding="async">
+                    <div class="absolute bottom-0 left-0 w-full bg-black/80 p-1 text-center text-lg opacity-0 group-hover:opacity-100 transition-opacity text-osd-green">CHAOS_REDUX</div>
+                </div>
+            </div>
+
+            <!-- Goodbye Text -->
+            <div class="mt-24 max-w-4xl mx-auto border-2 border-white/20 p-8 md:p-12 relative bg-black">
+                <!-- Corner marks -->
+                <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-osd-green"></div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-osd-green"></div>
+                <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-osd-green"></div>
+                <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-osd-green"></div>
+
+                <p class="bangla-text text-xl md:text-2xl leading-relaxed text-center text-gray-200">
+                    "স্মৃতি খুব দীর্ঘায়ু প্রাপ্ত না হলেও দিন শেষে এই সামান্য মূহূর্ত গুলো মধুর স্মৃতি হয়ে লিখা থাকবে। এই বন্ধুরা আর ইউল্যাবের করা দুষ্টামি হয়তো কলেজের স্মৃতির চাদরে লিখা থাকবে। তবে দিন শেষে জানি না কে কোথায় যাস কিন্তু ভালো থাকিস মামা তোরা সব সময়।"
+                </p>
+                <div class="text-center mt-6 text-osd-green font-mono tracking-widest text-lg">
+                    >> END_OF_TAPE
+                </div>
+            </div>
+        </section>
+
+        <!-- QUOTE (End Credits Style) -->
+        <section class="py-32 flex justify-center items-center relative border-t border-white/10 bg-black">
+            <div class="max-w-3xl text-center z-10 px-6">
+                <h2 class="text-4xl md:text-6xl uppercase leading-tight mb-6 text-white tracking-wider">
+                    ALLAH DOES NOT BURDEN A SOUL BEYOND THAT IT CAN BEAR
+                </h2>
+                <p class="text-2xl text-osd-green font-mono">[ QURAN 2:286 ]</p>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-12 text-center border-t border-white/20 bg-vcr-blue">
+            <div class="text-2xl mb-6 text-white">THANKS FOR WATCHING</div>
+            <button onclick="window.location.href='../index.html'" class="bg-black text-white border-2 border-white text-2xl px-8 py-2 hover:bg-white hover:text-blue-800 transition-colors uppercase tracking-widest">
+                Eject Tape
+            </button>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. TIMESTAMP & REC TIMER
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('timestamp').innerText = now.toLocaleTimeString('en-US', { hour12: true });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        let recSeconds = 0;
+        function updateRec() {
+            recSeconds++;
+            const h = Math.floor(recSeconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((recSeconds % 3600) / 60).toString().padStart(2, '0');
+            const s = (recSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('rec-timer').innerText = `REC ${h}:${m}:${s}`;
+        }
+        setInterval(updateRec, 1000);
+
+        // 2. NIGHT VISION TOGGLE
+        const modeBtn = document.getElementById('mode-toggle');
+        let isNight = false;
+        modeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('night-vision');
+            isNight = !isNight;
+            modeBtn.innerText = isNight ? "[COLOR_MODE]" : "[NIGHT_VIS]";
+        });
+
+        // 3. ZOOM SLIDER
+        const zoomSlider = document.getElementById('zoom-slider');
+        const heroGrid = document.getElementById('hero-grid');
+        if(zoomSlider && heroGrid) {
+            zoomSlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                heroGrid.style.transform = `scale(${val})`;
+            });
+        }
+
+        // 4. MANUAL GLITCH
+        function glitchEffect(element) {
+            element.classList.add('glitching');
+            setTimeout(() => {
+                element.classList.remove('glitching');
+            }, 300);
+        }
+
+        // 5. OPENING SEQUENCE
+        const blueScreen = document.getElementById('blue-screen');
+        const bgMusic = document.getElementById('bg-music');
+        const mainContent = document.getElementById('main-content');
+
+        blueScreen.addEventListener('click', () => {
+            // Play Audio
+            bgMusic.volume = 0.5;
+            bgMusic.play().catch(e => console.log("Audio play failed", e));
+
+            const tl = gsap.timeline();
+            
+            // Text glitch out
+            tl.to(blueScreen.children, { opacity: 0, duration: 0.2, stagger: 0.1 });
+            
+            // Screen shrinking effect (TV turn on reverse)
+            tl.to(blueScreen, { 
+                scaleY: 0.01,
+                duration: 0.2,
+                ease: "power2.in"
+            });
+            tl.to(blueScreen, { 
+                scaleX: 0,
+                duration: 0.2,
+                onComplete: () => blueScreen.style.display = 'none'
+            });
+
+            // Reveal Content
+            tl.to(mainContent, { opacity: 1, duration: 0.5 });
+            
+            // Animate Hero Elements
+            tl.from("h1", { opacity: 0, scale: 1.2, duration: 0.1, repeat: 3, yoyo: true }); // Glitch flicker
+            tl.from(".vcr-frame", { 
+                y: 50, 
+                opacity: 0, 
+                stagger: 0.2, 
+                duration: 0.8, 
+                ease: "power2.out" 
+            }, "-=0.2");
+        });
+
+        // 6. SCROLL ANIMATIONS
+        // Bangla Text Reveal
+        gsap.utils.toArray('.bangla-text').forEach(text => {
+            gsap.from(text, {
+                scrollTrigger: {
+                    trigger: text,
+                    start: "top 85%",
+                },
+                opacity: 0,
+                y: 20,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+
+        // VCR Frames Parallax/Glitch on Scroll
+        gsap.utils.toArray('.vcr-frame').forEach(frame => {
+            gsap.to(frame, {
+                scrollTrigger: {
+                    trigger: frame,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                },
+                y: -30, // Slight parallax
+                ease: "none"
+            });
+        });
+
+    </script>
+</body>
+</html>

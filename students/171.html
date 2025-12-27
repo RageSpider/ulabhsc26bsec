@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>171 | Muntasir Billah</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Playfair Display (Elegant, lively), Tiro Bangla (Bengali), DM Sans (Clean Body) -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ivory': '#FDFBF7',
+                        'emerald-deep': '#064E3B', /* Life, Nature, Depth */
+                        'emerald-light': '#D1FAE5',
+                        'earth': '#3F3F46', 
+                        'gold-accent': '#D97706',
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                        'body': ['DM Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #3F3F46;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* Geometric Pattern Overlay - Livelier than "texture" */
+        .pattern-overlay {
+            position: fixed; inset: 0;
+            background-image: radial-gradient(#064E3B 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Image Styling - Vibrant & Clean */
+        .portrait-container {
+            position: relative;
+            padding: 10px;
+            background: white;
+            box-shadow: 10px 10px 0px rgba(6, 78, 59, 0.1); /* Emerald Shadow */
+            border: 1px solid rgba(6, 78, 59, 0.1);
+            max-width: 380px;
+            margin: 0 auto;
+            transform: rotate(-2deg);
+            transition: transform 0.5s ease;
+        }
+        .portrait-container:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+        .portrait-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: contrast(1.05) saturate(1.1); /* Slightly vibrant */
+        }
+
+        /* Typography */
+        .bangla-text {
+            font-size: 1.125rem;
+        }
+        @media (min-width: 768px) {
+            .bangla-text { font-size: 1.25rem; }
+        }
+
+        /* Islamic/Geometric Motif for Divider */
+        .geo-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 2rem 0;
+            opacity: 0.3;
+        }
+        .geo-diamond {
+            width: 8px; height: 8px;
+            background: #064E3B;
+            transform: rotate(45deg);
+        }
+        .geo-line {
+            width: 50px; height: 1px;
+            background: #064E3B;
+        }
+
+        /* Opening Animation */
+        #intro-screen {
+            position: fixed; inset: 0;
+            background: #064E3B;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            color: #FDFBF7;
+        }
+        
+        /* Card Styles for Teachers */
+        .teacher-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #D97706;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .teacher-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="selection:bg-emerald-deep selection:text-white font-bangla">
+
+    <div class="pattern-overlay"></div>
+
+    <!-- OPENING SCREEN -->
+    <div id="intro-screen" class="cursor-pointer">
+        <div class="text-center">
+            <div class="w-16 h-16 border-2 border-white/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                <span class="font-display text-xl">171</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bangla mb-2">আসসালামু আলাইকুম</h1>
+            <p class="font-body text-xs tracking-[0.3em] uppercase opacity-70 mt-4">Tap to Begin</p>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center bg-ivory/80 backdrop-blur-md border-b border-emerald-deep/5">
+        <div class="font-display text-lg font-bold text-emerald-deep flex items-center gap-2">
+            <span class="w-2 h-2 bg-gold-accent rounded-full"></span>
+            Muntasir
+        </div>
+        <div class="flex gap-6 font-body text-[10px] md:text-xs font-bold tracking-widest uppercase text-earth">
+            <a href="../gallery.html" class="hover:text-emerald-deep transition-colors">Gallery</a>
+            <a href="../index.html" class="hover:text-emerald-deep transition-colors">Index</a>
+        </div>
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 pt-32 pb-20 px-4 md:px-12 max-w-4xl mx-auto opacity-0" id="main-content">
+
+        <!-- HERO HEADER -->
+        <header class="text-center mb-16">
+            <span class="inline-block py-1 px-3 rounded-full bg-emerald-deep/5 text-emerald-deep text-xs font-bold tracking-widest uppercase mb-4">Roll 171</span>
+            <h1 class="text-5xl md:text-7xl font-bangla font-bold text-emerald-deep mb-4">মুনতাসির বিল্লাহ</h1>
+            <p class="font-display italic text-gold-accent text-lg">"The Believer"</p>
+        </header>
+
+        <!-- IMAGE SECTION -->
+        <section class="mb-20">
+            <div class="portrait-container">
+                <img src="../images/171.jpg" alt="Muntasir Billah">
+            </div>
+            <p class="text-center font-body text-xs text-earth/50 mt-4 tracking-widest uppercase">Captured Moment • 2024</p>
+        </section>
+
+
+        <!-- CONTENT SECTION: PHILOSOPHY -->
+        <section class="mb-20 text-center md:text-justify max-w-3xl mx-auto">
+            <div class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-emerald-deep/5 relative overflow-hidden">
+                <!-- Background decorative quote mark -->
+                <div class="absolute top-0 right-4 text-9xl font-display text-emerald-deep/5 select-none leading-none">”</div>
+                
+                <p class="bangla-text text-emerald-deep leading-loose relative z-10 font-medium">
+                    মানুষের মৃত্যু অনিবার্য। এই ক্ষণস্থায়ী জীবনে কখনো এখানে তো কখনো সেখানে পাড়ি জমিয়ে প্রতিকূল পরিবেশকে অনুকূল পরিবেশে পরিণত করে সম্মুখে অগ্রসর হওয়াই মানবজাতির ধর্ম ও কর্ম।
+                </p>
+                
+                <div class="geo-divider">
+                    <div class="geo-line"></div>
+                    <div class="geo-diamond"></div>
+                    <div class="geo-line"></div>
+                </div>
+
+                <p class="bangla-text text-earth leading-loose relative z-10">
+                    এই ক্ষণস্থায়ী জীবনের ক্ষুদ্র মানুষটার জীবনের দু-দুটো বছর কিভাবে যে অতিবাহিত হয়ে গেলো কিছুই বুঝতে পারলাম না। জীবনে ভেঙে পড়লে চলবে না। অদম্য শক্তি ও চেষ্টা নিয়ে সামনে অগ্রসর হয়ে যেতে হবে। পরকালের পুঁজি উপার্জন করতে হবে যে। কিছুই তো করতে পারিনি নিজের জন্য। কখনো কি একান্তে, নির্জনে ভেবে দেখেছি এই কথাগুলো?
+                </p>
+            </div>
+        </section>
+
+
+        <!-- CONTENT SECTION: THE TEACHERS (Grid Cards) -->
+        <section class="mb-20 py-8">
+            <div class="flex items-center justify-center gap-4 mb-10">
+                <h3 class="font-display text-2xl text-emerald-deep">Guidance & Gratitude</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">মমতাজ ম্যাম</span>
+                    <span class="text-sm text-gray-500">গম্ভীরতা</span>
+                </div>
+                <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">শিরিন ম্যাম</span>
+                    <span class="text-sm text-gray-500">হাস্যোজ্জ্বল মুখাবয়ব</span>
+                </div>
+                <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">দিলরুবা ম্যাম</span>
+                    <span class="text-sm text-gray-500">নিরলস প্রচেষ্টা</span>
+                </div>
+                <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">জাহাঙ্গীর স্যার</span>
+                    <span class="text-sm text-gray-500">প্রয়োজনীয় কঠোরতা</span>
+                </div>
+                 <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">নুরুল স্যার</span>
+                    <span class="text-sm text-gray-500">সন্তান সুলভ নজরদারিতা</span>
+                </div>
+                 <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">বরুন স্যার</span>
+                    <span class="text-sm text-gray-500">গল্পের মাঝে পড়ানোর দক্ষতা</span>
+                </div>
+                 <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">টাইমুর স্যার</span>
+                    <span class="text-sm text-gray-500">শীতল মস্তিষ্কে পড়ানোর অনন্যতা</span>
+                </div>
+                 <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">হ্যাপি ম্যাম</span>
+                    <span class="text-sm text-gray-500">মাতৃসুলভ আচরণ</span>
+                </div>
+                <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">মফিজ স্যার</span>
+                    <span class="text-sm text-gray-500">অঙ্ক করানোর অসাধারণ অভিজ্ঞতা</span>
+                </div>
+                 <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">সাইদুল ও ওয়ালিদ স্যার</span>
+                    <span class="text-sm text-gray-500">অ্যাডমিশনের প্রতি উৎসাহ</span>
+                </div>
+                 <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">বিথি ম্যাম</span>
+                    <span class="text-sm text-gray-500">মঙ্গলজনক কঠোরতা</span>
+                </div>
+                 <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">এলিনা ম্যাম</span>
+                    <span class="text-sm text-gray-500">মানবতার কল্যাণে ব্রত করার উপদেশ</span>
+                </div>
+                 <div class="teacher-card">
+                    <span class="font-bold text-emerald-deep block">আকন্দ স্যার</span>
+                    <span class="text-sm text-gray-500">মানসিক বিকাশ</span>
+                </div>
+                 <div class="teacher-card border-l-emerald-deep">
+                    <span class="font-bold text-emerald-deep block">ফারযানা তানযিল ম্যাম</span>
+                    <span class="text-sm text-gray-500">ল্যাবে কাটানো মুহূর্তগুলো</span>
+                </div>
+                <div class="teacher-card col-span-1 md:col-span-2 lg:col-span-3 text-center border-l-emerald-deep bg-emerald-50">
+                    <span class="font-bold text-emerald-deep block">আফসানা, ফারযানা এবং পারভীন ববি ম্যাম</span>
+                    <span class="text-sm text-gray-500">বাংলা ভাষার স্বাদ আস্বাদন</span>
+                </div>
+            </div>
+            
+            <p class="text-center mt-12 text-earth/70 font-bangla text-lg">
+                "এসবের মাঝেই অতিবাহিত হয়ে গেলো দু-দুটো বছর। আর কখনো ফিরে আসবে না এই মুহূর্তগুলো।"
+            </p>
+        </section>
+
+
+        <!-- CONTENT SECTION: THANKS & FRIENDS -->
+        <section class="mb-24 text-center max-w-2xl mx-auto space-y-12">
+            
+            <!-- Thanks to Sajid -->
+            <div class="bg-gradient-to-br from-white to-emerald-50 p-8 rounded-2xl border border-emerald-100">
+                <div class="font-bangla text-lg text-emerald-900">
+                    <span class="font-bold text-gold-accent">সাজিদকে</span> অসংখ্য ধন্যবাদ জানাচ্ছি তাঁর এই অভিনব ধারণা প্রদানের জন্য। যার জন্য সবাই নিজের মতামতগুলো প্রকাশ করার অবকাশ পেয়েছে।
+                </div>
+            </div>
+
+            <!-- Message to Friends -->
+            <div class="relative">
+                <div class="absolute left-1/2 -translate-x-1/2 -top-10 text-6xl text-emerald-deep/10 font-display">Friends</div>
+                <h3 class="font-display text-3xl text-emerald-deep mb-6 relative z-10">An Open Door</h3>
+                <p class="font-bangla text-lg leading-relaxed text-earth">
+                    এখন আসা যাক যাদের কারণে এই কলেজ, যাদের সঙ্গে বসে গ্রহণ করেছি পাঠদান। হেসেছি অনেক হাসি। তাদের জন্য আমার মতো ক্ষুদ্র মানুষটার দ্বার সদা-সর্বদা উন্মুক্ত। 
+                </p>
+                <div class="mt-8 p-6 border-y-2 border-emerald-deep/10 inline-block">
+                    <p class="font-bangla text-xl font-bold text-emerald-deep">
+                        "যখন, যে অবস্থাতেই থাকো না কেন করিও একবার স্মরণ। <br>ছুটিয়া যাবো তোমাদেরই পানে ফেলিয়া দুই চরণ।"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="text-center py-16">
+            <button id="close-btn" class="group relative px-8 py-3 bg-emerald-deep text-white font-body font-bold rounded-full overflow-hidden transition-all hover:shadow-lg hover:shadow-emerald-deep/30">
+                <span class="relative z-10 text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Return to Index</span>
+            </button>
+            <p class="mt-8 text-[10px] text-earth/30 tracking-widest uppercase">Roll 171 • Batch 26</p>
+        </footer>
+
+    </main>
+
+    <!-- JS -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const introScreen = document.getElementById('intro-screen');
+        const mainContent = document.getElementById('main-content');
+        
+        // 1. OPENING ANIMATION
+        introScreen.addEventListener('click', () => {
+            const tl = gsap.timeline();
+            
+            // Text fade out
+            tl.to(introScreen.children[0], { opacity: 0, y: -20, duration: 0.5 });
+            
+            // Screen split/fade
+            tl.to(introScreen, { 
+                opacity: 0, 
+                duration: 0.8, 
+                ease: "power2.inOut",
+                onComplete: () => introScreen.style.display = 'none'
+            });
+
+            // Content reveal
+            tl.to(mainContent, { opacity: 1, duration: 0.8 }, "-=0.2");
+            
+            // Staggered element entry
+            tl.from("header > *", { y: 30, opacity: 0, stagger: 0.2, duration: 0.8, ease: "back.out(1.7)" }, "-=0.4");
+            tl.from(".portrait-container", { scale: 0.8, opacity: 0, rotation: -5, duration: 1, ease: "elastic.out(1, 0.7)" }, "-=0.6");
+        });
+
+        // 2. SCROLL ANIMATIONS
+        // Animate text sections up
+        gsap.utils.toArray('section p, section h3, .geo-divider').forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+
+        // Animate Cards Staggered
+        gsap.from(".teacher-card", {
+            scrollTrigger: {
+                trigger: ".grid",
+                start: "top 80%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: "power1.out"
+        });
+
+        // 3. EXIT ANIMATION
+        document.getElementById('close-btn').addEventListener('click', () => {
+            const tl = gsap.timeline({
+                onComplete: () => window.location.href = '../index.html'
+            });
+            tl.to("body", { backgroundColor: "#FFF", duration: 0.5 });
+            tl.to(mainContent, { opacity: 0, y: 20, duration: 0.5 }, "<");
+        });
+
+    </script>
+</body>
+</html>

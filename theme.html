@@ -8,8 +8,8 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Added Permanent Marker, Courier Prime for new themes -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Added Press Start 2P for 151 -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&family=Courier+Prime:wght@400;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -57,6 +57,32 @@
             position: absolute; font-size: 24px; opacity: 0.6;
             animation: float 3s ease-in-out infinite;
         }
+
+        /* 125: The Camcorder (VCR) */
+        .theme-125 {
+            background-color: #050505;
+            color: #00ff00;
+            font-family: 'VT323', monospace;
+            border: 2px solid #333;
+            position: relative;
+            text-shadow: 0 0 4px rgba(0, 255, 0, 0.8);
+            overflow: hidden;
+        }
+        .theme-125:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+        }
+        .theme-125 .scanline {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5) 50%);
+            background-size: 100% 4px;
+            position: absolute; inset: 0; pointer-events: none; opacity: 0.5; z-index: 5;
+        }
+        .rec-dot {
+            width: 10px; height: 10px; background: red; border-radius: 50%;
+            display: inline-block; margin-right: 5px;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         /* 127: The Game Master (Bio + Squid Game) */
         .theme-127 { 
@@ -144,6 +170,36 @@
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
+        /* 151: System 151 (Windows 98 Style) */
+        .theme-151 {
+            background-color: #008080; /* Teal background */
+            color: #000;
+            font-family: 'Press Start 2P', cursive;
+            border: 2px solid #fff;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-151:hover {
+            box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080, 0 0 15px rgba(0, 128, 128, 0.5);
+        }
+        .theme-151 .win-window {
+            background: #c0c0c0;
+            border-top: 1px solid #fff; border-left: 1px solid #fff;
+            border-right: 1px solid #000; border-bottom: 1px solid #000;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column;
+        }
+        .theme-151 .win-header {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            padding: 2px 4px;
+            color: white;
+            font-size: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
         /* 152: The Relativity Age (Noir Physics) */
         .theme-152 { 
             background-color: #050505; 
@@ -208,6 +264,27 @@
             opacity: 0.3; pointer-events: none;
         }
 
+        /* 171: Reflective Journal */
+        .theme-171 {
+            background-color: #FDFBF7;
+            color: #064E3B;
+            font-family: 'Playfair Display', serif;
+            border: 1px solid #064E3B;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-171:hover {
+            box-shadow: 0 0 20px rgba(6, 78, 59, 0.2);
+            transform: translateY(-5px);
+        }
+        .theme-171 .geo-pattern {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(#064E3B 0.5px, transparent 0.5px);
+            background-size: 10px 10px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
         /* 174: Comics */
         .theme-174 { background-color: #ffffff; color: #000; border: 3px solid #000; box-shadow: 6px 6px 0px #000; font-family: 'Bangers', cursive; }
         .bg-hero-yellow { background-color: #F9E216; }
@@ -255,6 +332,38 @@
                 <div class="relative z-10 text-center">
                     <h2 class="font-hand text-5xl text-[#5D4037] mb-1 group-hover:scale-110 transition-transform duration-500 leading-none">Sakura<br>Dreams</h2>
                     <p class="font-sans text-[10px] uppercase tracking-widest text-[#98B4A6] mt-2">The Smile Collector</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- 125: The Camcorder (VCR) -->
+        <a href="../students/125.html" class="card-container block group">
+            <div class="theme-125 h-72 p-6 relative flex flex-col justify-between">
+                <div class="scanline"></div>
+                
+                <div class="absolute top-4 right-4 text-sm font-bold tracking-widest">
+                    <span class="text-green-500 opacity-60">SP</span> 0:00:00
+                </div>
+
+                <div class="absolute bottom-4 left-4 text-6xl opacity-20 font-bold group-hover:opacity-40 transition-opacity">125</div>
+
+                <div class="relative z-10 flex items-start">
+                    <div class="rec-dot"></div> <span class="text-xs tracking-widest text-red-500">REC</span>
+                </div>
+
+                <div class="relative z-10 text-center">
+                    <h2 class="text-5xl mb-1 group-hover:skew-x-12 transition-transform duration-100">The<br>Camcorder</h2>
+                    <div class="bg-[#0000aa] text-white px-2 py-1 text-[10px] inline-block tracking-widest mt-2 font-sans">
+                        CHAOS.mp4
+                    </div>
+                </div>
+                
+                <!-- Battery Icon -->
+                <div class="absolute bottom-4 right-4">
+                    <div class="w-8 h-4 border border-green-500 relative">
+                        <div class="h-full bg-green-500 w-3/4"></div>
+                        <div class="absolute top-1 -right-1 w-0.5 h-2 bg-green-500"></div>
+                    </div>
                 </div>
             </div>
         </a>
@@ -379,6 +488,56 @@
             </div>
         </a>
 
+        <!-- 151: System 151 (Windows 98 Style) -->
+        <a href="../students/151.html" class="card-container block group">
+            <div class="theme-151 h-72 p-4 relative flex flex-col justify-center items-center">
+                
+                <!-- Desktop Icons Background -->
+                <div class="absolute top-2 left-2 flex flex-col gap-4 opacity-50 pointer-events-none">
+                    <div class="flex flex-col items-center gap-1">
+                        <img src="https://img.icons8.com/color/48/my-computer--v1.png" class="w-8 h-8">
+                        <span class="text-[8px] text-white bg-[#008080]">My Computer</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <img src="https://img.icons8.com/color/48/full-trash.png" class="w-8 h-8">
+                        <span class="text-[8px] text-white bg-[#008080]">Recycle Bin</span>
+                    </div>
+                </div>
+
+                <!-- Window Card -->
+                <div class="win-window w-full max-w-[200px] z-10 group-hover:scale-105 transition-transform duration-200">
+                    <div class="win-header">
+                        <span class="truncate">System_151.exe</span>
+                        <div class="flex gap-1">
+                            <span class="bg-[#c0c0c0] text-black w-3 h-3 flex items-center justify-center text-[6px] border-t border-l border-white border-b border-r border-black font-sans font-bold">_</span>
+                            <span class="bg-[#c0c0c0] text-black w-3 h-3 flex items-center justify-center text-[6px] border-t border-l border-white border-b border-r border-black font-sans font-bold">X</span>
+                        </div>
+                    </div>
+                    <div class="p-2 text-center">
+                        <div class="flex justify-center mb-2">
+                             <img src="https://img.icons8.com/color/96/user-male-circle--v1.png" class="w-12 h-12">
+                        </div>
+                        <h2 class="text-sm mb-1 text-blue-900">JB SHRABON</h2>
+                        <div class="text-[8px] text-gray-600 bg-white border border-gray-400 p-1 font-sans">
+                            <p>Status: Nostalgic</p>
+                            <p>Memories: Loaded</p>
+                        </div>
+                        <div class="mt-2">
+                            <button class="bg-[#c0c0c0] border-t border-l border-white border-b border-r border-black text-[8px] px-2 py-1 active:border-t-black active:border-l-black active:border-b-white active:border-r-white text-black">OK</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Taskbar strip at bottom -->
+                <div class="absolute bottom-0 left-0 right-0 h-6 bg-[#c0c0c0] border-t border-white flex items-center px-1">
+                    <div class="bg-[#c0c0c0] border-t border-l border-white border-b border-r border-black px-2 py-0.5 flex items-center gap-1">
+                        <img src="https://img.icons8.com/color/48/windows-logo.png" class="w-3 h-3">
+                        <span class="text-[8px] font-bold text-black">Start</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+
         <!-- 152: The Relativity Age -->
         <a href="../students/152.html" class="card-container block group">
             <div class="theme-152 h-72 p-6 relative overflow-hidden flex flex-col justify-between">
@@ -473,6 +632,29 @@
                     </div>
                     <p class="text-[9px] uppercase tracking-widest mt-2 opacity-60 text-gray-400">Blue Hour <span class="mx-1 text-white">/</span> Golden Hour</p>
                 </div>
+            </div>
+        </a>
+
+        <!-- 171: Reflective Journal (NEW) -->
+        <a href="../students/171.html" class="card-container block group">
+            <div class="theme-171 h-72 p-6 relative flex flex-col justify-between">
+                <div class="geo-pattern"></div>
+                
+                <!-- Roll Number -->
+                <div class="absolute top-4 right-4 text-7xl font-bold opacity-10 text-[#064E3B] font-serif italic">171</div>
+
+                <div class="relative z-10">
+                    <span class="text-[10px] tracking-[0.3em] uppercase text-[#D97706] font-bold">The Believer</span>
+                </div>
+
+                <div class="relative z-10 text-center">
+                    <!-- Diamond decorative -->
+                    <div class="w-3 h-3 bg-[#064E3B] rotate-45 mx-auto mb-4 opacity-50"></div>
+                    <h2 class="text-4xl text-[#064E3B] italic font-bold mb-2 group-hover:-translate-y-1 transition-transform">Reflective<br>Journal</h2>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 mt-2">Guidance & Gratitude</p>
+                </div>
+
+                <div class="absolute bottom-4 left-4 w-full h-[1px] bg-gradient-to-r from-transparent via-[#064E3B]/20 to-transparent"></div>
             </div>
         </a>
 
