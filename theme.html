@@ -8,8 +8,8 @@
     <!-- --- FONTS COLLECTION --- -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Added Press Start 2P for 151 -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&family=Courier+Prime:wght@400;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Added Monoton & Orbitron for 151 New Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700&family=Comic+Neue:wght@700&family=DM+Sans:wght@700&family=DM+Serif+Display&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;600&family=Oxanium:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;1,400&family=Bodoni+Moda:wght@400;800&family=Righteous&family=Rajdhani:wght@300;500;700&family=Quicksand:wght@300;400;600&family=Courier+Prime:wght@400;700&family=VT323&family=Press+Start+2P&family=Monoton&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&f[]=clash-display@600&f[]=cabinet-grotesk@800&f[]=alpino@700&display=swap" rel="stylesheet">
 
@@ -170,35 +170,21 @@
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
-        /* 151: System 151 (Windows 98 Style) */
+        /* 151: Neon Underground */
         .theme-151 {
-            background-color: #008080; /* Teal background */
-            color: #000;
-            font-family: 'Press Start 2P', cursive;
-            border: 2px solid #fff;
-            border-right-color: #404040;
-            border-bottom-color: #404040;
-            box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080;
+            background-color: #030303;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            border: 1px solid #333;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
         .theme-151:hover {
-            box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080, 0 0 15px rgba(0, 128, 128, 0.5);
+            border-color: #00FFFF;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
         }
-        .theme-151 .win-window {
-            background: #c0c0c0;
-            border-top: 1px solid #fff; border-left: 1px solid #fff;
-            border-right: 1px solid #000; border-bottom: 1px solid #000;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column;
-        }
-        .theme-151 .win-header {
-            background: linear-gradient(90deg, #000080, #1084d0);
-            padding: 2px 4px;
-            color: white;
-            font-size: 8px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .font-neon { font-family: 'Monoton', cursive; }
 
         /* 152: The Relativity Age (Noir Physics) */
         .theme-152 { 
@@ -264,7 +250,7 @@
             opacity: 0.3; pointer-events: none;
         }
 
-        /* 171: Reflective Journal */
+        /* 171: Reflective Journal (NEW) */
         .theme-171 {
             background-color: #FDFBF7;
             color: #064E3B;
@@ -488,51 +474,34 @@
             </div>
         </a>
 
-        <!-- 151: System 151 (Windows 98 Style) -->
+        <!-- 151: Neon Underground -->
         <a href="../students/151.html" class="card-container block group">
-            <div class="theme-151 h-72 p-4 relative flex flex-col justify-center items-center">
+            <div class="theme-151 h-72 p-6 relative flex flex-col justify-between">
+                <!-- Background Grid -->
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
                 
-                <!-- Desktop Icons Background -->
-                <div class="absolute top-2 left-2 flex flex-col gap-4 opacity-50 pointer-events-none">
-                    <div class="flex flex-col items-center gap-1">
-                        <img src="https://img.icons8.com/color/48/my-computer--v1.png" class="w-8 h-8">
-                        <span class="text-[8px] text-white bg-[#008080]">My Computer</span>
+                <div class="relative z-10 flex justify-between items-start">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[#FF0055] rounded-full animate-pulse shadow-[0_0_10px_#FF0055]"></span>
+                        <span class="text-xs font-bold tracking-[0.2em] text-[#FF0055]">SYSTEM 151</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <img src="https://img.icons8.com/color/48/full-trash.png" class="w-8 h-8">
-                        <span class="text-[8px] text-white bg-[#008080]">Recycle Bin</span>
+                    <span class="font-mono text-[10px] text-gray-500 border border-gray-800 px-2 py-1">NEON_GENESIS</span>
+                </div>
+
+                <div class="relative z-10 text-center">
+                    <h2 class="font-neon text-5xl text-white mb-2 group-hover:text-[#00FFFF] transition-colors duration-300 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">JB<br>SHRABON</h2>
+                    <div class="inline-block border border-[#FAFF00] px-3 py-1 bg-[#FAFF00]/10">
+                        <p class="font-bold text-[10px] tracking-[0.3em] text-[#FAFF00]">THE AGENT</p>
                     </div>
                 </div>
 
-                <!-- Window Card -->
-                <div class="win-window w-full max-w-[200px] z-10 group-hover:scale-105 transition-transform duration-200">
-                    <div class="win-header">
-                        <span class="truncate">System_151.exe</span>
-                        <div class="flex gap-1">
-                            <span class="bg-[#c0c0c0] text-black w-3 h-3 flex items-center justify-center text-[6px] border-t border-l border-white border-b border-r border-black font-sans font-bold">_</span>
-                            <span class="bg-[#c0c0c0] text-black w-3 h-3 flex items-center justify-center text-[6px] border-t border-l border-white border-b border-r border-black font-sans font-bold">X</span>
-                        </div>
+                <div class="relative z-10 flex justify-between items-end">
+                    <div class="text-[9px] text-gray-500 font-mono">
+                        STATUS: <span class="text-[#00FF99]">ONLINE</span><br>
+                        MEMORIES: LOADED
                     </div>
-                    <div class="p-2 text-center">
-                        <div class="flex justify-center mb-2">
-                             <img src="https://img.icons8.com/color/96/user-male-circle--v1.png" class="w-12 h-12">
-                        </div>
-                        <h2 class="text-sm mb-1 text-blue-900">JB SHRABON</h2>
-                        <div class="text-[8px] text-gray-600 bg-white border border-gray-400 p-1 font-sans">
-                            <p>Status: Nostalgic</p>
-                            <p>Memories: Loaded</p>
-                        </div>
-                        <div class="mt-2">
-                            <button class="bg-[#c0c0c0] border-t border-l border-white border-b border-r border-black text-[8px] px-2 py-1 active:border-t-black active:border-l-black active:border-b-white active:border-r-white text-black">OK</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Taskbar strip at bottom -->
-                <div class="absolute bottom-0 left-0 right-0 h-6 bg-[#c0c0c0] border-t border-white flex items-center px-1">
-                    <div class="bg-[#c0c0c0] border-t border-l border-white border-b border-r border-black px-2 py-0.5 flex items-center gap-1">
-                        <img src="https://img.icons8.com/color/48/windows-logo.png" class="w-3 h-3">
-                        <span class="text-[8px] font-bold text-black">Start</span>
+                    <div class="text-2xl text-[#00FFFF] group-hover:rotate-90 transition-transform duration-500">
+                        ✛
                     </div>
                 </div>
             </div>
