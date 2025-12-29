@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>180 | Mushfiqur Rahman</title>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Teko (Sporty Headers), Tiro Bangla (Bengali) -->
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;600;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pitch-green': '#006A4E', // BD Jersey Green
+                        'cricket-red': '#F42A41', // Cricket Ball Red
+                        'stump-gold': '#FFCC00',
+                        'crease-white': '#F0F0F0',
+                        'dark-turf': '#004225',
+                    },
+                    fontFamily: {
+                        'sport': ['Teko', 'sans-serif'],
+                        'bangla': ['Tiro Bangla', 'serif'],
+                    },
+                    backgroundImage: {
+                        'grass': "url('https://www.transparenttextures.com/patterns/grass.png')",
+                        'carbon': "url('https://www.transparenttextures.com/patterns/carbon-fibre.png')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #004225;
+            color: #F0F0F0;
+            overflow-x: hidden;
+        }
+
+        /* SCOREBOARD STYLE */
+        .scoreboard {
+            background: #000;
+            border: 4px solid #333;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            font-family: 'Teko', sans-serif;
+        }
+        .score-digit {
+            background: #222;
+            color: #FFCC00;
+            padding: 0 10px;
+            border-radius: 4px;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        /* PLAYER CARD */
+        .player-card-frame {
+            background: linear-gradient(135deg, #006A4E 0%, #004225 100%);
+            border: 2px solid #FFCC00;
+            position: relative;
+            overflow: hidden;
+        }
+        .player-card-frame::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        /* STITCHING EFFECT */
+        .seam-line {
+            border-bottom: 3px dashed #F42A41;
+            height: 0;
+            width: 100%;
+            opacity: 0.7;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #004225; }
+        ::-webkit-scrollbar-thumb { background: #F42A41; border-radius: 4px; }
+
+        /* ID CARD GLITCH */
+        .missing-stamp {
+            border: 4px solid #F42A41;
+            color: #F42A41;
+            transform: rotate(-15deg);
+            font-family: 'Teko', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            font-size: 2rem;
+            opacity: 0.8;
+            mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im4iPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjUiIG51bU9jdGF2ZXM9IjEiIHN0aXRjaFRpbGVzPSJub1N0aXRjaCIgLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNuKSIgb3BhY2l0eT0iMC41Ii8+PC9zdmc+');
+        }
+    </style>
+</head>
+<body class="bg-grass selection:bg-cricket-red selection:text-white">
+
+    <!-- NAV / SCOREBOARD HEADER -->
+    <nav class="fixed top-0 w-full z-50 p-2 md:p-4">
+        <div class="max-w-7xl mx-auto scoreboard rounded-lg flex justify-between items-center px-4 py-2 bg-zinc-900">
+            <div class="flex items-center gap-4">
+                <div class="hidden md:block text-gray-400 font-sport text-xl tracking-widest uppercase">BATSMAN</div>
+                <div class="text-stump-gold font-sport text-3xl md:text-4xl font-bold">MUSHFIQUR</div>
+            </div>
+            
+            <div class="flex items-center gap-2 md:gap-6">
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">JERSEY</span>
+                    <span class="score-digit text-2xl md:text-3xl">180</span>
+                </div>
+            </div>
+
+            <div class="hidden md:flex gap-4 text-sm font-bold font-sport tracking-widest text-white/70">
+                <a href="../gallery.html" class="hover:text-cricket-red transition-colors">GALLERY</a>
+                <span class="text-gray-600">|</span>
+                <a href="../index.html" class="hover:text-cricket-red transition-colors">INDEX</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-32 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
+
+        <!-- SECTION 1: PLAYER PROFILE (HERO) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 mb-24 items-center">
+            
+            <!-- Player Card Image -->
+            <div class="lg:col-span-5 order-2 lg:order-1 relative group">
+                <div class="player-card-frame rounded-xl p-3 shadow-2xl transform transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
+                    <div class="relative overflow-hidden rounded-lg aspect-[3/4] bg-gray-900 border-2 border-white/10">
+                        <img src="../images/180/main.jpeg" alt="Mushfiqur Rahman" class="w-full h-full object-cover">
+                        <!-- Stats Overlay -->
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6 pt-20">
+                            <h1 class="text-4xl md:text-5xl font-sport font-bold text-white uppercase leading-none">Mushfiqur<br><span class="text-stump-gold">Rahman</span></h1>
+                            <div class="flex gap-3 mt-2">
+                                <span class="bg-cricket-red text-white px-2 py-0.5 text-xs font-bold font-sport uppercase tracking-wider rounded">Striker</span>
+                                <span class="bg-pitch-green text-white px-2 py-0.5 text-xs font-bold font-sport uppercase tracking-wider rounded">Roll 180</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ball graphic -->
+                <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-gradient-to-br from-red-500 to-red-900 rounded-full shadow-lg border-4 border-red-800 hidden md:flex items-center justify-center z-20">
+                    <div class="w-full h-[2px] bg-white/30 transform rotate-45"></div>
+                </div>
+            </div>
+
+            <!-- Intro Stats -->
+            <div class="lg:col-span-7 order-1 lg:order-2 space-y-8">
+                <div class="border-l-4 border-stump-gold pl-6">
+                    <h2 class="text-xl font-sport text-stump-gold tracking-[0.2em] uppercase mb-2">Match Situation</h2>
+                    <p class="font-bangla text-xl md:text-2xl leading-relaxed text-white">
+                        আমার এই কলেজে আসাটা হয়েছিলো অনাকাঙ্ক্ষিত। মোহাম্মদ সরাকারি কলেজে যাতায়াত সমস্যার কারণে এই কলেজে আসা।
+                    </p>
+                </div>
+
+                <!-- First Day Card -->
+                <div class="bg-pitch-green/40 backdrop-blur-md border border-white/10 rounded-lg p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i class="fas fa-calendar-alt text-6xl text-white"></i>
+                    </div>
+                    <h3 class="font-sport text-3xl text-white uppercase mb-4 border-b border-white/20 pb-2 inline-block">The Debut (First Day)</h3>
+                    <div class="font-bangla text-gray-200 text-lg space-y-2">
+                        <p><span class="text-stump-gold text-xl">☞</span> প্রথম দিনে কিছুটা অন্যরকমই লেগেছিলো। সাবিতের পিছনে গিয়ে ক্লাস রুম চিনা।</p>
+                        <p class="font-bold text-white"><span class="text-cricket-red text-xl">☞</span> আবার প্রথম দিনই ক্লাস ফাকি দিয়ে মহসিন হলের মাঠে খেলতে যাওয়া।</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: THE SQUAD (FRIENDS) -->
+        <section class="mb-24">
+            <div class="flex items-center gap-4 mb-8">
+                <i class="fas fa-users text-stump-gold text-2xl"></i>
+                <h2 class="text-4xl font-sport font-bold text-white uppercase tracking-wide">The Squad</h2>
+                <div class="h-1 flex-grow bg-white/10 rounded"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Squad List (Left) -->
+                <div class="bg-black/40 border border-stump-gold/30 rounded-xl p-8 relative">
+                    <p class="font-bangla text-gray-300 text-lg leading-loose mb-6">
+                        কলেজে বেশি একজনের সাথে চলা হয়নি। তবে সিফাত, বাপ্পি, আবির, এরা ছিলো ঘোরাঘুরির সাথি। ক্লাসে তানজিল ও আবু সাইদ ও কম নয়। আবার পরিক্ষার হলে রাহাত, শাহাদাত ভুলার নয়।
+                    </p>
+                    
+                    <!-- Team Sheet UI -->
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div class="bg-pitch-green/20 p-3 rounded border-l-2 border-stump-gold">
+                            <div class="text-xs font-sport text-stump-gold uppercase">Travel Buddies</div>
+                            <div class="font-bangla font-bold">সিফাত, বাপ্পি, আবির</div>
+                        </div>
+                        <div class="bg-pitch-green/20 p-3 rounded border-l-2 border-cricket-red">
+                            <div class="text-xs font-sport text-cricket-red uppercase">Classroom Partners</div>
+                            <div class="font-bangla font-bold">তানজিল, আবু সাইদ</div>
+                        </div>
+                        <div class="bg-pitch-green/20 p-3 rounded border-l-2 border-white col-span-2">
+                            <div class="text-xs font-sport text-white uppercase">Exam Hall Saviors</div>
+                            <div class="font-bangla font-bold">রাহাত, শাহাদাত</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Squad Photos (Right) -->
+                <div class="grid grid-cols-2 gap-4 h-full">
+                    <div class="relative overflow-hidden rounded-lg border-2 border-white/10 group h-64">
+                        <img src="../images/180/sifat.jpeg" alt="Sifat" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center text-white font-sport text-sm tracking-widest">SIFAT</div>
+                    </div>
+                    <div class="relative overflow-hidden rounded-lg border-2 border-white/10 group h-64">
+                        <img src="../images/180/abir_sifat_bappi_me.jpeg" alt="Group" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute bottom-0 left-0 w-full bg-black/60 p-2 text-center text-white font-sport text-sm tracking-widest">THE BOYS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: HIGHLIGHTS (MEMORIES & JERSEY) -->
+        <section class="mb-24 relative">
+            <!-- Background Cricket Graphics -->
+            <div class="absolute top-0 right-0 opacity-5 pointer-events-none">
+                <i class="fas fa-cricket text-9xl text-white"></i>
+            </div>
+
+            <div class="text-center mb-10">
+                <h2 class="text-5xl font-sport font-bold text-stump-gold uppercase">Match Highlights</h2>
+                <p class="font-bangla text-white/60 mt-2">স্মৃতিময় মুহূর্তগুলো</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-pitch-green/20 p-6 md:p-10 rounded-2xl border border-white/5">
+                <!-- Text -->
+                <div class="order-2 md:order-1 text-center md:text-left">
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-cricket-red text-white w-10 h-10 flex items-center justify-center rounded-full font-bold shadow-lg flex-shrink-0">1</div>
+                            <p class="font-bangla text-xl text-white leading-relaxed pt-1">
+                                দেয়াল টপকে কলেজ পলানো। 
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="bg-stump-gold text-black w-10 h-10 flex items-center justify-center rounded-full font-bold shadow-lg flex-shrink-0">2</div>
+                            <p class="font-bangla text-xl text-white leading-relaxed pt-1">
+                                ক্লাস ফাকি দিয়ে ক্রিকেট খেলা তাকি ভুলা যায়!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jersey Photos -->
+                <div class="order-1 md:order-2 grid grid-cols-2 gap-4">
+                    <div class="transform rotate-3 hover:rotate-0 transition-transform duration-300 border-4 border-white shadow-xl">
+                        <img src="../images/180/jersey_pic_standing_with_friends.jpeg" alt="Jersey 1" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="transform -rotate-2 hover:rotate-0 transition-transform duration-300 border-4 border-white shadow-xl translate-y-8">
+                        <img src="../images/180/friends_and_jersey.jpeg" alt="Jersey 2" class="w-full h-48 object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FUN FACT: THE ID CARD -->
+        <section class="max-w-2xl mx-auto text-center mb-24">
+            <div class="bg-gray-200 text-black p-8 rounded-lg shadow-2xl relative overflow-hidden rotate-1 transform hover:rotate-0 transition-duration-300">
+                <!-- Lanyard Hole -->
+                <div class="absolute top-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-black/20 rounded-full"></div>
+                
+                <div class="flex justify-between items-start mb-6 border-b-2 border-black/10 pb-4">
+                    <div class="text-left">
+                        <h3 class="font-sport font-bold text-2xl uppercase text-pitch-green">ULAB</h3>
+                        <p class="text-xs font-bold text-gray-500">IDENTITY CARD</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-300 rounded border border-gray-400"></div>
+                </div>
+
+                <div class="font-bangla text-2xl font-bold text-gray-800 mb-4">
+                    "মজার বিষয় ☞ এখনও আইডিকার্ড পাইনি"
+                </div>
+
+                <div class="missing-stamp absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    MISSING
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="text-center border-t border-white/10 pt-12">
+            <h2 class="text-[10vw] font-sport text-white/5 leading-none select-none">180</h2>
+            <div class="relative -top-10">
+                <button id="exit-btn" class="bg-cricket-red text-white font-sport text-xl px-8 py-2 rounded shadow-lg hover:bg-red-600 transition-colors">
+                    END INNINGS
+                </button>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- JS -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. INTRO ANIMATIONS
+        const tl = gsap.timeline();
+        
+        tl.from(".scoreboard", { y: -100, opacity: 0, duration: 1, ease: "bounce.out" });
+        tl.from(".player-card-frame", { x: -50, opacity: 0, duration: 1, ease: "power2.out" }, "-=0.5");
+        tl.from(".lg\\:col-span-7 > div", { x: 50, opacity: 0, stagger: 0.2, duration: 1, ease: "power2.out" }, "-=0.8");
+
+        // 2. SCROLL ANIMATIONS
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.from(section.children, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power2.out"
+            });
+        });
+
+        // 3. EXIT
+        document.getElementById('exit-btn').addEventListener('click', () => {
+            gsap.to("main", { opacity: 0, y: -50, duration: 0.5 });
+            gsap.to("body", { backgroundColor: "#000", duration: 0.5, onComplete: () => window.location.href = '../index.html' });
+        });
+
+    </script>
+</body>
+</html>
